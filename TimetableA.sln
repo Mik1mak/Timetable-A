@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableA", "TimetableA\TimetableA.csproj", "{B5C86BB8-0F4E-40B2-899A-8455C46550D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableA.API", "TimetableA\TimetableA.API.csproj", "{B5C86BB8-0F4E-40B2-899A-8455C46550D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableA.Entities", "TimetableA.Entities\TimetableA.Entities.csproj", "{193D0A98-6F08-4E2D-97C8-3E37D81CFA97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableA.DataAccessLayer", "TimetableA.DataAccessLayer\TimetableA.DataAccessLayer.csproj", "{63105980-94E2-4CA2-A15B-E487711EF73B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{B5C86BB8-0F4E-40B2-899A-8455C46550D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5C86BB8-0F4E-40B2-899A-8455C46550D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C86BB8-0F4E-40B2-899A-8455C46550D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{193D0A98-6F08-4E2D-97C8-3E37D81CFA97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{193D0A98-6F08-4E2D-97C8-3E37D81CFA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{193D0A98-6F08-4E2D-97C8-3E37D81CFA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{193D0A98-6F08-4E2D-97C8-3E37D81CFA97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63105980-94E2-4CA2-A15B-E487711EF73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63105980-94E2-4CA2-A15B-E487711EF73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63105980-94E2-4CA2-A15B-E487711EF73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63105980-94E2-4CA2-A15B-E487711EF73B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
