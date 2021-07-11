@@ -26,6 +26,7 @@ namespace TimetableA.Entities.Models
         [Column(TypeName = "nvarchar(512)")]
         public string Link { get; set; }
 
+        [Required]
         [ForeignKey(nameof(Group))]
         public int GroupId { get; set; }
         public Group Group { get; set; }

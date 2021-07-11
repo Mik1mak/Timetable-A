@@ -19,6 +19,7 @@ namespace TimetableA.Entities.Models
         [Column(TypeName = "nvarchar(7)")]
         public string HexColor { get; set; }
 
+        [Required]
         [ForeignKey(nameof(Timetable))]
         public int TimetableId { get; set; }
         public Timetable Timetable { get; set; }

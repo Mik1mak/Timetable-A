@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimetableA.DataAccessLayer.Repositories.Abstract;
+using TimetableA.DataAccessLayer.Repositories.Concrete;
+using TimetableA.Entities.Data;
 
 namespace TimetableA
 {
@@ -31,6 +36,12 @@ namespace TimetableA
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TimetableA", Version = "v1" });
             });
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddDbContext<TimetableAContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DevConnection"),
+                b => b.MigrationsAssembly(typeof(TimetableAContext).Assembly.FullName)));
+            services.AddScoped<ITimetableRepository, TimetableRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

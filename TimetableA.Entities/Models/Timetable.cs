@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TimetableA.Entities.Models
@@ -15,9 +16,11 @@ namespace TimetableA.Entities.Models
         [Column(TypeName = "nvarchar(64)")]
         public string Name { get; set; }
 
+        [JsonIgnore]
         [Column(TypeName = "nvarchar(16)")]
         public string ReadKey { get; set; }
 
+        //[JsonIgnore]
         [Column(TypeName = "nvarchar(16)")]
         public string EditKey { get; set; }
 
