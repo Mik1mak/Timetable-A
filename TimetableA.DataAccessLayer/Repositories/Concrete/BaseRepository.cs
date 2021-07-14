@@ -12,12 +12,12 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
     public abstract class BaseRepository
     {
         protected readonly TimetableAContext context;
-        protected readonly ILogger logger;
+        public ILogger Logger { protected get; set; }
 
         public BaseRepository(TimetableAContext context, ILogger logger)
         {
             this.context = context;
-            this.logger = logger;
+            Logger = logger;
         }
     }
 }

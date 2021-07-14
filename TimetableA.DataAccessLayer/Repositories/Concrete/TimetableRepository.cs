@@ -9,7 +9,6 @@ using TimetableA.Entities.Data;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
 using TimetableA.Entities.Models;
 using Microsoft.Extensions.DependencyInjection;
-using TimetableA.DataAccessLayer.Helpers;
 
 namespace TimetableA.DataAccessLayer.Repositories.Concrete
 {
@@ -24,37 +23,22 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
                 if (timetable == null)
                     throw new ArgumentNullException(nameof(timetable));
 
-                if (timetable.Id == default)
-                {
-                    timetable.ReadKey = KeyGen.Generate();
-                    timetable.EditKey = KeyGen.Generate();
-                    context.Entry(timetable).State = EntityState.Added;
-                }
-                else
-                {
-                    context.Entry(timetable).State = EntityState.Modified;
-                }
-                
+                context.Entry(timetable).State = timetable.Id == default ? EntityState.Added : EntityState.Modified;
                 
                 await context.SaveChangesAsync();
             }
             catch(Exception ex)
             {
-                logger?.LogError(ex, ex.Message);
+                Logger?.LogError(ex, ex.Message);
                 return false;
             }
             
             return true;
         }
 
-        public async Task<IEnumerable<Timetable>> GetAllBasicInfoAsync()
+        public async Task<IEnumerable<Timetable>> GetAllAsync()
         {
-            return (await context.Timetables.ToListAsync()).Select(x =>
-            {
-                x.ReadKey = x.EditKey = default;
-                x.Gropus?.Clear();
-                return x;
-            });
+            return await context.Timetables.ToListAsync();
         }
 
         public async Task<Timetable> GetAsync(int id)
@@ -76,7 +60,7 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex, ex.Message);
+                Logger?.LogError(ex, ex.Message);
                 return false;
             }
 

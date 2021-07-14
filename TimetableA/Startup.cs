@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimetableA.API.Helpers;
+using TimetableA.API.Services;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
 using TimetableA.DataAccessLayer.Repositories.Concrete;
 using TimetableA.Entities.Data;
@@ -42,6 +44,9 @@ namespace TimetableA
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection"),
                 b => b.MigrationsAssembly(typeof(TimetableAContext).Assembly.FullName)));
             services.AddScoped<ITimetableRepository, TimetableRepository>();
+            services.AddScoped<IAuthService, AuthService>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +62,7 @@ namespace TimetableA
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

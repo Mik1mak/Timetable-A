@@ -7,13 +7,13 @@ using TimetableA.Entities.Models;
 
 namespace TimetableA.DataAccessLayer.Repositories.Abstract
 {
-    public interface ITimetableRepository
+    public interface ITimetableRepository : IRepository
     {
         public Task<bool> SaveAsync(Timetable timetable);
 
         public Task<Timetable> GetAsync(int id);
 
-        public Task<IEnumerable<Timetable>> GetAllBasicInfoAsync();
+        public Task<IEnumerable<Timetable>> GetAllAsync();
 
         public Task<bool> DeleteAsync(int id);
     }

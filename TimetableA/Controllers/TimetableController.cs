@@ -5,6 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimetableA.API.Helpers;
+using TimetableA.API.Models.InputModels;
+using TimetableA.API.Models.OutputModels;
+using TimetableA.API.Services;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
 using TimetableA.Entities.Models;
 
@@ -19,66 +23,86 @@ namespace TimetableA.API.Controllers
         private readonly ITimetableRepository repository;
         private readonly ILogger logger;
         private readonly IMapper mapper;
+        private readonly IAuthService authService;
 
         public TimetableController(ITimetableRepository repository, IMapper mapper, ILogger<TimetableController> logger)
         {
             this.repository = repository;
             this.mapper = mapper;
             this.logger = logger;
+            repository.Logger = logger;
         }
 
         // GET: api/<TimetableController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Timetable>>> Get()
+        [Authorize(AuthLevel.Admin)]
+        public async Task<ActionResult<IEnumerable<TimetableOutputModel>>> Get()
         {
-            var timetable = await repository.GetAllBasicInfoAsync();
+            var timetable = await repository.GetAllAsync();
 
             if (timetable == null)
                 return NotFound();
             if (!timetable.Any())
                 return NotFound();
 
-            //map to outputModel
 
-            return Ok(timetable);
+            var output = timetable.Select(x =>
+            {
+                x.Gropus?.Clear();
+                return mapper.Map<TimetableOutputModel>(x);
+            });
+
+            return Ok(output);
         }
 
         // GET api/<TimetableController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Timetable>> Get(int id)
+        [Authorize(AuthLevel.Read)]
+        public async Task<ActionResult<TimetableOutputModel>> Get(int id)
         {
             var timetable = await repository.GetAsync(id);
 
             if (timetable == null)
                 return NotFound();
 
-            //map to outputModel
+            var output = mapper.Map<TimetableOutputModel>(timetable);
 
-            return Ok(timetable);
+            return Ok(output);
         }
 
         // POST api/<TimetableController>
         [HttpPost]
-        public async Task<ActionResult> Post(Timetable timetable)
+        public async Task<ActionResult<Timetable>> Post(TimetableInputModel input)
         {
-            if (timetable == null)
+            if (input == null)
                 return BadRequest("Timetable can't be null.");
 
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            if (await repository.SaveAsync(timetable))
-                return Ok();
+            var newTimetable = mapper.Map<Timetable>(input);
+
+            newTimetable.CreateDate = DateTime.Now;
+            newTimetable.EditKey = KeyGen.Generate();
+            newTimetable.ReadKey = KeyGen.Generate();
+
+            if (await repository.SaveAsync(newTimetable))
+                return Ok(newTimetable);
+                
 
             return Problem();
         }
 
         // PUT api/<TimetableController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, Timetable timetable)
+        [Authorize(AuthLevel.Edit)]
+        public async Task<ActionResult> Put(int id, [FromBody] TimetableInputModel input)
         {
-            //inputModel
-            timetable.Id = id;
+            var timetable = await repository.GetAsync(id);
+
+            timetable.Name = input.Name;
+            timetable.Cycles = input.Cycles;
+
             if (await repository.SaveAsync(timetable))
                 return Ok();
 
@@ -87,6 +111,7 @@ namespace TimetableA.API.Controllers
 
         // DELETE api/<TimetableController>/5
         [HttpDelete("{id}")]
+        [Authorize(AuthLevel.Edit)]
         public async Task<ActionResult> Delete(int id)
         {
             if (await repository.DeleteAsync(id))

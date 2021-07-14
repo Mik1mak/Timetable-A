@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TimetableA.Controllers
 {
-    [ApiController]
+    //[ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimetableA.DataAccessLayer.Helpers
+namespace TimetableA.API.Helpers
 {
     public class KeyGen
     {

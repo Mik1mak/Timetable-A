@@ -16,11 +16,9 @@ namespace TimetableA.Entities.Models
         [Column(TypeName = "nvarchar(64)")]
         public string Name { get; set; }
 
-        [JsonIgnore]
         [Column(TypeName = "nvarchar(16)")]
         public string ReadKey { get; set; }
 
-        //[JsonIgnore]
         [Column(TypeName = "nvarchar(16)")]
         public string EditKey { get; set; }
 
