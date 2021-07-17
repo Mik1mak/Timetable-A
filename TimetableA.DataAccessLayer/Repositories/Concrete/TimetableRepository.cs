@@ -16,5 +16,20 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
     {
         public TimetableRepository(TimetableAContext context) : base(context, null) { }
 
+        public async override Task<IEnumerable<Timetable>> GetAllAsync()
+        {
+            return await context.Set<Timetable>()
+                .Include(x => x.Gropus)
+                .ThenInclude(x => x.Lessons)
+                .ToListAsync();
+        }
+
+        public async override Task<Timetable> GetAsync(int id)
+        {
+            return await context.Set<Timetable>()
+                .Include(x => x.Gropus)
+                .ThenInclude(x => x.Lessons)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

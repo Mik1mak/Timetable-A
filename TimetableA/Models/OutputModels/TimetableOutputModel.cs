@@ -17,6 +17,6 @@ namespace TimetableA.API.Models.OutputModels
 
         public DateTime CreateDate { get; set; }
 
-        public ICollection<Group> Gropus { get; set; }
+        public ICollection<GroupOutputModel> Gropus { get; set; }
     }
 }

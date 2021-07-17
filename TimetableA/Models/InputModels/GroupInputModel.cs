@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace TimetableA.API.Models.InputModels
 {
-    public class TimetableInputModel
+    public class GroupInputModel
     {
         [Required]
         [MaxLength(64)]
-        [MinLength(1)]
+        [MinLength(2)]
         public string Name { get; set; }
 
-        [Range(1, 64)]
-        public int Cycles { get; set; }
+        [StringLength(7)]
+        public string HexColor { get; set; }
+
     }
 }

@@ -12,4 +12,19 @@ namespace TimetableA.API.Helpers
         Edit = 2,
         Admin = 4,
     }
+
+    public static class AuthLevelStrings
+    {
+        public static string GetStr(this AuthLevel authLvl)
+        {
+            return authLvl switch
+            {
+                AuthLevel.Unauthorized => "Unauthorized",
+                AuthLevel.Read => "Read",
+                AuthLevel.Edit => "Edit",
+                AuthLevel.Admin => "Admin",
+                _ => string.Empty,
+            };
+        }
+    }
 }

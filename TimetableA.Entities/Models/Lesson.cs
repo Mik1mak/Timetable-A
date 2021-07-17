@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TimetableA.Entities.Models
@@ -29,6 +30,7 @@ namespace TimetableA.Entities.Models
         [Required]
         [ForeignKey(nameof(Group))]
         public int GroupId { get; set; }
+        [JsonIgnore]
         public Group Group { get; set; }
     }
 }

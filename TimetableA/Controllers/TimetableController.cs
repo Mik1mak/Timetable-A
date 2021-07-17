@@ -21,21 +21,25 @@ namespace TimetableA.API.Controllers
     public class TimetableController : ControllerBase
     {
         private readonly ITimetableRepository timetablesRepo;
-        private readonly ILogger logger;
+        private readonly IGroupsRepository groupsRepo;
+        //private readonly ILogger logger;
         private readonly IMapper mapper;
 
-        public TimetableController(ITimetableRepository repository, IMapper mapper, ILogger<TimetableController> logger)
+        public TimetableController(ITimetableRepository timetableRepo, IGroupsRepository groupsRepo, IMapper mapper, ILogger<TimetableController> logger)
         {
-            this.timetablesRepo = repository;
+            this.timetablesRepo = timetableRepo;
+            this.groupsRepo = groupsRepo;
             this.mapper = mapper;
-            this.logger = logger;
-            repository.Logger = logger;
+            //this.logger = logger;
+            timetableRepo.Logger = groupsRepo.Logger = logger;
         }
 
-        // GET: api/<TimetableController>
+        #region Timetable
         [HttpGet]
+#if DEBUG == false
         [Authorize(AuthLevel.Admin)]
-        public async Task<ActionResult<IEnumerable<TimetableOutputModel>>> Get()
+#endif
+        public async Task<ActionResult<IEnumerable<Timetable>>> Get()
         {
             var timetable = await timetablesRepo.GetAllAsync();
 
@@ -45,16 +49,15 @@ namespace TimetableA.API.Controllers
                 return NotFound();
 
 
-            var output = timetable.Select(x =>
-            {
-                x.Gropus?.Clear();
-                return mapper.Map<TimetableOutputModel>(x);
-            });
+            //var output = timetable.Select(x =>
+            //{
+            //    //x.Gropus?.Clear();
+            //    return mapper.Map<TimetableOutputModel>(x);
+            //});
 
-            return Ok(output);
+            return Ok(timetable);
         }
 
-        // GET api/<TimetableController>/5
         [HttpGet("{id}")]
         [Authorize(AuthLevel.Read)]
         public async Task<ActionResult<TimetableOutputModel>> Get(int id)
@@ -69,7 +72,6 @@ namespace TimetableA.API.Controllers
             return Ok(output);
         }
 
-        // POST api/<TimetableController>
         [HttpPost]
         public async Task<ActionResult<Timetable>> Post(TimetableInputModel input)
         {
@@ -92,12 +94,17 @@ namespace TimetableA.API.Controllers
             return Problem();
         }
 
-        // PUT api/<TimetableController>/5
         [HttpPut("{id}")]
         [Authorize(AuthLevel.Edit)]
         public async Task<ActionResult> Put(int id, [FromBody] TimetableInputModel input)
         {
+            if (input == null)
+                return BadRequest("Timetable can't be null");
+
             var timetable = await timetablesRepo.GetAsync(id);
+
+            if (timetable == null)
+                return NotFound();
 
             timetable.Name = input.Name;
             timetable.Cycles = input.Cycles;
@@ -108,7 +115,6 @@ namespace TimetableA.API.Controllers
             return Problem();
         }
 
-        // DELETE api/<TimetableController>/5
         [HttpDelete("{id}")]
         [Authorize(AuthLevel.Edit)]
         public async Task<ActionResult> Delete(int id)
@@ -118,5 +124,99 @@ namespace TimetableA.API.Controllers
 
             return Problem();
         }
+        #endregion
+
+        #region Groups
+        [HttpPost("{id}/Group")]
+        [Authorize(AuthLevel.Edit)]
+        public async Task<ActionResult<GroupOutputModel>> AddGroup(int id, [FromBody] GroupInputModel input)
+        {
+            if (input == null)
+                return BadRequest("Group can't be null.");
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var newGroup = mapper.Map<Group>(input);
+            newGroup.TimetableId = id;
+
+            if (await groupsRepo.SaveAsync(newGroup))
+                return Ok(mapper.Map<GroupOutputModel>(newGroup));
+
+            return Problem();
+        }
+
+        [HttpGet("{id}/Group/{groupId}")]
+        [Authorize(AuthLevel.Read)]
+        public async Task<ActionResult<GroupOutputModel>> GetGroup(int id, int groupId)
+        {
+            var group = await groupsRepo.GetAsync(groupId);
+
+            if (group == null)
+                return NotFound();
+            if (group.TimetableId != id)
+                return BadRequest();
+
+            var output = mapper.Map<GroupOutputModel>(group);
+            return Ok(output);
+        }
+
+        [HttpGet("{id}/Groups")]
+        [Authorize(AuthLevel.Read)]
+        public async Task<ActionResult<IEnumerable<GroupOutputModel>>> GetGroups(int id)
+        {
+            var timetable = await timetablesRepo.GetAsync(id);
+
+            if (timetable == null)
+                return NotFound();
+            if (timetable.Gropus == null)
+                return NotFound();
+            if(!timetable.Gropus.Any())
+                return NotFound();
+
+            return Ok(timetable.Gropus.Select(x => mapper.Map<GroupOutputModel>(x)));
+        }
+
+        [HttpPut("{id}/Group/{groupId}")]
+        [Authorize(AuthLevel.Edit)]
+        public async Task<ActionResult> PutGroup(int id, int groupId, [FromBody] GroupInputModel input)
+        {
+            var group = await groupsRepo.GetAsync(groupId);
+
+            if (group == null)
+                return NotFound();
+
+            if(group.TimetableId == id)
+            {
+                group.Name = input.Name;
+                group.HexColor = input.HexColor;
+
+                if (await groupsRepo.SaveAsync(group))
+                    return Ok();
+                return Problem();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{id}/Group/{groupId}")]
+        [Authorize(AuthLevel.Edit)]
+        public async Task<ActionResult> DeleteGroup(int id, int groupId)
+        {
+            var groupToDel = await groupsRepo.GetAsync(groupId);
+
+            if (groupToDel == null)
+                return NotFound();
+
+            if(groupToDel.TimetableId == id)
+            {
+                if (await groupsRepo.DeleteAsync(groupId))
+                    return Ok();
+                return Problem();
+            }
+
+            return BadRequest();
+        }
+        #endregion
     }
 }

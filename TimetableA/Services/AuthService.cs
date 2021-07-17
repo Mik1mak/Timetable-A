@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using TimetableA.API.Helpers;
 using TimetableA.API.Models.InputModels;
 using TimetableA.API.Models.OutputModels;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
@@ -35,13 +36,17 @@ namespace TimetableA.API.Services
                 return null;
 
             string token;
+            AuthLevel authLvl;
+
             if (timetable.ReadKey == model.Key)
             {
+                authLvl = AuthLevel.Read;
                 timetable.EditKey = default;
                 token = GenerateJwtToken(timetable, model.Key);
             }
             else if(timetable.EditKey == model.Key)
             {
+                authLvl = AuthLevel.Edit;
                 timetable.ReadKey = default;
                 token = GenerateJwtToken(timetable, model.Key);
             }
@@ -50,7 +55,7 @@ namespace TimetableA.API.Services
                 return null;
             }
 
-            return new AuthenticateResponse(timetable, token);
+            return new AuthenticateResponse(timetable, token, authLvl);
         }
 
         private string GenerateJwtToken(Timetable timetable, string key)

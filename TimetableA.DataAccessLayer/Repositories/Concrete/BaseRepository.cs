@@ -22,7 +22,7 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
             Logger = logger;
         }
 
-        public async Task<bool> SaveAsync(TEntity entity)
+        public async virtual Task<bool> SaveAsync(TEntity entity)
         {
             try
             {
@@ -42,17 +42,17 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
             return true;
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public async virtual Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<TEntity> GetAsync(int id)
+        public async virtual Task<TEntity> GetAsync(int id)
         {
             return await context.FindAsync<TEntity>(id);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async virtual Task<bool> DeleteAsync(int id)
         {
             var entityToRemove = await context.FindAsync<TEntity>(id);
 
