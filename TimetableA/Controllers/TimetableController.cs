@@ -20,14 +20,13 @@ namespace TimetableA.API.Controllers
     [ApiController]
     public class TimetableController : ControllerBase
     {
-        private readonly ITimetableRepository repository;
+        private readonly ITimetableRepository timetablesRepo;
         private readonly ILogger logger;
         private readonly IMapper mapper;
-        private readonly IAuthService authService;
 
         public TimetableController(ITimetableRepository repository, IMapper mapper, ILogger<TimetableController> logger)
         {
-            this.repository = repository;
+            this.timetablesRepo = repository;
             this.mapper = mapper;
             this.logger = logger;
             repository.Logger = logger;
@@ -38,7 +37,7 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Admin)]
         public async Task<ActionResult<IEnumerable<TimetableOutputModel>>> Get()
         {
-            var timetable = await repository.GetAllAsync();
+            var timetable = await timetablesRepo.GetAllAsync();
 
             if (timetable == null)
                 return NotFound();
@@ -60,7 +59,7 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Read)]
         public async Task<ActionResult<TimetableOutputModel>> Get(int id)
         {
-            var timetable = await repository.GetAsync(id);
+            var timetable = await timetablesRepo.GetAsync(id);
 
             if (timetable == null)
                 return NotFound();
@@ -86,7 +85,7 @@ namespace TimetableA.API.Controllers
             newTimetable.EditKey = KeyGen.Generate();
             newTimetable.ReadKey = KeyGen.Generate();
 
-            if (await repository.SaveAsync(newTimetable))
+            if (await timetablesRepo.SaveAsync(newTimetable))
                 return Ok(newTimetable);
                 
 
@@ -98,12 +97,12 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit)]
         public async Task<ActionResult> Put(int id, [FromBody] TimetableInputModel input)
         {
-            var timetable = await repository.GetAsync(id);
+            var timetable = await timetablesRepo.GetAsync(id);
 
             timetable.Name = input.Name;
             timetable.Cycles = input.Cycles;
 
-            if (await repository.SaveAsync(timetable))
+            if (await timetablesRepo.SaveAsync(timetable))
                 return Ok();
 
             return Problem();
@@ -114,7 +113,7 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit)]
         public async Task<ActionResult> Delete(int id)
         {
-            if (await repository.DeleteAsync(id))
+            if (await timetablesRepo.DeleteAsync(id))
                 return Ok();
 
             return Problem();

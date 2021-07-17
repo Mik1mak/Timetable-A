@@ -7,7 +7,7 @@ using TimetableA.Entities.Models;
 
 namespace TimetableA.DataAccessLayer.Repositories.Abstract
 {
-    public interface ITimetableRepository : IRepository<Timetable>
+    public interface ILessonsRepository : IRepository<Lesson>
     {
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TimetableA.Entities.Models
 {
-    public class Group
+    public class Group : IModel
     {
         [Key]
         public int Id { get; set; }
@@ -25,8 +25,5 @@ namespace TimetableA.Entities.Models
         public Timetable Timetable { get; set; }
 
         public ICollection<Lesson> Lessons { get; set; }
-
-        [NotMapped]
-        public ICollection<Group> ExcludingGroups { get; set; }
     }
 }

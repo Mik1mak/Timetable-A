@@ -44,6 +44,8 @@ namespace TimetableA
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection"),
                 b => b.MigrationsAssembly(typeof(TimetableAContext).Assembly.FullName)));
             services.AddScoped<ITimetableRepository, TimetableRepository>();
+            services.AddScoped<IGroupsRepository, GroupsRepository>();
+            services.AddScoped<ILessonsRepository, LessonsRepository>();
             services.AddScoped<IAuthService, AuthService>();
 
 

@@ -19,12 +19,12 @@ namespace TimetableA.API.Helpers
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, ITimetableRepository TimetableRepo)
+        public async Task Invoke(HttpContext context, ITimetableRepository timetableRepo)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
-                await AttachTimetableToContext(context, TimetableRepo, token);
+                await AttachTimetableToContext(context, timetableRepo, token);
 
             await _next(context);
         }
@@ -46,8 +46,6 @@ namespace TimetableA.API.Helpers
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
                 var key = jwtToken.Claims.First(x => x.Type == "key").Value;
-
-                //if(context.Items["Id"])
 
                 context.Items["Timetable"] = await timetableRepo.GetAsync(userId);
                 context.Items["Key"] = key;

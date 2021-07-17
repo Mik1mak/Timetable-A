@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TimetableA.Entities.Models
 {
-    public class Lesson
+    public class Lesson : IModel
     {
         [Key]
         public int Id { get; set; }

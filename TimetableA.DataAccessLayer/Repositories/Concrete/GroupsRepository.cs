@@ -5,16 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TimetableA.Entities.Data;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
+using TimetableA.Entities.Data;
 using TimetableA.Entities.Models;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace TimetableA.DataAccessLayer.Repositories.Concrete
 {
-    public class TimetableRepository : BaseRepository<Timetable>, ITimetableRepository
+    public class GroupsRepository : BaseRepository<Group>, IGroupsRepository
     {
-        public TimetableRepository(TimetableAContext context) : base(context, null) { }
-
+        public GroupsRepository(TimetableAContext context) : base(context, null) { }
     }
 }

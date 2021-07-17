@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TimetableA.Entities.Data;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
+using Microsoft.EntityFrameworkCore;
+using TimetableA.Entities.Models;
 
 namespace TimetableA.DataAccessLayer.Repositories.Concrete
 {
-    public abstract class BaseRepository
+    public abstract class BaseRepository<TEntity> where TEntity : class, IModel
     {
         protected readonly TimetableAContext context;
         public ILogger Logger { protected get; set; }
@@ -18,6 +20,57 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
         {
             this.context = context;
             Logger = logger;
+        }
+
+        public async Task<bool> SaveAsync(TEntity entity)
+        {
+            try
+            {
+                if (entity == default)
+                    throw new ArgumentNullException(nameof(entity));
+
+                context.Entry(entity).State = entity.Id == default ? EntityState.Added : EntityState.Modified;
+
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await context.Set<TEntity>().ToListAsync();
+        }
+
+        public async Task<TEntity> GetAsync(int id)
+        {
+            return await context.FindAsync<TEntity>(id);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var entityToRemove = await context.FindAsync<TEntity>(id);
+
+            if (entityToRemove == default)
+                return false;
+
+            try
+            {
+                context.Remove<TEntity>(entityToRemove);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, ex.Message);
+                return false;
+            }
+
+            return true;
         }
     }
 }
