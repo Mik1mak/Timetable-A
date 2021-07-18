@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,13 @@ namespace TimetableA.API.Helpers
 {
     public class JwtMiddleware
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate next;
+        private readonly AppSettings appSettings;
 
-        public JwtMiddleware(RequestDelegate next)
+        public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
         {
-            _next = next;
+            this.next = next;
+            this.appSettings = appSettings.Value;
         }
 
         public async Task Invoke(HttpContext context, ITimetableRepository timetableRepo)
@@ -26,7 +29,7 @@ namespace TimetableA.API.Helpers
             if (token != null)
                 await AttachTimetableToContext(context, timetableRepo, token);
 
-            await _next(context);
+            await next(context);
         }
 
         private async Task AttachTimetableToContext(HttpContext context, ITimetableRepository timetableRepo, string token)
@@ -34,7 +37,7 @@ namespace TimetableA.API.Helpers
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var secretKey = Encoding.ASCII.GetBytes("super sekretny kluczyk"); //TODO secretKey
+                var secretKey = Encoding.ASCII.GetBytes(appSettings.Secret);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,

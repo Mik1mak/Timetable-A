@@ -40,9 +40,12 @@ namespace TimetableA
             });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             services.AddDbContext<TimetableAContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection"),
                 b => b.MigrationsAssembly(typeof(TimetableAContext).Assembly.FullName)));
+
             services.AddScoped<ITimetableRepository, TimetableRepository>();
             services.AddScoped<IGroupsRepository, GroupsRepository>();
             services.AddScoped<ILessonsRepository, LessonsRepository>();

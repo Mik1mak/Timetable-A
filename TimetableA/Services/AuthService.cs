@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,10 +23,12 @@ namespace TimetableA.API.Services
     public class AuthService : IAuthService
     {
         private readonly ITimetableRepository timetables;
+        private readonly AppSettings appSettings;
 
-        public AuthService(ITimetableRepository repository)
+        public AuthService(ITimetableRepository repository, IOptions<AppSettings> appSettings)
         {
             timetables = repository;
+            this.appSettings = appSettings.Value;
         }
 
         public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
@@ -61,7 +64,7 @@ namespace TimetableA.API.Services
         private string GenerateJwtToken(Timetable timetable, string key)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var keyJWT = Encoding.ASCII.GetBytes("super sekretny kluczyk"); //TODO secret key 
+            var keyJWT = Encoding.ASCII.GetBytes(appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] 
