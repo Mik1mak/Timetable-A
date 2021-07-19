@@ -22,16 +22,19 @@ namespace TimetableA.API.Controllers
     {
         private readonly ITimetableRepository timetablesRepo;
         private readonly IGroupsRepository groupsRepo;
+        private readonly ILessonsRepository lessonsRepo;
         //private readonly ILogger logger;
         private readonly IMapper mapper;
 
-        public TimetableController(ITimetableRepository timetableRepo, IGroupsRepository groupsRepo, IMapper mapper, ILogger<TimetableController> logger)
+        public TimetableController(ITimetableRepository timetableRepo, IGroupsRepository groupsRepo, ILessonsRepository lessonsRepo,
+            IMapper mapper, ILogger<TimetableController> logger)
         {
             this.timetablesRepo = timetableRepo;
             this.groupsRepo = groupsRepo;
+            this.lessonsRepo = lessonsRepo;
             this.mapper = mapper;
             //this.logger = logger;
-            timetableRepo.Logger = groupsRepo.Logger = logger;
+            timetableRepo.Logger = groupsRepo.Logger = lessonsRepo.Logger = logger;
         }
 
         #region Timetable
@@ -152,10 +155,9 @@ namespace TimetableA.API.Controllers
         {
             var group = await groupsRepo.GetAsync(groupId);
 
-            if (group == null)
-                return NotFound();
-            if (group.TimetableId != id)
-                return BadRequest();
+            var result = ValidId(id, group);
+            if (result != null)
+                return result;
 
             var output = mapper.Map<GroupOutputModel>(group);
             return Ok(output);
@@ -183,20 +185,16 @@ namespace TimetableA.API.Controllers
         {
             var group = await groupsRepo.GetAsync(groupId);
 
-            if (group == null)
-                return NotFound();
+            var result = ValidId(id, group);
+            if (result != null)
+                return result;
 
-            if(group.TimetableId == id)
-            {
-                group.Name = input.Name;
-                group.HexColor = input.HexColor;
+            group.Name = input.Name;
+            group.HexColor = input.HexColor;
 
-                if (await groupsRepo.SaveAsync(group))
-                    return Ok();
-                return Problem();
-            }
-
-            return BadRequest();
+            if (await groupsRepo.SaveAsync(group))
+                return Ok();
+            return Problem();
         }
 
         [HttpDelete("{id}/Group/{groupId}")]
@@ -205,17 +203,125 @@ namespace TimetableA.API.Controllers
         {
             var groupToDel = await groupsRepo.GetAsync(groupId);
 
-            if (groupToDel == null)
+            var result = ValidId(id, groupToDel);
+            if (result != null)
+                return result;
+
+            if (await groupsRepo.DeleteAsync(groupId))
+                return Ok();
+            return Problem();
+        }
+        #endregion
+
+        #region Lessons
+        [HttpPost("{id}/Group/{groupId}/Lesson")]
+        [Authorize(AuthLevel.Edit)]
+        public async Task<ActionResult<LessonOutputModel>> AddLesson(int id, int groupId, [FromBody] LessonInputModel input)
+        {
+            if (input == null)
+                return BadRequest("Lesson can't be null.");
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var result = ValidId(id, await groupsRepo.GetAsync(groupId));
+            if (result != null)
+                return result;
+
+            var lessonToAdd = mapper.Map<Lesson>(input);
+            lessonToAdd.GroupId = groupId;
+            //TODO validacja
+
+            if (await lessonsRepo.SaveAsync(lessonToAdd))
+                return Ok(lessonToAdd);
+
+            return Problem();
+        }
+
+
+        [HttpGet("{id}/Group/{groupId}/Lesson/{lessonId}")]
+        [Authorize(AuthLevel.Read)]
+        public async Task<ActionResult<GroupOutputModel>> GetLesson(int id, int groupId, int lessonId)
+        {
+            var group = await groupsRepo.GetAsync(groupId);
+
+            var result = ValidId(id, group, lessonId);
+            if (result != null)
+                return result;
+
+            var output = mapper.Map<LessonOutputModel>(group.Lessons.First(x => x.Id == lessonId));
+            return Ok(output);
+        }
+
+        [HttpGet("{id}/Groups/{groupId}/Lessons")]
+        [Authorize(AuthLevel.Read)]
+        public async Task<ActionResult<IEnumerable<LessonOutputModel>>> GetLessons(int id, int groupId)
+        {
+            var group = await groupsRepo.GetAsync(groupId);
+
+            var result = ValidId(id, group);
+            if (result != null)
+                return result;
+
+            return Ok(group.Lessons.Select(x => mapper.Map<LessonOutputModel>(x)));
+        }
+
+        [HttpPut("{id}/Group/{groupId}/Lesson/{lessonId}")]
+        [Authorize(AuthLevel.Edit)]
+        public async Task<ActionResult> PutLesson(int id, int groupId, int lessonId, [FromBody] LessonInputModel input)
+        {
+            var group = await groupsRepo.GetAsync(groupId);
+
+            var result = ValidId(id, group, lessonId);
+            if (result != null)
+                return result;
+
+            var lesson = await lessonsRepo.GetAsync(lessonId);
+            lesson.Name = input.Name;
+            lesson.Start = input.Start;
+            lesson.Duration = TimeSpan.FromMinutes(input.Duration);
+            lesson.Link = input.Link;
+            lesson.Classroom = input.Classroom;
+
+            if (await lessonsRepo.SaveAsync(lesson))
+                return Ok();
+            return Problem();
+        }
+
+        [HttpDelete("{id}/Group/{groupId}/Lesson/{lessonId}")]
+        [Authorize(AuthLevel.Edit)]
+        public async Task<ActionResult> DeleteLesson(int id, int groupId, int lessonId)
+        {
+            var group = await groupsRepo.GetAsync(groupId);
+            var result = ValidId(id, group, lessonId);
+            if (result != null)
+                return result;
+
+            if (await lessonsRepo.DeleteAsync(lessonId))
+                return Ok();
+            return Problem();
+        }
+
+        private ActionResult ValidId(int timetableId, Group group, int? lessonId = null)
+        {
+            if (group == null)
                 return NotFound();
 
-            if(groupToDel.TimetableId == id)
+            if (group.TimetableId != timetableId)
+                return BadRequest();
+
+            if(lessonId != null)
             {
-                if (await groupsRepo.DeleteAsync(groupId))
-                    return Ok();
-                return Problem();
+                if (group.Lessons != null)
+                {
+                    if (!group.Lessons.Any(x => x.Id == lessonId))
+                        return NotFound();
+                }
+                else
+                    return NotFound();
             }
 
-            return BadRequest();
+            return null;
         }
         #endregion
     }

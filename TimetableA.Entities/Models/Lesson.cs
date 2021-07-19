@@ -11,6 +11,13 @@ namespace TimetableA.Entities.Models
 {
     public class Lesson : IModel
     {
+        public Lesson() { }
+
+        public Lesson(int duration)
+        {
+            Duration = TimeSpan.FromMinutes(duration);
+        }
+
         [Key]
         public int Id { get; set; }
 

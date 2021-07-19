@@ -20,7 +20,18 @@ namespace TimetableA.API.Models.OutputModels
                     Id = x.Id,
                     Name = x.Name,
                     HexColor = x.HexColor,
-                    Lessons = x.Lessons,
+                    Lessons = x.Lessons?.Select(y =>
+                    {
+                        return new LessonOutputModel
+                        {
+                            Id = y.Id,
+                            Name = y.Name,
+                            Start = y.Start,
+                            Duration = (int)y.Duration.TotalMinutes,
+                            Link = y.Link,
+                            Classroom = y.Classroom,
+                        };
+                    }).ToList(),
                 };
             }).ToList();
             this.Cycles = model.Cycles;

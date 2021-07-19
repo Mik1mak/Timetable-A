@@ -13,8 +13,11 @@ namespace TimetableA.API.Helpers
     {
         public AutoMapperBaseProfile()
         {
+            CreateMap<LessonInputModel, Lesson>();
             CreateMap<GroupInputModel, Group>();
             CreateMap<TimetableInputModel, Timetable>();
+
+            CreateMap<Lesson, LessonOutputModel>();
             CreateMap<Group, GroupOutputModel>();
             CreateMap<Timetable, TimetableOutputModel>();
         }
