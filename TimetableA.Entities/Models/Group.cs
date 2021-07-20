@@ -27,5 +27,17 @@ namespace TimetableA.Entities.Models
         public Timetable Timetable { get; set; }
 
         public ICollection<Lesson> Lessons { get; set; }
+
+        public bool CollidesWith(Group group2)
+        {
+            foreach (var lesson in Lessons)
+                foreach (var lesson2 in group2.Lessons)
+                    if (lesson.CollidesWith(lesson2))
+                        return true;
+
+            return false;
+        }
+
+        public IEnumerable<int> CollidingGroupsIds(IEnumerable<Group> groups) => groups?.Where(x => CollidesWith(x))?.Select(x => x.Id);
     }
 }

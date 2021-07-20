@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TimetableA.API.Models.InputModels
 {
-    public class LessonInputModel
+    public class LessonInputModel : IValidatableObject
     {
         [Required]
         [MaxLength(64)]
@@ -25,5 +25,11 @@ namespace TimetableA.API.Models.InputModels
 
         [MaxLength(512)]
         public string Link { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if((Start + TimeSpan.FromMinutes(Duration)).Date != Start.Date)
+                yield return new ValidationResult($"End of lesson must be in this same day", new[] { nameof(Start), nameof(Duration) });
+        }
     }
 }

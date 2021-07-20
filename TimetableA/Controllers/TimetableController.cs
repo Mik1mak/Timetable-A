@@ -26,15 +26,15 @@ namespace TimetableA.API.Controllers
         //private readonly ILogger logger;
         private readonly IMapper mapper;
 
-        public TimetableController(ITimetableRepository timetableRepo, IGroupsRepository groupsRepo, ILessonsRepository lessonsRepo,
+        public TimetableController(ITimetableRepository timetablesRepo, IGroupsRepository groupsRepo, ILessonsRepository lessonsRepo,
             IMapper mapper, ILogger<TimetableController> logger)
         {
-            this.timetablesRepo = timetableRepo;
+            this.timetablesRepo = timetablesRepo;
             this.groupsRepo = groupsRepo;
             this.lessonsRepo = lessonsRepo;
             this.mapper = mapper;
             //this.logger = logger;
-            timetableRepo.Logger = groupsRepo.Logger = lessonsRepo.Logger = logger;
+            timetablesRepo.Logger = groupsRepo.Logger = lessonsRepo.Logger = logger;
         }
 
         #region Timetable
@@ -179,6 +179,21 @@ namespace TimetableA.API.Controllers
             return Ok(timetable.Gropus.Select(x => mapper.Map<GroupOutputModel>(x)));
         }
 
+        [HttpGet("{id}/CollidingGroups/{groupId}")]
+        [Authorize(AuthLevel.Read)]
+        public async Task<ActionResult<IEnumerable<int>>> CollidingGroups(int id, int groupId)
+        {
+            var group = await groupsRepo.GetAsync(groupId);
+
+            var result = ValidId(id, group);
+            if (result != null)
+                return result;
+
+            var otherGroups = (await timetablesRepo.GetAsync(id)).Gropus?.Where(x => x.Id != group.Id);
+
+            return Ok(group.CollidingGroupsIds(otherGroups));
+        }
+
         [HttpPut("{id}/Group/{groupId}")]
         [Authorize(AuthLevel.Edit)]
         public async Task<ActionResult> PutGroup(int id, int groupId, [FromBody] GroupInputModel input)
@@ -224,13 +239,17 @@ namespace TimetableA.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var result = ValidId(id, await groupsRepo.GetAsync(groupId));
+            var group = await groupsRepo.GetAsync(groupId);
+
+            var result = ValidId(id, group);
             if (result != null)
                 return result;
 
             var lessonToAdd = mapper.Map<Lesson>(input);
             lessonToAdd.GroupId = groupId;
-            //TODO validacja
+
+            if (group.Lessons.Any(x => x.CollidesWith(lessonToAdd)))
+                return BadRequest("Lesson can't collide with other existing lessons in same group.");
 
             if (await lessonsRepo.SaveAsync(lessonToAdd))
                 return Ok(lessonToAdd);
@@ -282,6 +301,9 @@ namespace TimetableA.API.Controllers
             lesson.Duration = TimeSpan.FromMinutes(input.Duration);
             lesson.Link = input.Link;
             lesson.Classroom = input.Classroom;
+
+            if (group.Lessons.Any(x => x.CollidesWith(lesson)))
+                return BadRequest("Lesson can't collide with other existing lessons in this same group.");
 
             if (await lessonsRepo.SaveAsync(lesson))
                 return Ok();
