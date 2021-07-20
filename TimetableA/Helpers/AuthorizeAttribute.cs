@@ -13,16 +13,28 @@ namespace TimetableA.API.Helpers
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         private readonly AuthLevel minimumLevel;
+        private readonly IAuthValidationMethod authValMethod;
+        private readonly string idKey;
         public AuthorizeAttribute(AuthLevel minimumLevel)
         {
             this.minimumLevel = minimumLevel;
+            this.idKey = "id";
+        }
+        public AuthorizeAttribute(AuthLevel minimumLevel, Type AuthValidationMethod, string idKey = "id")
+        {
+            if (AuthValidationMethod.GetInterface(nameof(IAuthValidationMethod)) == null)
+                throw new ArgumentException($"type of Auth Validation Method must implement {nameof(IAuthValidationMethod)}");
+
+            this.minimumLevel = minimumLevel;
+            this.authValMethod = (IAuthValidationMethod)Activator.CreateInstance(AuthValidationMethod);
+            this.idKey = idKey;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var key = (string)context.HttpContext.Items["Key"];
             var timetable = (Timetable)context.HttpContext.Items["Timetable"];
-            var requestId = (string)context.HttpContext.Request.RouteValues["id"];
+            var requestId = (string)context.HttpContext.Request.RouteValues[idKey];
 
             bool isInvalid = false;
 
@@ -30,13 +42,19 @@ namespace TimetableA.API.Helpers
                 isInvalid = true;
             else if (minimumLevel > GetAuthLevel(timetable, key))
                 isInvalid = true;
-            else if(!string.IsNullOrEmpty(requestId))
-            {
-                if (requestId != timetable.Id.ToString())
-                    isInvalid = true;
-            }
 
-            if(isInvalid)
+            if (!string.IsNullOrEmpty(requestId))
+            {
+                if (timetable == null)
+                    isInvalid = true;
+                else if (!authValMethod.Valid(requestId, timetable))
+                {
+                    context.Result = new JsonResult(new { message = "Unauthorized or not found" }) { StatusCode = StatusCodes.Status400BadRequest };
+                    isInvalid = false;
+                }
+            }
+                
+            if (isInvalid)
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }
 
