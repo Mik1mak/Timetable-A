@@ -10,10 +10,10 @@ namespace TimetableA.API.Helpers
     {
         public bool Valid(string id, Timetable timetable)
         {   
-            if (timetable.Gropus == null)
+            if (timetable.Groups == null)
                 return false;
 
-            foreach (var group in timetable.Gropus)
+            foreach (var group in timetable.Groups)
             {
                 if (group.Lessons != null)
                     if (group.Lessons.Any(x => x.Id.ToString() == id))

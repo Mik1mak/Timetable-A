@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimetableA.Entities.Data;
 
 namespace TimetableA.Entities.Migrations
 {
     [DbContext(typeof(TimetableAContext))]
-    partial class TimetableAContextModelSnapshot : ModelSnapshot
+    [Migration("20210803133935_timetableUpdate")]
+    partial class timetableUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,7 +112,7 @@ namespace TimetableA.Entities.Migrations
             modelBuilder.Entity("TimetableA.Entities.Models.Group", b =>
                 {
                     b.HasOne("TimetableA.Entities.Models.Timetable", "Timetable")
-                        .WithMany("Groups")
+                        .WithMany("Gropus")
                         .HasForeignKey("TimetableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -136,7 +138,7 @@ namespace TimetableA.Entities.Migrations
 
             modelBuilder.Entity("TimetableA.Entities.Models.Timetable", b =>
                 {
-                    b.Navigation("Groups");
+                    b.Navigation("Gropus");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,7 +19,7 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
         public async override Task<IEnumerable<Timetable>> GetAllAsync()
         {
             return await context.Set<Timetable>()
-                .Include(x => x.Gropus)
+                .Include(x => x.Groups)
                 .ThenInclude(x => x.Lessons)
                 .ToListAsync();
         }
@@ -27,7 +27,7 @@ namespace TimetableA.DataAccessLayer.Repositories.Concrete
         public async override Task<Timetable> GetAsync(int id)
         {
             return await context.Set<Timetable>()
-                .Include(x => x.Gropus)
+                .Include(x => x.Groups)
                 .ThenInclude(x => x.Lessons)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

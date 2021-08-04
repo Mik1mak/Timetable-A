@@ -1,21 +1,23 @@
 import { Component } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { User } from '@app/_models';
-import { UserService } from '@app/_services';
+import { TimetableService } from '@app/_services';
+import { Group, Timetable } from '@app/_models';
 
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent {
     loading = false;
-    users!: User[];
+    timetable?: Timetable;
+    groups?: Group[];
 
-    constructor(private userService: UserService) { }
+     constructor(private timetableService: TimetableService) { }
 
     ngOnInit() {
         this.loading = true;
-        this.userService.getAll().pipe(first()).subscribe(users => {
+        this.timetableService.get().pipe(first()).subscribe(timetable => {
             this.loading = false;
-            this.users = users;
+            this.timetable = timetable;
+            this.groups = timetable.groups;
         });
     }
 }

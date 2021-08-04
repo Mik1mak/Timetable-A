@@ -24,8 +24,12 @@ namespace TimetableA.Entities.Models
 
         public int Cycles { get; set; }
 
+        public int StartHour { get; set; }
+
+        public int StopHour { get; set; }
+
         public DateTime CreateDate { get; set; }
 
-        public ICollection<Group> Gropus { get; set; }
+        public ICollection<Group> Groups { get; set; }
     }
 }

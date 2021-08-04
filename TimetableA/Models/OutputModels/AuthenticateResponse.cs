@@ -14,7 +14,7 @@ namespace TimetableA.API.Models.OutputModels
             this.Id = model.Id;
             this.Key = model.EditKey ?? model.ReadKey;
             this.Name = model.Name;
-            this.Gropus = model.Gropus?.Select(x => {
+            this.Groups = model.Groups?.Select(x => {
                 return new GroupOutputModel
                 {
                     Id = x.Id,

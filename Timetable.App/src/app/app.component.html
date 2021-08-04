@@ -1,7 +1,23 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-  <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLink="/" routerLinkActive="active">Home</a>
+<!-- <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser?.id">
+  <div class="container-fluid">
+      <a class="navbar-brand nav-link" routerLink="/" routerLinkActive="active">{{currentUser?.name}}</a>
       <a class="nav-item nav-link" (click)="logout()">Logout</a>
+      <form class="collapse navbar-collapse d-flex">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+        </ul>
+      </form>
+  </div>
+</nav> -->
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand">Navbar</a>
+    <div class="d-flex">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </div>
   </div>
 </nav>
 

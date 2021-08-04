@@ -61,12 +61,12 @@ namespace TimetableA.API.Controllers
         {
             var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
 
-            if (timetable.Gropus == null)
+            if (timetable.Groups == null)
                 return NotFound();
-            if (!timetable.Gropus.Any())
+            if (!timetable.Groups.Any())
                 return NotFound();
 
-            return Ok(timetable.Gropus.Select(x => mapper.Map<GroupOutputModel>(x)));
+            return Ok(timetable.Groups.Select(x => mapper.Map<GroupOutputModel>(x)));
         }
 
         [HttpGet("{id}/CollidingGroups")]
@@ -75,7 +75,7 @@ namespace TimetableA.API.Controllers
         {
             var group = await groupsRepo.GetAsync(id);
             var timetable = await timetablesRepo.GetAsync(group.TimetableId);
-            var otherGroups = timetable.Gropus?.Where(x => x.Id != group.Id);
+            var otherGroups = timetable.Groups?.Where(x => x.Id != group.Id);
 
             return Ok(group.CollidingGroupsIds(otherGroups));
         }
