@@ -1,7 +1,7 @@
 import { Lesson } from "./lesson";
 
 export class Group {
-    id: string;
+    id: number;
     name: string;
     hexColor: string;
     lessons: Array<Lesson>

@@ -22,10 +22,13 @@ namespace TimetableA.API.Controllers
     {
         private readonly ITimetableRepository timetablesRepo;
         private readonly IMapper mapper;
+        private readonly IAuthService authService;
 
-        public TimetableController(ITimetableRepository timetablesRepo, IMapper mapper, ILogger<TimetableController> logger)
+        public TimetableController(ITimetableRepository timetablesRepo, IAuthService authService,
+            IMapper mapper, ILogger<TimetableController> logger)
         {
             this.timetablesRepo = timetablesRepo;
+            this.authService = authService;
             this.mapper = mapper;
             timetablesRepo.Logger = logger;
         }
@@ -64,7 +67,7 @@ namespace TimetableA.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Timetable>> Post(TimetableInputModel input)
+        public async Task<ActionResult<AuthenticateResponse>> Post(TimetableInputModel input)
         {
             var newTimetable = mapper.Map<Timetable>(input);
 
@@ -73,7 +76,12 @@ namespace TimetableA.API.Controllers
             newTimetable.ReadKey = KeyGen.Generate();
 
             if (await timetablesRepo.SaveAsync(newTimetable))
-                return Ok(newTimetable);
+            {
+                var authRequest = new AuthenticateRequest { Id = newTimetable.Id, Key = newTimetable.EditKey };
+                var response = await authService.Authenticate(authRequest);
+                return Ok(response);
+            }
+                
                 
             return Problem();
         }

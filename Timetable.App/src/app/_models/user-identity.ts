@@ -4,12 +4,6 @@ export class UserIdentity {
     editKey?: string;
     readKey?: string;
     createDate?: Date;
+    cycles?: number;
     token?: string;
-
-    public get editMode() 
-    {
-        if(this.editKey)
-            return true;
-        return false;
-    }
 }

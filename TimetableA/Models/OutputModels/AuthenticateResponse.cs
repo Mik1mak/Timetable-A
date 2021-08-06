@@ -7,43 +7,38 @@ using TimetableA.Entities.Models;
 
 namespace TimetableA.API.Models.OutputModels
 {
-    public class AuthenticateResponse : TimetableOutputModel
+    public class AuthenticateResponse
     {
-        public AuthenticateResponse(Timetable model, string token, AuthLevel authLvl)
+        public AuthenticateResponse(Timetable model, string token)
         {
             this.Id = model.Id;
-            this.Key = model.EditKey ?? model.ReadKey;
             this.Name = model.Name;
-            this.Groups = model.Groups?.Select(x => {
-                return new GroupOutputModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    HexColor = x.HexColor,
-                    Lessons = x.Lessons?.Select(y =>
-                    {
-                        return new LessonOutputModel
-                        {
-                            Id = y.Id,
-                            Name = y.Name,
-                            Start = y.Start,
-                            Duration = (int)y.Duration.TotalMinutes,
-                            Link = y.Link,
-                            Classroom = y.Classroom,
-                        };
-                    }).ToList(),
-                };
-            }).ToList();
             this.Cycles = model.Cycles;
             this.CreateDate = model.CreateDate;
+            this.ReadKey = model.ReadKey;
+            this.EditKey = model.EditKey;
+            this.StartHour = model.StartHour;
+            this.StopHour = model.StopHour;
 
             Token = token;
-            this.authLevel = authLvl;
         }
 
-        public string Token { get; set; }
+        public int Id { get; set; }
 
-        private readonly AuthLevel authLevel;
-        public string AuthLevel { get => authLevel.GetStr(); } 
+        public string Name { get; set; }
+
+        public string ReadKey { get; set; }
+
+        public string EditKey { get; set; }
+
+        public int Cycles { get; set; }
+
+        public int StartHour { get; set; }
+
+        public int StopHour { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        public string Token { get; set; }
     }
 }

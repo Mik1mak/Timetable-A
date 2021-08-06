@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '@app/_services';
-import { environment } from '@environments/environment';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
@@ -17,12 +16,7 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
-    ) { 
-        // if (this.authenticationService.currentUserValue) { 
-        //     this.router.navigate(['/']);
-        // }
-    }
+        private authenticationService: AuthenticationService) {}
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({

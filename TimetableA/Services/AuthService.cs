@@ -39,18 +39,14 @@ namespace TimetableA.API.Services
                 return null;
 
             string token;
-            AuthLevel authLvl;
 
             if (timetable.ReadKey == model.Key)
             {
-                authLvl = AuthLevel.Read;
                 timetable.EditKey = default;
                 token = GenerateJwtToken(timetable, model.Key);
             }
             else if(timetable.EditKey == model.Key)
             {
-                authLvl = AuthLevel.Edit;
-                timetable.ReadKey = default;
                 token = GenerateJwtToken(timetable, model.Key);
             }
             else
@@ -58,7 +54,7 @@ namespace TimetableA.API.Services
                 return null;
             }
 
-            return new AuthenticateResponse(timetable, token, authLvl);
+            return new AuthenticateResponse(timetable, token);
         }
 
         private string GenerateJwtToken(Timetable timetable, string key)

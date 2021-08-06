@@ -14,7 +14,7 @@ export class TimetableService {
         return this.http.get<Timetable>(this.url);
     }
 
-    update(timetable: Timetable) {
+    update(timetable: UserIdentity) {
         this.http.put(this.url, timetable);
     }
 

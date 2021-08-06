@@ -10,6 +10,12 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register/register.component';
+import { ShereComponent } from './shere/shere.component';
+import { GroupsComponent } from './groups/groups.component';
+import { SettingsComponent } from './settings/settings.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { ToastsComponent } from './toasts/toasts.component';
+import { GroupComponent } from './group/group.component';
 
 @NgModule({
     imports: [
@@ -22,7 +28,13 @@ import { RegisterComponent } from './register/register.component';
         AppComponent,
         HomeComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        ShereComponent,
+        GroupsComponent,
+        SettingsComponent,
+        NavbarComponent,
+        ToastsComponent,
+        GroupComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

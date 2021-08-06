@@ -22,9 +22,16 @@ export class AuthenticationService {
     }
 
     login(id: number, key: string) {
-        return this.http.post<any>(environment.apiUrl+'/Authenticate/Auth', { id, key })
+        return this.getUser(environment.apiUrl+'/Authenticate/Auth', { id, key });
+    }
+
+    register(name: string, cycles: number){
+        return this.getUser(environment.apiUrl+'/api/Timetable', {name, cycles});
+    }
+
+    private getUser(url: string, request: any) {
+        return this.http.post<any>(url, request)
             .pipe(map(user => {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);
                 return user;
