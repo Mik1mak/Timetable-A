@@ -1,12 +1,15 @@
-<div class="d-flex flex-row bd-highlight">
-    <div class="p-1"><strong>Grupy</strong></div>
-    <div class="p-1">
-        <span class="badge rounded-pill bg-primary">{{groups.length}}</span>
+<div class="col-12 d-flex align-items-center px-1 c-prim">
+    <div class="p-2 flex-grow-1">
+        <h6 class="m-0">
+            <strong>Grupy </strong>
+            <small class="fw-lighter">{{groups?.length}}/10</small>
+        </h6>
     </div>
-    <div class="p-1">
-        <i class="bi bi-three-dots-vertical text-primary"></i>
+    <div class="p-2">
+        <i class="bi bi-plus-lg"></i>
     </div>
 </div>
+<hr class="m-0">
 <div *ngFor="let group of groups">
     <app-group [group]="group"></app-group>
 </div>

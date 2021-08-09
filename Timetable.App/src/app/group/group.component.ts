@@ -12,12 +12,13 @@ export class GroupComponent implements OnInit {
   selectable = true;
   selected = false;
 
-  constructor(private groupService: GroupsService) {
+  constructor(private groupService: GroupsService) {}
+
+  ngOnInit() 
+  {
     this.groupService.selected.subscribe(async () => {
       this.selectable = await this.groupService.isSelectable(this.group.id);
     });
   }
-
-  ngOnInit() {}
 
 }

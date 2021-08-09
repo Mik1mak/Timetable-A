@@ -1,8 +1,8 @@
-<div class="row">
-    <div class="col-12 col-sm-3 col-md-2 col-xxl-1 p-0 bg-light">
+<div class="row" [ngClass]="{'min-vh-content': width >= 576}">
+    <div class="col-12 col-sm-3 col-md-2 p-0 bg-light border-end">
         <app-groups></app-groups>
     </div>
-    <div class="col-12 col-sm-9 col-md-10 col-xxl-11">
+    <div class="col-12 col-sm-9 col-md-10">
         tabelka
     </div>
 </div>

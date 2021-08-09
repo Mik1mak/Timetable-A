@@ -5,3 +5,18 @@ html, body{
     margin: 0;
     padding: 0;
 }
+
+.c-prim {
+    background-color: #1565c0;
+    color: #fff;
+}
+
+.c-light {
+    background-color: #5e92f3;
+    /* color: #fff; */
+}
+
+.c-dark {
+    background-color: #003c8f;
+    color: #fff;
+}
