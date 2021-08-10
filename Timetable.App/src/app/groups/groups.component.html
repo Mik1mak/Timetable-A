@@ -1,15 +1,23 @@
+<app-group-modal-add></app-group-modal-add>
 <div class="col-12 d-flex align-items-center px-1 c-prim">
     <div class="p-2 flex-grow-1">
         <h6 class="m-0">
             <strong>Grupy </strong>
-            <small class="fw-lighter">{{groups?.length}}/10</small>
+            <small class="fw-lighter">{{groupsLength}}/10</small>
         </h6>
     </div>
     <div class="p-2">
-        <i class="bi bi-plus-lg"></i>
+        <button class="btn" type="button" (click)="showAddModal()">
+            <i class="bi bi-plus-lg" style="color: white;"></i>
+        </button>
     </div>
 </div>
 <hr class="m-0">
+<div class="text-center my-5" *ngIf="loading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
 <div *ngFor="let group of groups">
-    <app-group [group]="group"></app-group>
+    <app-group [group]="group" (showEditModalOutput)="showEditModal($event)"></app-group>
 </div>
