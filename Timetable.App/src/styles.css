@@ -1,7 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
 html, body{
     min-height: 100vh;
     width: 100%;
     margin: 0;
     padding: 0;
+}
+
+.c-prim {
+    background-color: #1565c0;
+    color: #fff;
+}
+
+.c-light {
+    background-color: #5e92f3;
+    /* color: #fff; */
+}
+
+.c-dark {
+    background-color: #003c8f;
+    color: #fff;
 }

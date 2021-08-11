@@ -1,12 +1,24 @@
-<div class="d-flex flex-row bd-highlight">
-    <div class="p-1"><strong>Grupy</strong></div>
-    <div class="p-1">
-        <span class="badge rounded-pill bg-primary">{{groups.length}}</span>
+<app-group-modal-add></app-group-modal-add>
+<app-group-modal-edit [groupToEdit]="groupToEdit"></app-group-modal-edit>
+<div class="col-12 d-flex align-items-center px-1 c-prim">
+    <div class="p-2 flex-grow-1">
+        <h6 class="m-0">
+            <strong>Groups </strong>
+            <small class="fw-lighter">{{groupsLength}}/10</small>
+        </h6>
     </div>
-    <div class="p-1">
-        <i class="bi bi-three-dots-vertical"></i>
+    <div class="p-2">
+        <button class="btn" type="button" (click)="showAddModal()">
+            <i class="bi bi-plus-lg" style="color: white;"></i>
+        </button>
     </div>
 </div>
+<hr class="m-0">
+<div class="text-center my-5" *ngIf="groupsService.loading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
 <div *ngFor="let group of groups">
-    <app-group [group]="group"></app-group>
+    <app-group [group]="group" (showEditModalEvent)="showEditModal($event)"></app-group>
 </div>
