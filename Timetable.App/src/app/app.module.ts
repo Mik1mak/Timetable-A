@@ -17,6 +17,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ToastsComponent } from './toasts/toasts.component';
 import { GroupComponent } from './group/group.component';
 import { GroupModalAddComponent } from './group-modal-add/group-modal-add.component';
+import { GroupModalEditComponent } from './group-modal-edit/group-modal-edit.component';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import { GroupModalAddComponent } from './group-modal-add/group-modal-add.compon
         NavbarComponent,
         ToastsComponent,
         GroupComponent,
-        GroupModalAddComponent
+        GroupModalAddComponent,
+        GroupModalEditComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

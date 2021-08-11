@@ -1,8 +1,9 @@
 <app-group-modal-add></app-group-modal-add>
+<app-group-modal-edit [groupToEdit]="groupToEdit"></app-group-modal-edit>
 <div class="col-12 d-flex align-items-center px-1 c-prim">
     <div class="p-2 flex-grow-1">
         <h6 class="m-0">
-            <strong>Grupy </strong>
+            <strong>Groups </strong>
             <small class="fw-lighter">{{groupsLength}}/10</small>
         </h6>
     </div>
@@ -13,11 +14,11 @@
     </div>
 </div>
 <hr class="m-0">
-<div class="text-center my-5" *ngIf="loading">
+<div class="text-center my-5" *ngIf="groupsService.loading">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 <div *ngFor="let group of groups">
-    <app-group [group]="group" (showEditModalOutput)="showEditModal($event)"></app-group>
+    <app-group [group]="group" (showEditModalEvent)="showEditModal($event)"></app-group>
 </div>

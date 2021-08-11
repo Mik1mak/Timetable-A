@@ -4,7 +4,8 @@ export class Group {
     id: number;
     name: string;
     hexColor: string;
-    lessons: Array<Lesson>
+    lessons: Array<Lesson>;
+    collidingGroups: number[];
 
     constructor(data: any)
     {
@@ -16,5 +17,10 @@ export class Group {
             this.lessons = data.lessons.Map((lesson: any) => new Lesson(lesson));
         else
             this.lessons = [];
+
+        if(data.collidingGroups)
+            this.collidingGroups = data.collidingGroups;
+        else
+            this.collidingGroups = [];
     }
 }

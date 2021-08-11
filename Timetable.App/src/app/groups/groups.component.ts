@@ -9,24 +9,25 @@ import Modal from 'bootstrap/js/dist/modal';
   templateUrl: './groups.component.html'
 })
 export class GroupsComponent implements OnInit {
-  loading = false;
   groupToEdit?: Group;
   groups!: Group[];
+  groupsService: GroupsService;
 
-  constructor(private groupsService: GroupsService, private toaster: ToasterService) { }
+  constructor(groupsService: GroupsService, private toaster: ToasterService) { 
+    this.groupsService = groupsService;
+  }
 
   ngOnInit() {
-    this.loading = true;
-    this.groupsService.getAll().subscribe({
-      next: groups => {
-        this.loading = false;
+    this.groupsService.groups.subscribe({
+      next: (groups: Group[]) => {
         this.groups = groups;
       },
       error: err => {
-        this.loading = false;
         this.toaster.add(err);
       }
-    });
+    })
+
+    this.groupsService.refreshGroups();
   }
 
   public get groupsLength() {
@@ -36,17 +37,20 @@ export class GroupsComponent implements OnInit {
   }
 
   showAddModal() {
-    this.groupToEdit = undefined;
-    this.showModal();
+    if(this.groupsLength >= 10)
+    {
+      this.toaster.add('max count of groups is 10');
+      return;
+    }
+
+    let modalElement = <Element>document.getElementById('group-modal-add');
+    let modal = new Modal(modalElement, {});
+    modal.show();
   }
 
   showEditModal(group: Group) {
     this.groupToEdit = group;
-    this.showModal();
-  }
-
-  private showModal() {
-    let modalElement = <Element>document.getElementById('group-modal-add');
+    let modalElement = <Element>document.getElementById('group-modal-edit');
     let modal = new Modal(modalElement, {});
     modal.show();
   }

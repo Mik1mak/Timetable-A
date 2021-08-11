@@ -8,8 +8,8 @@ import { ToasterService } from '@app/_services/toaster.service';
   templateUrl: './group.component.html'
 })
 export class GroupComponent implements OnInit {
-  @Input() group!: Group;
   @Output() showEditModalEvent = new EventEmitter<Group>();
+  @Input() group!: Group;
 
   disabled = true;
   selected = false;
@@ -19,26 +19,26 @@ export class GroupComponent implements OnInit {
   ngOnInit() 
   {
     this.groupService.selected.subscribe({
-      next: async () => await this.isDisabled(),
+      next: () => this.isDisabled(),
       error: err => this.toaster.add(err)
     });
-    this.isDisabled();
+    //this.isDisabled();
   }
 
-  async isDisabled() {
-    this.disabled = !(await this.groupService.isSelectable(this.group.id));
+  isDisabled() {
+    this.disabled = !this.groupService.isSelectable(this.group);
   }
 
   toggle() {
     if(!this.disabled)
     {
       if(this.selected) {
-        this.groupService.unselect(this.group.id);
+        this.groupService.unselect(this.group);
         this.selected = false;
       }
       else
       {
-        this.groupService.select(this.group.id);
+        this.groupService.select(this.group);
         this.selected = true;
       }
     }
@@ -48,4 +48,7 @@ export class GroupComponent implements OnInit {
     this.showEditModalEvent.emit(this.group);
   }
 
+  remove() {
+    this.groupService.delete(this.group);
+  }
 }
