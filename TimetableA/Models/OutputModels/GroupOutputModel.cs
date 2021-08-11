@@ -14,6 +14,8 @@ namespace TimetableA.API.Models.OutputModels
 
         public string HexColor { get; set; }
 
-        public ICollection<LessonOutputModel> Lessons { get; set; }
+        public IEnumerable<LessonOutputModel> Lessons { get; set; }
+
+        public IEnumerable<int> CollidingGroups { get; set; }
     }
 }
