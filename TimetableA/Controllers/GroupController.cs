@@ -40,7 +40,11 @@ namespace TimetableA.API.Controllers
             newGroup.TimetableId = ThisTimetable.Id;
 
             if (await groupsRepo.SaveAsync(newGroup))
-                return Ok(mapper.Map<GroupOutputModel>(newGroup));
+            {
+                var output = mapper.Map<GroupOutputModel>(newGroup);
+                output.CollidingGroups = await CollidingGroups(newGroup);
+                return Ok(output);
+            }
 
             return Problem();
         }
@@ -52,6 +56,8 @@ namespace TimetableA.API.Controllers
             var group = await groupsRepo.GetAsync(id);
 
             var output = mapper.Map<GroupOutputModel>(group);
+            output.CollidingGroups = await CollidingGroups(group);
+
             return Ok(output);
         }
 
@@ -63,10 +69,19 @@ namespace TimetableA.API.Controllers
 
             if (timetable.Groups == null)
                 return NotFound();
-            if (!timetable.Groups.Any())
-                return NotFound();
+            //if (!timetable.Groups.Any())
+            //    return NotFound();
 
-            return Ok(timetable.Groups.Select(x => mapper.Map<GroupOutputModel>(x)));
+            var output = new List<GroupOutputModel>();
+
+            foreach (var g in timetable.Groups)
+            {
+                var outputModel = mapper.Map<GroupOutputModel>(g);
+                outputModel.CollidingGroups = await CollidingGroups(g);
+                output.Add(outputModel);
+            }
+
+            return Ok(output);
         }
 
         [HttpGet("{id}/CollidingGroups")]
@@ -74,10 +89,15 @@ namespace TimetableA.API.Controllers
         public async Task<ActionResult<IEnumerable<int>>> CollidingGroups(int id)
         {
             var group = await groupsRepo.GetAsync(id);
+            return Ok(await CollidingGroups(group));
+        }
+
+        private async Task<IEnumerable<int>> CollidingGroups(Group group)
+        {
             var timetable = await timetablesRepo.GetAsync(group.TimetableId);
             var otherGroups = timetable.Groups?.Where(x => x.Id != group.Id);
 
-            return Ok(group.CollidingGroupsIds(otherGroups));
+            return group.CollidingGroupsIds(otherGroups);
         }
 
         [HttpPut("{id}")]
