@@ -18,13 +18,15 @@ import { ToastsComponent } from './toasts/toasts.component';
 import { GroupComponent } from './group/group.component';
 import { GroupModalAddComponent } from './group-modal-add/group-modal-add.component';
 import { GroupModalEditComponent } from './group-modal-edit/group-modal-edit.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
     imports: [
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
-        AppRoutingModule
+        AppRoutingModule,
+        ClipboardModule,
     ],
     declarations: [
         AppComponent,

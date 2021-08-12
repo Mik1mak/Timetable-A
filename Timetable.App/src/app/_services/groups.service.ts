@@ -18,7 +18,6 @@ export class GroupsService {
 
     loading = true;
     queryParamsUpdateSubscribed = false;
-    private intSelect: number[] = [];
 
     constructor(
         private crud: GroupsCrudService,
@@ -29,21 +28,23 @@ export class GroupsService {
         this.selectedSubject = new BehaviorSubject(new Array<number>());
         this.selected = this.selectedSubject.asObservable();
         this.groupsSubject = new BehaviorSubject(new Array<Group>());
-        this.groups = this.groupsSubject.asObservable();
-        
-        this.route.queryParamMap.pipe(first()).subscribe(params => {
-            this.intSelect = params.getAll('g').map(x => parseInt(x));
-        });
+        this.groups = this.groupsSubject.asObservable();        
     }
 
     refreshGroups() {
         this.loading = true;
-        this.crud.getAll().subscribe({
+
+        let toSelect: number[] = [];
+        this.route.queryParamMap.pipe(first()).subscribe(params => {
+            toSelect = params.getAll('g').map(x => parseInt(x));
+        });
+
+        this.crud.getAll().pipe(first()).subscribe({
             next: groups => {
                 this.loading = false;
                 this.groupsSubject.next(groups);
 
-                for(let id of this.intSelect) {
+                for(let id of toSelect) {
                     let group = groups.find(g => g.id == id)
                     if(group)
                         this.select(group);
@@ -78,13 +79,12 @@ export class GroupsService {
 
     unselect(group: Group)
     {
-        if(this.selectedValue.includes(group.id))
-            this.selectedValue.forEach((val, index) => {
-                if(val == group.id) {
-                    this.selectedValue.splice(index, 1);
-                    this.selectedSubject.next(this.selectedValue);
-                }
-            });
+        this.selectedValue.forEach((val, index) => {
+            if(val == group.id) {
+                this.selectedValue.splice(index, 1);
+                this.selectedSubject.next(this.selectedValue);
+            }
+        });
     }
 
     isSelectable(group: Group) {
@@ -95,7 +95,6 @@ export class GroupsService {
        for(let val of arr1)
             if(arr2.includes(val))
                 return true;
-
         return false;
     }
 
@@ -112,15 +111,14 @@ export class GroupsService {
        this.crud.update(id, name, hexColor).pipe(first()).subscribe({
            next: () => {
                 this.groupsSubject.value.forEach(g => {
-                    if(g.id == id)
-                    {
+                    if(g.id == id) {
                         g.name = name;
                         g.hexColor = hexColor;
                     }
                 });
                 
            },
-           error: err => this.toaster.add(err)
+           error: err => this.makeToastAndRefresh(err)
        })
     }
 
@@ -130,13 +128,17 @@ export class GroupsService {
                 this.unselect(group);
                 if(this.groupsSubject.value.includes(group))
                 this.groupsSubject.value.forEach((val, index) => {
-                    if(val.id == group.id)
-                    {
+                    if(val.id == group.id) {
                         this.groupsSubject.value.splice(index, 1);
                     }
                 });
             },
-            error: err => this.toaster.add(err)            
+            error: err => this.makeToastAndRefresh(err)
         });
+    }
+
+    private makeToastAndRefresh(errorMsg: string) {
+        this.toaster.add(errorMsg);
+        this.refreshGroups();
     }
 }
