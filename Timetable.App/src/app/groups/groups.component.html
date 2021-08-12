@@ -1,6 +1,6 @@
 <app-group-modal-add></app-group-modal-add>
 <app-group-modal-edit [groupToEdit]="groupToEdit"></app-group-modal-edit>
-<div class="col-12 d-flex align-items-center px-1 c-prim">
+<div id="groups-header" class="col-12 d-flex align-items-center px-1 c-prim">
     <div class="p-2 flex-grow-1">
         <h6 class="m-0">
             <strong>Groups </strong>
@@ -8,7 +8,7 @@
         </h6>
     </div>
     <div class="p-2">
-        <button class="btn" type="button" (click)="showAddModal()">
+        <button *ngIf="editMode" class="btn" type="button" (click)="showAddModal()">
             <i class="bi bi-plus-lg" style="color: white;"></i>
         </button>
     </div>

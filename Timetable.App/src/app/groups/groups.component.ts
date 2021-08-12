@@ -1,19 +1,29 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Group } from '@app/_models';
+import { AuthenticationService } from '@app/_services';
 import { GroupsService } from '@app/_services/groups.service';
 import { ToasterService } from '@app/_services/toaster.service';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
   selector: 'app-groups',
-  templateUrl: './groups.component.html'
+  templateUrl: './groups.component.html',
+  styleUrls: ['./groups.component.css']
 })
 export class GroupsComponent implements OnInit {
   groupToEdit?: Group;
   groups!: Group[];
   groupsService: GroupsService;
+  editMode: boolean;
 
-  constructor(groupsService: GroupsService, private toaster: ToasterService) { 
+  constructor(
+    private toaster: ToasterService,
+    groupsService: GroupsService, 
+    auth: AuthenticationService) {
+
+    this.editMode = auth.currentUserEditMode;
+
     this.groupsService = groupsService;
   }
 
@@ -25,9 +35,9 @@ export class GroupsComponent implements OnInit {
       error: err => {
         this.toaster.add(err);
       }
-    })
+    });
 
-    this.groupsService.refreshGroups();
+    this.groupsService.refreshGroups();    
   }
 
   public get groupsLength() {
@@ -44,14 +54,14 @@ export class GroupsComponent implements OnInit {
     }
 
     let modalElement = <Element>document.getElementById('group-modal-add');
-    let modal = new Modal(modalElement, {});
-    modal.show();
+    let addModal = new Modal(modalElement, {});
+    addModal.show();
   }
 
   showEditModal(group: Group) {
     this.groupToEdit = group;
     let modalElement = <Element>document.getElementById('group-modal-edit');
-    let modal = new Modal(modalElement, {});
-    modal.show();
+    let editModal = new Modal(modalElement, {});
+    editModal.show();
   }
 }

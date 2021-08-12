@@ -21,6 +21,12 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
+    public get currentUserEditMode(): boolean {
+        if(this.currentUserValue.editKey)
+            return true;
+        return false;
+    }
+
     login(id: number, key: string) {
         return this.getUser(environment.apiUrl+'/Authenticate/Auth', { id, key });
     }

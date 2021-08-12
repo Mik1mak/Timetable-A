@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Group } from '@app/_models';
+import { AuthenticationService } from '@app/_services';
 import { GroupsService } from '@app/_services/groups.service';
 import { ToasterService } from '@app/_services/toaster.service';
 
@@ -13,20 +14,23 @@ export class GroupComponent implements OnInit {
 
   disabled = true;
   selected = false;
+  editMode: boolean;
 
-  constructor(private groupService: GroupsService, private toaster: ToasterService) {}
+  constructor(private groupService: GroupsService, private toaster: ToasterService, auth: AuthenticationService) {
+    this.editMode = auth.currentUserEditMode;
+  }
 
   ngOnInit() 
   {
     this.groupService.selected.subscribe({
-      next: () => this.isDisabled(),
+      next: () => this.refresh(),
       error: err => this.toaster.add(err)
     });
-    //this.isDisabled();
   }
 
-  isDisabled() {
+  refresh() {
     this.disabled = !this.groupService.isSelectable(this.group);
+    this.selected = this.groupService.selectedValue.includes(this.group.id);
   }
 
   toggle() {
