@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserIdentity } from '@app/_models';
-import { AuthenticationService } from '@app/_services';
+import { UserService } from '@app/_services';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +12,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
       private router: Router,
-      private authenticationService: AuthenticationService) 
+      private authenticationService: UserService) 
   {
       this.authenticationService.currentUser.subscribe(x => {
           this.currentUser = x;

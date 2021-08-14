@@ -1,12 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Group } from '@app/_models';
-import { AuthenticationService } from '@app/_services';
+import { UserService } from '@app/_services';
 import { GroupsService } from '@app/_services/groups.service';
 import { ToasterService } from '@app/_services/toaster.service';
 
 @Component({
   selector: 'app-group',
-  templateUrl: './group.component.html'
+  templateUrl: './group.component.html',
+  styleUrls: ['./group.component.css']
 })
 export class GroupComponent implements OnInit {
   @Output() showEditModalEvent = new EventEmitter<Group>();
@@ -16,7 +17,7 @@ export class GroupComponent implements OnInit {
   selected = false;
   editMode: boolean;
 
-  constructor(private groupService: GroupsService, private toaster: ToasterService, auth: AuthenticationService) {
+  constructor(private groupService: GroupsService, private toaster: ToasterService, auth: UserService) {
     this.editMode = auth.currentUserEditMode;
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Group } from '@app/_models';
-import { AuthenticationService } from '@app/_services';
+import { UserService } from '@app/_services';
 import { GroupsService } from '@app/_services/groups.service';
 import { ToasterService } from '@app/_services/toaster.service';
 import Modal from 'bootstrap/js/dist/modal';
@@ -20,7 +20,7 @@ export class GroupsComponent implements OnInit {
   constructor(
     private toaster: ToasterService,
     groupsService: GroupsService, 
-    auth: AuthenticationService) {
+    auth: UserService) {
 
     this.editMode = auth.currentUserEditMode;
 

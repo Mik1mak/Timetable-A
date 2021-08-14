@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '@app/_services';
+import { UserService } from '@app/_services';
 import { GroupsService } from '@app/_services/groups.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class ShereComponent implements OnInit {
   editMode: boolean;
 
   constructor(
-    private authenticationService: AuthenticationService, 
+    private authenticationService: UserService, 
     private groupService: GroupsService) {
       this.editMode = authenticationService.currentUserEditMode;
     }
