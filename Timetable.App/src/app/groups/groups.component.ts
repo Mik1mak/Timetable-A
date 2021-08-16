@@ -37,7 +37,7 @@ export class GroupsComponent implements OnInit {
       }
     });
 
-    this.groupsService.refreshGroups();    
+    this.groupsService.loadGroups();    
   }
 
   public get groupsLength() {

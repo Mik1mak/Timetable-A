@@ -6,6 +6,9 @@ export class Lesson {
     classroom: string;
     link: string;
 
+    hexColor?: string;
+    isVisible: boolean = true;
+
     constructor(data: any)
     {
         this.id = data.id;

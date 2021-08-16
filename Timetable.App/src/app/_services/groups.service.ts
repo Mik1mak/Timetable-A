@@ -31,7 +31,12 @@ export class GroupsService {
         this.groups = this.groupsSubject.asObservable();        
     }
 
-    refreshGroups() {
+
+    get selectedValue() {
+        return this.selectedSubject.value;
+    }
+
+    loadGroups() {
         this.loading = true;
 
         let toSelect: number[] = [];
@@ -64,8 +69,11 @@ export class GroupsService {
         });
     }
 
-    get selectedValue() {
-        return this.selectedSubject.value;
+    refreshSelectable() {
+        for (let group of this.groupsSubject.value) {
+            this.crud.getCollidingGroupsIds(group.id).pipe(first())
+                .subscribe(g => group.collidingGroups = g);
+        }
     }
 
     select(group: Group): boolean {
@@ -139,6 +147,6 @@ export class GroupsService {
 
     private makeToastAndRefresh(errorMsg: string) {
         this.toaster.add(errorMsg);
-        this.refreshGroups();
+        this.loadGroups();
     }
 }

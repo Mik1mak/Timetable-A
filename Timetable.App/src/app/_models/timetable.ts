@@ -1,17 +1,5 @@
-import { Group } from "./group";
+import { Week } from ".";
 
 export class Timetable {
-    name: string;
-    cycles: number;
-    groups: Array<Group>;
-
-    constructor(data: any)
-    {
-        this.name = data.name;
-        this.cycles = data.cycles;
-        if(data.groups)
-            this.groups = data.groups.map((group : any)=> new Group(group));
-        else
-            this.groups = [];
-    }
+    weeks?: Array<Week> = [];
 }

@@ -19,6 +19,10 @@ import { GroupComponent } from './group/group.component';
 import { GroupModalAddComponent } from './group-modal-add/group-modal-add.component';
 import { GroupModalEditComponent } from './group-modal-edit/group-modal-edit.component';
 import { ClipboardModule } from 'ngx-clipboard';
+import { WeeksComponent } from './weeks/weeks.component';
+import { WeekComponent } from './week/week.component';
+import { DayComponent } from './day/day.component';
+import { LessonComponent } from './lesson/lesson.component';
 
 @NgModule({
     imports: [
@@ -41,7 +45,11 @@ import { ClipboardModule } from 'ngx-clipboard';
         ToastsComponent,
         GroupComponent,
         GroupModalAddComponent,
-        GroupModalEditComponent
+        GroupModalEditComponent,
+        WeeksComponent,
+        WeekComponent,
+        DayComponent,
+        LessonComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
