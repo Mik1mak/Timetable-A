@@ -13,6 +13,8 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <app-day *ngFor="let day of week.days" [day]="day"></app-day>
+        <app-day *ngFor="let day of week.days" [day]="day" [pxPerMinute]="pxPerMin" 
+            [minStartOfWeek]="TotalMinutesOfminStart" [maxStopOfWeek]="TotalMinutesOfmaxStop"
+            [style.display]="display(day)"></app-day>
     </div>
 </div>

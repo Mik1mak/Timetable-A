@@ -45,12 +45,15 @@ export class WeeksComponent implements OnInit {
   refillWeeks() {
     for (let i = 1; i <= this.userService.currentUserValue.cycles!; i++) {
       const week = this.weeks![i-1];
-      if(!week) {
-        const newWeek = new Week();
-        newWeek.number = i;
-        newWeek.days = [];
-        this.weeks!.splice(i, 0, newWeek);
-      }
+      
+      if(week)
+        if(week.number == i)
+          continue;
+
+      const newWeek = new Week();
+      newWeek.number = i;
+      newWeek.days = [];
+      this.weeks!.splice(i-1, 0, newWeek);
     }
 
     this.weeks!.length = this.userService.currentUserValue.cycles!;
