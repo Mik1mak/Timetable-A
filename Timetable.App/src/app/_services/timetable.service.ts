@@ -20,7 +20,9 @@ export class TimetableService {
                 timetabe.weeks?.forEach(week => {
                     week.days
                         ?.forEach(day => day.lessons
-                            ?.forEach(lesson => lesson.start = new Date(lesson.start)));
+                            ?.forEach(lesson => {
+                                lesson.start = new Date(lesson.start);
+                            }));
                     if(week.minStart)
                         week.minStart = new Date(week.minStart);
                     if(week.maxStop)

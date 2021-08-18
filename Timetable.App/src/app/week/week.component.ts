@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Day, Week } from '@app/_models';
 import { UserService } from '@app/_services';
@@ -9,8 +9,8 @@ import { UserService } from '@app/_services';
   styleUrls: ['./week.component.css']
 })
 export class WeekComponent implements OnInit {
-
   @Input() week?: Week;
+  @Output() openAddModalEvent = new EventEmitter<number>();
   editMode: boolean;
 
   get pxPerMin(): number {
@@ -47,5 +47,9 @@ export class WeekComponent implements OnInit {
     if(day.isVisible)
       return 'block';
     return 'none';
+  }
+
+  openAddModal() {
+    this.openAddModalEvent.emit(this.week!.number!);
   }
 }

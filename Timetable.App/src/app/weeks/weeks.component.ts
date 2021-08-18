@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Day, Week } from '@app/_models';
+import { TotalTime } from '@app/_helpers';
+import { Day, Lesson, Week } from '@app/_models';
 import { TimetableService, ToasterService, UserService } from '@app/_services';
+import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
   selector: 'app-weeks',
@@ -10,6 +12,7 @@ import { TimetableService, ToasterService, UserService } from '@app/_services';
 export class WeeksComponent implements OnInit {
 
   weeks?: Week[];
+  weekNumberToAddLesson = 0;
   loading = true;
 
   constructor(
@@ -53,6 +56,9 @@ export class WeeksComponent implements OnInit {
       const newWeek = new Week();
       newWeek.number = i;
       newWeek.days = [];
+      newWeek.minDuration = 45;
+      newWeek.maxStop = new Date(1, 1, 1, 12);
+      newWeek.minStart = new Date(1, 1, 1, 8);
       this.weeks!.splice(i-1, 0, newWeek);
     }
 
@@ -85,5 +91,36 @@ export class WeeksComponent implements OnInit {
         }
       }
     }
+  }
+
+  openAddModal(weekNumber: number) {
+    this.weekNumberToAddLesson = weekNumber;
+    let modalElement = <Element>document.getElementById('weeks-modal-add-lesson');
+    let editModal = new Modal(modalElement, {});
+    editModal.show();
+  }
+
+  addLesson(lessonToAdd: any) {
+    const lesson: Lesson = lessonToAdd.lesson;
+    const weekIndex = lessonToAdd.week - 1;
+
+    const week = this.weeks![weekIndex];
+
+    week.days![(lesson.start.getDay()+6) % 7].lessons.push(lesson);
+
+    if(lesson.duration < week.minDuration!)
+      week.minDuration = lesson.duration;
+
+    let lessonStart = new Date(lesson.start);
+
+    if(TotalTime.minutesInDay(lessonStart) < TotalTime.minutesInDay(week.minStart!))
+      week.minStart = lessonStart;
+
+    if(TotalTime.minutesInDay(lessonStart)+lesson.duration > TotalTime.minutesInDay(week.maxStop!))
+    {
+      lessonStart.setMinutes(lessonStart.getMinutes() + lesson.duration);
+      week.maxStop = lessonStart;
+    }
+      
   }
 }

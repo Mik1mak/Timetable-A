@@ -5,4 +5,14 @@ export class TotalTime {
 
     return output;
   }
+
+  public static readonly dayOfWeeksArray = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
 }

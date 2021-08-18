@@ -23,6 +23,7 @@ import { WeeksComponent } from './weeks/weeks.component';
 import { WeekComponent } from './week/week.component';
 import { DayComponent } from './day/day.component';
 import { LessonComponent } from './lesson/lesson.component';
+import { WeeksModalAddLessonComponent } from './weeks-modal-add-lesson/weeks-modal-add-lesson.component';
 
 @NgModule({
     imports: [
@@ -50,7 +51,8 @@ import { LessonComponent } from './lesson/lesson.component';
         WeekComponent,
         DayComponent,
         LessonComponent,
-        TimetableHourPipe
+        TimetableHourPipe,
+        WeeksModalAddLessonComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

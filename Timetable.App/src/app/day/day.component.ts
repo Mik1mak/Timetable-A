@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { TotalTime } from '@app/_helpers';
 import { Day, UserIdentity } from '@app/_models';
 import { GroupsService, UserService } from '@app/_services';
 
@@ -16,19 +17,9 @@ export class DayComponent implements OnInit {
 
   hasVisibleLessons: boolean = true;
 
-  private readonly fullEn = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
-
   get dayOfWeekFull() {
       if(this.day)
-          return this.fullEn[this.day.dayOfWeek!-1];
+          return TotalTime.dayOfWeeksArray[this.day.dayOfWeek!-1];
       return ''
   }
 

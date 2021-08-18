@@ -6,7 +6,7 @@
                 <strong>Week {{week.number}}</strong> 
             </div>
             <div class="p-2">
-                <button *ngIf="editMode" class="btn" type="button" title="Add New Lesson">
+                <button *ngIf="editMode" class="btn" type="button" title="Add New Lesson" (click)="openAddModal()">
                     <i class="bi bi-plus-lg" style="color: white;"></i>
                 </button>
             </div>

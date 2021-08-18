@@ -1,0 +1,55 @@
+<div class="modal" id="weeks-modal-add-lesson" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form [formGroup]="addLessonForm" (ngSubmit)="add()">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Lesson</h5>
+                    <button type="button" class="btn-close" (click)="close()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="m-2">
+                        <label for="lesson-group" class="form-label">Group</label>
+                        <select id="lesson-group" class="form-select" formControlName="group">
+                            <option *ngFor="let group of groups" [ngValue]="group.id">{{group.name}}</option>
+                        </select>
+                    </div>
+                    <div class="m-2">
+                        <label for="lesson-week" class="form-label">Week</label>
+                        <select id="lesson-week" name="" class="form-select" formControlName="week">
+                            <option *ngFor="let i of weeksNumbers" [ngValue]="i">Week {{i}}</option>
+                         </select>
+                    </div>
+                    <div class="m-2">
+                        <label for="lesson-day" class="form-label">Day Of Week</label>
+                        <select id="lesson-day" name="" class="form-select" formControlName="day">
+                            <option *ngFor="let dayOfWeek of daysOfweek; index as i" [ngValue]="i+1">{{dayOfWeek}}</option>
+                         </select>
+                    </div>
+                    <div class="m-2">
+                        <label for="lesson-start" class="form-label">Beginning</label>
+                        <input type="time" class="form-control" id="lesson-start" formControlName="start">
+                    </div>
+                    <div class="m-2">
+                        <label for="lesson-duration" class="form-label">Duration (min)</label>
+                        <input type="number" min="15" max="1440" class="form-control" id="lesson-duration" formControlName="duration">
+                    </div>
+                    <div class="m-2">
+                        <label for="lesson-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="lesson-name" formControlName="name">
+                    </div>
+                    <div class="m-2">
+                        <label for="lesson-classroom" class="form-label">Classroom</label>
+                        <input type="text" class="form-control" id="lesson-classroom" formControlName="classroom">
+                    </div>
+                    <div class="m-2">
+                        <label for="lesson-link" class="form-label">Link</label>
+                        <input type="url" class="form-control" id="lesson-link" formControlName="link">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

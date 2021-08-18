@@ -40,6 +40,17 @@ export class LessonComponent implements OnInit {
         this.lesson!.isVisible = newSelected.includes(this.lesson!.groupId);
       }
     });
+
+    this.groupsService.groups.subscribe({
+      next: newGroups => {
+        for (const group of newGroups) {
+          if(group.id == this.lesson!.groupId) {
+            if(group.hexColor != this.lesson!.hexColor)
+              this.lesson!.hexColor = group.hexColor;
+          }
+        }
+      }
+    });
   }
 
 }

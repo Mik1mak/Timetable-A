@@ -4,6 +4,11 @@
 }
 
 .lesson-container {
-    position: relative;
+    position: absolute;
+    width: 100%;
     min-height: 66px;
+}
+
+.dropdown-btn {
+    z-index: 10;
 }

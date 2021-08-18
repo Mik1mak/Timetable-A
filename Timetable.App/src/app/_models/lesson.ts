@@ -1,5 +1,5 @@
 export class Lesson {
-    id: string;
+    id: number;
     name: string;
     start: Date;
     duration: number;

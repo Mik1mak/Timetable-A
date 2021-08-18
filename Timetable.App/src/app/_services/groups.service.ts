@@ -123,6 +123,7 @@ export class GroupsService {
                         g.name = name;
                         g.hexColor = hexColor;
                     }
+                this.groupsSubject.next(this.groupsSubject.value);
                 });
                 
            },
