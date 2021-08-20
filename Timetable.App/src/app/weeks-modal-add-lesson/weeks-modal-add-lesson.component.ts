@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TotalTime } from '@app/_helpers';
 import { lessonCollisionValidator } from '@app/_helpers/lesson-collision.validator';
 import { Group } from '@app/_models';
@@ -37,9 +37,11 @@ export class WeeksModalAddLessonComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(32)]],
       classroom: ['', [Validators.maxLength(32)]],
       link: ['', [Validators.maxLength(512)]],
+    }, 
+    {
+      updateOn: 'blur',
+      asyncValidators: lessonCollisionValidator(this.lessonsService, this.groupService)
     });
-    this.addLessonForm.addAsyncValidators(lessonCollisionValidator(this.lessonsService, this.groupService));
-    this.addLessonForm.updateValueAndValidity();
 
     this.groupService.groups.subscribe({next: groups => this.groups = groups});
     this.userService.currentUser.subscribe({next: user => this.weeksNumbers = Array.from({length: user.cycles!}, (_, i) => i + 1)});

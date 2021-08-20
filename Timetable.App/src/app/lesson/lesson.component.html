@@ -21,7 +21,10 @@
         <div class="float-none"></div>
     </div>
     <div>
-        <strong>
+        <strong *ngIf="lesson?.link">
+            <a href="{{lesson!.link}}" target="_blank">{{lesson!.name}}</a>
+        </strong>
+        <strong *ngIf="!lesson?.link">
             {{lesson!.name}}
         </strong>
         <br>
