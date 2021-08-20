@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
-import { Lesson as any } from '@app/_models';
+import { map } from 'rxjs/operators';
+import { ValidationErrors } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class LessonsService {
@@ -22,5 +23,23 @@ export class LessonsService {
 
     delete(lessonId: number) {
         return this.http.delete(`${this.url}/${lessonId}`);
+    }
+
+    verify(lesson: any, selectedGroupsIds: number[]) {
+        let requestBody = {
+            lesson: {
+                name: 'foo',
+                start: lesson.start,
+                duration: lesson.duration
+            },
+            groupIds: selectedGroupsIds
+        };
+
+        return this.http.post<ValidationErrors>(`${this.url}/Verify/${lesson.groupId}`, requestBody).pipe(map(response => {
+            if(response)
+                return null;
+            
+            return {error: 'Colliding with other lessons in group or in other selected groups'};
+        }));
     }
 }

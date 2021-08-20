@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TotalTime } from '@app/_helpers';
+import { lessonCollisionValidator } from '@app/_helpers/lesson-collision.validator';
 import { Group } from '@app/_models';
 import { GroupsService, LessonsService, UserService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
@@ -29,15 +30,16 @@ export class WeeksModalAddLessonComponent implements OnInit, OnChanges {
 
     this.addLessonForm = this.formBuilder.group({
       group: ['', [Validators.required]],
-      week: ['', [Validators.min(1), Validators.max(10)]],
+      week: ['', [Validators.required, Validators.min(1), Validators.max(10)]],
       day: ['', [Validators.required]],
       start: ['', [Validators.required]],
       duration: ['', [Validators.required, Validators.min(15), Validators.max(1440)]],
       name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(32)]],
       classroom: ['', [Validators.maxLength(32)]],
-      link: ['', [Validators.maxLength(512)]]
+      link: ['', [Validators.maxLength(512)]],
     });
-
+    this.addLessonForm.addAsyncValidators(lessonCollisionValidator(this.lessonsService, this.groupService));
+    this.addLessonForm.updateValueAndValidity();
 
     this.groupService.groups.subscribe({next: groups => this.groups = groups});
     this.userService.currentUser.subscribe({next: user => this.weeksNumbers = Array.from({length: user.cycles!}, (_, i) => i + 1)})
@@ -56,13 +58,10 @@ export class WeeksModalAddLessonComponent implements OnInit, OnChanges {
     const week: number = this.addLessonForm.controls.week.value;
     let startTime = this.addLessonForm.controls.start.value;
 
-    let startDate: Date = new Date(Date.UTC(1, 0, (week-1) * 7 + day, 0, 0, 0, 0));
-    startDate.setUTCFullYear(1);
-
     let newLesson = {
       groupId: this.addLessonForm.controls.group.value,
       duration: this.addLessonForm.controls.duration.value,
-      start: `${startDate.toISOString().split('T')[0]}T${startTime}:00.000`,
+      start: TotalTime.createDateTimeIso(week, day, startTime),
       name: this.addLessonForm.controls.name.value,
       classroom: this.addLessonForm.controls.classroom.value,
       link: this.addLessonForm.controls.link.value,

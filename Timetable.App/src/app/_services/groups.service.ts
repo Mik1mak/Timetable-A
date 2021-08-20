@@ -36,6 +36,10 @@ export class GroupsService {
         return this.selectedSubject.value;
     }
 
+    get groupsCurrentValue() {
+        return this.groupsSubject.value;
+    }
+
     loadGroups() {
         this.loading = true;
 
