@@ -15,7 +15,7 @@
                 <li><a class="dropdown-item" href="javascript:void(0);"><i class="bi bi-card-text me-3"></i>Details</a></li>
                 <li *ngIf="editMode"><a class="dropdown-item" href="javascript:void(0);"><i class="bi bi-clipboard-plus me-3"></i>Copy</a></li>
                 <li *ngIf="editMode"><a class="dropdown-item" href="javascript:void(0);"><i class="bi bi-pencil me-3"></i>Edit</a></li>
-                <li *ngIf="editMode"><a class="dropdown-item" href="javascript:void(0);"><i class="bi bi-trash me-3"></i>Delete</a></li>
+                <li *ngIf="editMode"><a class="dropdown-item" href="javascript:void(0);" (click)="remove()"><i class="bi bi-trash me-3"></i>Delete</a></li>
             </ul>
         </div>
         <div class="float-none"></div>

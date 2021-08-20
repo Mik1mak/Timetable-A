@@ -70,10 +70,10 @@ export class GroupsService {
     }
 
     refreshSelectable() {
-        for (let group of this.groupsSubject.value) {
-            this.crud.getCollidingGroupsIds(group.id).pipe(first())
-                .subscribe(g => group.collidingGroups = g);
-        }
+        this.crud.getAll().pipe(first()).subscribe(newGroups => newGroups.forEach(newGroup => this.groupsSubject.value.forEach(group => {
+            if(newGroup.id == group.id)
+                group.collidingGroups = newGroup.collidingGroups;
+        })));
     }
 
     select(group: Group): boolean {

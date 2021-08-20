@@ -6,7 +6,7 @@
     <div *ngIf="day">
         <app-lesson *ngFor="let lessonOfDay of day?.lessons" 
             [lesson]="lessonOfDay" [pxPerMin]="pxPerMinute"
-            [minStart]="minStartOfWeek"
+            [minStart]="minStartOfWeek" (removeEvent)="removeLesson($event)"
             [style.width.px]="dayContainer.offsetWidth"></app-lesson>
     </div>
 </div>

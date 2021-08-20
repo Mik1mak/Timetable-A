@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Day, UserIdentity } from '@app/_models';
-import { GroupsService, UserService } from '@app/_services';
+import { GroupsService, LessonsService, ToasterService, UserService } from '@app/_services';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-day',
@@ -27,7 +28,11 @@ export class DayComponent implements OnInit {
     return `${((this.maxStopOfWeek - this.minStartOfWeek) * this.pxPerMinute) + 40}px`;
   }
 
-  constructor(private groupService: GroupsService, private userService: UserService) { }
+  constructor(
+    private groupService: GroupsService, 
+    private userService: UserService,
+    private lessonService: LessonsService,
+    private toaster: ToasterService) { }
 
   ngOnInit(): void { 
     this.groupService.selected.subscribe({next: newSelected => 
@@ -51,4 +56,20 @@ export class DayComponent implements OnInit {
     
     this.day!.isVisible = hasVisible;
   }
+
+  removeLesson(lessonId: number) {
+    this.lessonService.delete(lessonId).pipe(first()).subscribe({
+      next: () => {
+        this.day!.lessons.forEach((val, index) => {
+          if(val.id == lessonId) {
+            this.day!.lessons.splice(index, 1);
+            this.refreshDayVisibility(this.groupService.selectedValue, this.userService.currentUserValue);
+            this.groupService.refreshSelectable();
+          }
+        })
+      },
+      error: err => this.toaster.add(err)
+    });
+  }
+
 }

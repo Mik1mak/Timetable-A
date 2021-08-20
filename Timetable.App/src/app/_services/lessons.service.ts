@@ -19,4 +19,8 @@ export class LessonsService {
             link: lesson.link,
         });
     }
+
+    delete(lessonId: number) {
+        return this.http.delete(`${this.url}/${lessonId}`);
+    }
 }

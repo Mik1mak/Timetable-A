@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Lesson } from '@app/_models';
 import { GroupsService, UserService } from '@app/_services';
@@ -13,6 +13,7 @@ export class LessonComponent implements OnInit {
   @Input() lesson?: Lesson;
   @Input() pxPerMin: number = 1.1;
   @Input() minStart: number = 480;
+  @Output() removeEvent = new EventEmitter<number>()
 
   editMode = false;
 
@@ -53,4 +54,7 @@ export class LessonComponent implements OnInit {
     });
   }
 
+  remove() {
+    this.removeEvent.emit(this.lesson!.id);
+  }
 }

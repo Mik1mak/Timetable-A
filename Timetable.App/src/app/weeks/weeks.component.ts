@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Day, Lesson, Week } from '@app/_models';
-import { TimetableService, ToasterService, UserService } from '@app/_services';
+import { GroupsService, TimetableService, ToasterService, UserService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
@@ -17,6 +17,7 @@ export class WeeksComponent implements OnInit {
 
   constructor(
     private timetableService: TimetableService,
+    private groupService: GroupsService,
     private userService: UserService,
     private toaster: ToasterService) { }
 
@@ -28,11 +29,10 @@ export class WeeksComponent implements OnInit {
 
         this.userService.currentUser.subscribe({
           next: newUser => {
-            this.refillWeeks();
-            if(newUser.showWeekend)
-              this.refillDays();
-            else
-              this.removeEmptyDays();
+            this.refillWeeks().then(() =>{
+              if(newUser.showWeekend)
+                this.refillDays();
+            });          
           }
         });
       },
@@ -41,11 +41,9 @@ export class WeeksComponent implements OnInit {
         this.toaster.add(err);
       }
     });
-
-    
   }
 
-  refillWeeks() {
+  private async refillWeeks() {
     for (let i = 1; i <= this.userService.currentUserValue.cycles!; i++) {
       const week = this.weeks![i-1];
       
@@ -53,74 +51,74 @@ export class WeeksComponent implements OnInit {
         if(week.number == i)
           continue;
 
-      const newWeek = new Week();
-      newWeek.number = i;
-      newWeek.days = [];
-      newWeek.minDuration = 45;
-      newWeek.maxStop = new Date(1, 1, 1, 12);
-      newWeek.minStart = new Date(1, 1, 1, 8);
+      const newWeek = await this.timetableService.getWeek(i).toPromise();
       this.weeks!.splice(i-1, 0, newWeek);
     }
 
     this.weeks!.length = this.userService.currentUserValue.cycles!;
   }
 
-  refillDays() {
+  private refillDays() {
     for (const week of this.weeks!) {
       for (let i = 1; i <= 7; i++) {
         const element = week.days![i-1];
-        if(element?.dayOfWeek != i)
-        {
-          const newDay = new Day();
-          newDay.dayOfWeek = i;
-          newDay.lessons = [];
-          week.days!.splice(i-1, 0, newDay);
-        }
+        if(element?.dayOfWeek != i) 
+          this.addEmptyDay(week, i);
       } 
     }
   }
 
-  removeEmptyDays() {
-    for (const week of this.weeks!) {
-      var i = 0;
-      while (i < week.days!.length) {
-        if (week.days![i].lessons.length == 0) {
-          week.days!.splice(i, 1);
-        } else {
-          ++i;
-        }
-      }
-    }
+  private addEmptyDay(week: Week, dayNumber: number): Day {
+    const newDay = new Day();
+    newDay.dayOfWeek = dayNumber;
+    newDay.lessons = [];
+    week.days!.splice(dayNumber-1, 0, newDay);
+    return newDay;
   }
 
   openAddModal(weekNumber: number) {
     this.weekNumberToAddLesson = weekNumber;
-    let modalElement = <Element>document.getElementById('weeks-modal-add-lesson');
-    let editModal = new Modal(modalElement, {});
+    const modalElement = <Element>document.getElementById('weeks-modal-add-lesson');
+    const editModal = new Modal(modalElement, {});
     editModal.show();
   }
 
-  addLesson(lessonToAdd: any) {
-    const lesson: Lesson = lessonToAdd.lesson;
-    const weekIndex = lessonToAdd.week - 1;
+  addLesson(lessonAndWeekNum: any) {
+    const lesson: Lesson = lessonAndWeekNum.lesson;
+    const weekIndex = lessonAndWeekNum.week - 1;
 
     const week = this.weeks![weekIndex];
+    const dayIndex = (lesson.start.getDay()+6) % 7;
+    const day = week.days![dayIndex];
 
-    week.days![(lesson.start.getDay()+6) % 7].lessons.push(lesson);
+    if(day) {
+      day.lessons.push(lesson);
+    }
+    else {
+      const newday = this.addEmptyDay(week, dayIndex + 1);
+      newday.lessons.push(lesson);
+    }
 
-    if(lesson.duration < week.minDuration!)
+    this.refreshWeekExtremes(week);
+    this.groupService.refreshSelectable();
+  }
+
+  private refreshWeekExtremes(week: Week) {
+    week.days!.forEach(day => day.lessons.forEach(lesson => {
+      if(lesson.duration < week.minDuration!)
       week.minDuration = lesson.duration;
 
-    let lessonStart = new Date(lesson.start);
+      let lessonStart = new Date(lesson.start);
 
-    if(TotalTime.minutesInDay(lessonStart) < TotalTime.minutesInDay(week.minStart!))
-      week.minStart = lessonStart;
+      if(TotalTime.minutesInDay(lessonStart) < TotalTime.minutesInDay(week.minStart!))
+        week.minStart = lessonStart;
 
-    if(TotalTime.minutesInDay(lessonStart)+lesson.duration > TotalTime.minutesInDay(week.maxStop!))
-    {
-      lessonStart.setMinutes(lessonStart.getMinutes() + lesson.duration);
-      week.maxStop = lessonStart;
-    }
-      
+      if(TotalTime.minutesInDay(lessonStart)+lesson.duration > TotalTime.minutesInDay(week.maxStop!))
+      {
+        lessonStart.setMinutes(lessonStart.getMinutes() + lesson.duration);
+        week.maxStop = lessonStart;
+      }
+    }))
   }
+
 }

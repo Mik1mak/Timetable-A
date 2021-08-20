@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TotalTime } from '@app/_helpers';
-import { Group, Lesson, Week } from '@app/_models';
+import { Group } from '@app/_models';
 import { GroupsService, LessonsService, UserService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
