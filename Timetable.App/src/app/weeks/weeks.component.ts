@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Day, Lesson, Week } from '@app/_models';
 import { GroupsService, TimetableService, ToasterService, UserService } from '@app/_services';
-import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
   selector: 'app-weeks',
@@ -12,7 +11,6 @@ import Modal from 'bootstrap/js/dist/modal';
 export class WeeksComponent implements OnInit {
 
   weeks?: Week[];
-  weekNumberToAddLesson = 0;
   loading = true;
 
   constructor(
@@ -30,8 +28,7 @@ export class WeeksComponent implements OnInit {
         this.userService.currentUser.subscribe({
           next: newUser => {
             this.refillWeeks().then(() =>{
-              if(newUser.showWeekend)
-                this.refillDays();
+              this.refillDays();
             });          
           }
         });
@@ -76,13 +73,6 @@ export class WeeksComponent implements OnInit {
     return newDay;
   }
 
-  openAddModal(weekNumber: number) {
-    this.weekNumberToAddLesson = weekNumber;
-    const modalElement = <Element>document.getElementById('weeks-modal-add-lesson');
-    const editModal = new Modal(modalElement, {});
-    editModal.show();
-  }
-
   addLesson(lessonAndWeekNum: any) {
     const lesson: Lesson = lessonAndWeekNum.lesson;
     const weekIndex = lessonAndWeekNum.week - 1;
@@ -93,10 +83,8 @@ export class WeeksComponent implements OnInit {
 
     if(day) {
       day.lessons.push(lesson);
-    }
-    else {
-      const newday = this.addEmptyDay(week, dayIndex + 1);
-      newday.lessons.push(lesson);
+      if(this.groupService.selectedValue.includes(lesson.groupId))
+        day.isVisible = true;
     }
 
     this.refreshWeekExtremes(week);

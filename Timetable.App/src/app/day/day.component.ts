@@ -15,9 +15,7 @@ export class DayComponent implements OnInit {
   @Input() pxPerMinute: number = 1.1;
   @Input() minStartOfWeek: number = 480;
   @Input() maxStopOfWeek: number = 960;
-
-  hasVisibleLessons: boolean = true;
-
+  
   get dayOfWeekFull() {
       if(this.day)
           return TotalTime.dayOfWeeksArray[this.day.dayOfWeek!-1];

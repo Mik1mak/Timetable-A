@@ -17,7 +17,7 @@ export function lessonCollisionValidator(lessonsService: LessonsService, groupSe
         return lessonsService.verify({
             groupId: groupId,
             duration: duration,
-            start: TotalTime.createDateTimeIso(weekNumber, day, start)
+            start: TotalTime.createDateTimeIso(weekNumber, day, start.substr(0, 5))
         }, groupService.selectedValue).pipe(first());
       };
 }

@@ -1,4 +1,4 @@
-<app-weeks-modal-add-lesson [defaultWeekNumber]="weekNumberToAddLesson" (saveEvent)="addLesson($event)"></app-weeks-modal-add-lesson>
+<app-weeks-modal-add-lesson (saveEvent)="addLesson($event)"></app-weeks-modal-add-lesson>
 <div class="text-center my-5" *ngIf="loading">
     <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -6,6 +6,6 @@
 </div>
 <div *ngIf="!loading && weeks">
     <div class="container-fluid p-0 m-0">
-        <app-week *ngFor="let week of weeks" [week]="week" (openAddModalEvent)="openAddModal($event)"></app-week>
+        <app-week *ngFor="let week of weeks" [week]="week"></app-week>
     </div>
 </div>

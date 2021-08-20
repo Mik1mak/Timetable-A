@@ -12,13 +12,15 @@ export class LessonsService {
     constructor(private http: HttpClient) {}
 
     add(lesson: any) {
-        return this.http.post<any>(`${this.url}/${lesson.groupId}`, {
+        const requestBody = {
             name: lesson.name,
             start: lesson.start,
             duration: lesson.duration,
             classroom: lesson.classroom,
             link: lesson.link,
-        });
+        };
+
+        return this.http.post<any>(`${this.url}/${lesson.groupId}`, requestBody);
     }
 
     delete(lessonId: number) {
@@ -26,7 +28,7 @@ export class LessonsService {
     }
 
     verify(lesson: any, selectedGroupsIds: number[]) {
-        let requestBody = {
+        const requestBody = {
             lesson: {
                 name: 'foo',
                 start: lesson.start,

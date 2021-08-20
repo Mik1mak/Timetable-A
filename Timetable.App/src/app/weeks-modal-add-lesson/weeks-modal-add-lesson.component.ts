@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TotalTime } from '@app/_helpers';
 import { lessonCollisionValidator } from '@app/_helpers/lesson-collision.validator';
 import { Group } from '@app/_models';
-import { GroupsService, LessonsService, UserService } from '@app/_services';
+import { GroupsService, LessonsModalService, LessonsService, UserService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
@@ -11,8 +11,7 @@ import Modal from 'bootstrap/js/dist/modal';
   templateUrl: './weeks-modal-add-lesson.component.html',
   styleUrls: ['./weeks-modal-add-lesson.component.css']
 })
-export class WeeksModalAddLessonComponent implements OnInit, OnChanges {
-  @Input() defaultWeekNumber?: number;
+export class WeeksModalAddLessonComponent implements OnInit {
   @Output() saveEvent = new EventEmitter<any>();
 
   readonly daysOfweek = TotalTime.dayOfWeeksArray;
@@ -24,7 +23,8 @@ export class WeeksModalAddLessonComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private groupService: GroupsService,
     private lessonsService: LessonsService,
-    private userService: UserService) { }
+    private userService: UserService,
+    private lessonsModalService: LessonsModalService) { }
 
   ngOnInit(): void {
 
@@ -42,12 +42,17 @@ export class WeeksModalAddLessonComponent implements OnInit, OnChanges {
     this.addLessonForm.updateValueAndValidity();
 
     this.groupService.groups.subscribe({next: groups => this.groups = groups});
-    this.userService.currentUser.subscribe({next: user => this.weeksNumbers = Array.from({length: user.cycles!}, (_, i) => i + 1)})
-  }
+    this.userService.currentUser.subscribe({next: user => this.weeksNumbers = Array.from({length: user.cycles!}, (_, i) => i + 1)});
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(this.addLessonForm)
-      this.addLessonForm.controls.week.setValue(this.defaultWeekNumber);
+    this.lessonsModalService.defaultLessonValues.subscribe({next: defaultValues => {
+
+      for(const [key, value] of Object.entries(defaultValues)) {
+        if(value)
+          this.addLessonForm.controls[key].setValue(value);
+      }
+
+      this.addLessonForm.updateValueAndValidity();
+    }});
   }
 
   add() {

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Day, Week } from '@app/_models';
-import { UserService } from '@app/_services';
+import { LessonsModalService, UserService } from '@app/_services';
 
 @Component({
   selector: 'app-week',
@@ -10,7 +10,6 @@ import { UserService } from '@app/_services';
 })
 export class WeekComponent implements OnInit {
   @Input() week?: Week;
-  @Output() openAddModalEvent = new EventEmitter<number>();
   editMode: boolean;
 
   get pxPerMin(): number {
@@ -19,15 +18,7 @@ export class WeekComponent implements OnInit {
 
     return 66 / this.week.minDuration!;
   }
-
-  // let minDuration = Number.MAX_VALUE;
-  // this.week!.days!.forEach(day => {
-  //   day.lessons.forEach(lesson => {
-  //     if(lesson.duration < minDuration)
-  //       minDuration = lesson.duration;
-  //   })
-  // });
-
+  
   get TotalMinutesOfminStart() {
     return TotalTime.minutesInDay(this.week!.minStart!);
   }
@@ -36,7 +27,7 @@ export class WeekComponent implements OnInit {
     return TotalTime.minutesInDay(this.week!.maxStop!);
   }
 
-  constructor(private userService: UserService) { 
+  constructor(userService: UserService, private lessonsModalService: LessonsModalService) { 
     this.editMode = userService.currentUserEditMode;
   }
 
@@ -50,6 +41,6 @@ export class WeekComponent implements OnInit {
   }
 
   openAddModal() {
-    this.openAddModalEvent.emit(this.week!.number!);
+    this.lessonsModalService.openAddModal(this.week!.number!);
   }
 }
