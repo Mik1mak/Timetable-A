@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TotalTime } from '@app/_helpers';
 import { lessonCollisionValidator } from '@app/_helpers/lesson-collision.validator';
 import { Group } from '@app/_models';
-import { GroupsService, ModalService, LessonsService, UserService } from '@app/_services';
+import { GroupsService, ModalService, LessonsService, UserService, ToasterService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
@@ -24,7 +24,8 @@ export class WeeksModalAddLessonComponent implements OnInit {
     private groupService: GroupsService,
     private lessonsService: LessonsService,
     private userService: UserService,
-    private lessonsModalService: ModalService) { }
+    private lessonsModalService: ModalService,
+    private toaster: ToasterService) { }
 
   ngOnInit(): void {
 
@@ -77,13 +78,14 @@ export class WeeksModalAddLessonComponent implements OnInit {
     this.lessonsService.add(newLesson).subscribe({next: (lesson: any) => {
       lesson.start = new Date(lesson.start); 
       this.saveEvent.emit({lesson: lesson, week: week});
-    }})
+    },
+    error: err => this.toaster.add(err)})
 
     this.close();    
   }   
 
   close() {
-    let modalElement = <Element>document.querySelector('#weeks-modal-add-lesson');
+    let modalElement = <Element>document.getElementById('weeks-modal-add-lesson');
     let modal = Modal.getInstance(modalElement);
     modal?.hide();
   }

@@ -6,8 +6,14 @@ export class ToasterService {
 
     constructor() { }
 
-    add(message: string) {
-        this.toasts.push({message, visible: true});
+    add(message: any) {
+        if(typeof message != 'string')
+            for(const [key, value] of Object.entries(message)) {
+                if(value)
+                    this.toasts.push({message: value, visible: true});      
+            }
+        else
+            this.toasts.push({message, visible: true});
     }
 
     remove(message: any) {

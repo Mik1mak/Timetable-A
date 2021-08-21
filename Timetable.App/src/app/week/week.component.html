@@ -1,9 +1,9 @@
 <div *ngIf="week">
     <div class="col-12 c-prim week-header m-0 p-0">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between" style="height: 56px;">
             <div></div>
-            <div class=" p-2 text-center">
-                <strong>Week {{week.number}}</strong> 
+            <div class="text-center pt-3">
+                    <strong>Week {{week.number}}</strong> 
             </div>
             <div class="p-2">
                 <button *ngIf="editMode" class="btn" type="button" title="Add New Lesson" (click)="openAddModal()">
