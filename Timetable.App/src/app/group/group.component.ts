@@ -1,8 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { Group } from '@app/_models';
-import { UserService } from '@app/_services';
-import { GroupsService } from '@app/_services/groups.service';
-import { ToasterService } from '@app/_services/toaster.service';
+import { ModalService, UserService, GroupsService } from '@app/_services';
 
 @Component({
   selector: 'app-group',
@@ -15,7 +13,10 @@ export class GroupComponent implements OnInit{
 
   editMode: boolean;
 
-  constructor(private groupService: GroupsService, private toaster: ToasterService, auth: UserService) {
+  constructor(
+    private modalService: ModalService,
+    private groupService: GroupsService, 
+    auth: UserService) {
     this.editMode = auth.currentUserEditMode;
   }
 
@@ -44,6 +45,9 @@ export class GroupComponent implements OnInit{
   }
 
   remove() {
-    this.groupService.delete(this.group);
+    this.modalService.openConfirmModal(`Confirm Group Deletion`, 'Delating this group will remove all related lessons.').subscribe({next: confirmation => {
+      if(confirmation)
+        this.groupService.delete(this.group);
+    }})
   }
 }

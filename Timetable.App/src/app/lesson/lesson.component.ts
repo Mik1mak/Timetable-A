@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Lesson } from '@app/_models';
-import { GroupsService, LessonsModalService, UserService } from '@app/_services';
+import { GroupsService, ModalService, UserService } from '@app/_services';
 
 @Component({
   selector: 'app-lesson',
@@ -19,7 +19,7 @@ export class LessonComponent implements OnInit {
 
   constructor(private groupsService: GroupsService, 
     userService: UserService, 
-    private lessonsModalService: LessonsModalService) {
+    private lessonsModalService: ModalService) {
     this.editMode = userService.currentUserEditMode;
   }
 
@@ -61,6 +61,6 @@ export class LessonComponent implements OnInit {
   }
 
   copy() {
-    this.lessonsModalService.openAddModal(1, (this.lesson!.start.getDay() + 6) % 7 + 1, this.lesson);
+    this.lessonsModalService.openAddLessonModal(1, (this.lesson!.start.getDay() + 6) % 7 + 1, this.lesson);
   }
 }

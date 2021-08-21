@@ -3,4 +3,4 @@ export * from './timetable.service';
 export * from './groups.service'
 export * from './toaster.service'
 export * from './lessons.service';
-export * from './lessons-modal.service';
+export * from './modal.service';

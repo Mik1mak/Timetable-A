@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TotalTime } from '@app/_helpers';
 import { lessonCollisionValidator } from '@app/_helpers/lesson-collision.validator';
 import { Group } from '@app/_models';
-import { GroupsService, LessonsModalService, LessonsService, UserService } from '@app/_services';
+import { GroupsService, ModalService, LessonsService, UserService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
@@ -24,7 +24,7 @@ export class WeeksModalAddLessonComponent implements OnInit {
     private groupService: GroupsService,
     private lessonsService: LessonsService,
     private userService: UserService,
-    private lessonsModalService: LessonsModalService) { }
+    private lessonsModalService: ModalService) { }
 
   ngOnInit(): void {
 

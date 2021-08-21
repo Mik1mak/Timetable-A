@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TotalTime } from '@app/_helpers';
 import { Day, Week } from '@app/_models';
-import { LessonsModalService, UserService } from '@app/_services';
+import { ModalService, UserService } from '@app/_services';
 
 @Component({
   selector: 'app-week',
@@ -27,7 +27,7 @@ export class WeekComponent implements OnInit {
     return TotalTime.minutesInDay(this.week!.maxStop!);
   }
 
-  constructor(userService: UserService, private lessonsModalService: LessonsModalService) { 
+  constructor(userService: UserService, private lessonsModalService: ModalService) { 
     this.editMode = userService.currentUserEditMode;
   }
 
@@ -41,6 +41,6 @@ export class WeekComponent implements OnInit {
   }
 
   openAddModal() {
-    this.lessonsModalService.openAddModal(this.week!.number!);
+    this.lessonsModalService.openAddLessonModal(this.week!.number!);
   }
 }
