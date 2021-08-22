@@ -49,7 +49,7 @@ namespace TimetableA.API.Helpers
                     isInvalid = true;
                 else if (!authValMethod.Valid(requestId, timetable))
                 {
-                    context.Result = new JsonResult(new { message = "Unauthorized or not found" }) { StatusCode = StatusCodes.Status400BadRequest };
+                    context.Result = new JsonResult(new { message = "Not Found" }) { StatusCode = StatusCodes.Status404NotFound };
                     isInvalid = false;
                 }
             }

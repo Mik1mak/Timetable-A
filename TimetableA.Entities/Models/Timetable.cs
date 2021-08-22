@@ -24,9 +24,7 @@ namespace TimetableA.Entities.Models
 
         public int Cycles { get; set; }
 
-        public int StartHour { get; set; }
-
-        public int StopHour { get; set; }
+        public bool DisplayEmptyDays { get; set; }
 
         public DateTime CreateDate { get; set; }
 

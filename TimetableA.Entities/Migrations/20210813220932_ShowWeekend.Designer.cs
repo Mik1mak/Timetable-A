@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimetableA.Entities.Data;
 
 namespace TimetableA.Entities.Migrations
 {
     [DbContext(typeof(TimetableAContext))]
-    partial class TimetableAContextModelSnapshot : ModelSnapshot
+    [Migration("20210813220932_ShowWeekend")]
+    partial class ShowWeekend
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,9 +89,6 @@ namespace TimetableA.Entities.Migrations
                     b.Property<int>("Cycles")
                         .HasColumnType("int");
 
-                    b.Property<bool>("DisplayEmptyDays")
-                        .HasColumnType("bit");
-
                     b.Property<string>("EditKey")
                         .HasColumnType("nvarchar(16)");
 
@@ -98,6 +97,15 @@ namespace TimetableA.Entities.Migrations
 
                     b.Property<string>("ReadKey")
                         .HasColumnType("nvarchar(16)");
+
+                    b.Property<bool>("ShowWeekend")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("StartHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StopHour")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

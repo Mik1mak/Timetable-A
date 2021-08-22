@@ -9,7 +9,7 @@ namespace TimetableA.API.Models.InputModels
     public class LessonInputModel : IValidatableObject
     {
         [Required]
-        [MaxLength(64)]
+        [MaxLength(32)]
         [MinLength(1)]
         public string Name { get; set; }
 
@@ -17,7 +17,7 @@ namespace TimetableA.API.Models.InputModels
         public DateTime Start { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue)]
+        [Range(1, 1440)]
         public int Duration { get; set; }
 
         [MaxLength(32)]

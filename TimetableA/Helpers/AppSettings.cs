@@ -8,5 +8,7 @@ namespace TimetableA.API.Helpers
     public class AppSettings
     {
         public string Secret { get; set; }
+        public int MaxWeeksInTimetable { get; set; }
+        public int MaxCountOfGroups { get; set; }
     }
 }

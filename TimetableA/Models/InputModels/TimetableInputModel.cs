@@ -9,11 +9,12 @@ namespace TimetableA.API.Models.InputModels
     public class TimetableInputModel
     {
         [Required]
-        [MaxLength(64)]
+        [MaxLength(32)]
         [MinLength(1)]
         public string Name { get; set; }
 
-        [Range(1, 64)]
         public int Cycles { get; set; }
+
+        public bool ShowWeekend { get; set; } = false;
     }
 }

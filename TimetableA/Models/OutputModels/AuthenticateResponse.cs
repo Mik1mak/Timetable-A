@@ -17,8 +17,7 @@ namespace TimetableA.API.Models.OutputModels
             this.CreateDate = model.CreateDate;
             this.ReadKey = model.ReadKey;
             this.EditKey = model.EditKey;
-            this.StartHour = model.StartHour;
-            this.StopHour = model.StopHour;
+            this.DisplayEmptyDays = model.DisplayEmptyDays;
 
             Token = token;
         }
@@ -33,9 +32,7 @@ namespace TimetableA.API.Models.OutputModels
 
         public int Cycles { get; set; }
 
-        public int StartHour { get; set; }
-
-        public int StopHour { get; set; }
+        public bool DisplayEmptyDays { get; set; }
 
         public DateTime CreateDate { get; set; }
 

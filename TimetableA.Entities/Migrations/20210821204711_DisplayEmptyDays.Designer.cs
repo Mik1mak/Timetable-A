@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimetableA.Entities.Data;
 
 namespace TimetableA.Entities.Migrations
 {
     [DbContext(typeof(TimetableAContext))]
-    partial class TimetableAContextModelSnapshot : ModelSnapshot
+    [Migration("20210821204711_DisplayEmptyDays")]
+    partial class DisplayEmptyDays
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

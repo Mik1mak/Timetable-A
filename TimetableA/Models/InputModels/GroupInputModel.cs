@@ -9,7 +9,7 @@ namespace TimetableA.API.Models.InputModels
     public class GroupInputModel
     {
         [Required]
-        [MaxLength(64)]
+        [MaxLength(32)]
         [MinLength(2)]
         public string Name { get; set; }
 

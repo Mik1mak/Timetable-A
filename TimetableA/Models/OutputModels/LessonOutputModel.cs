@@ -24,5 +24,7 @@ namespace TimetableA.API.Models.OutputModels
         public string Classroom { get; set; }
 
         public string Link { get; set; }
+
+        public int GroupId { get; set; }
     }
 }

@@ -98,5 +98,17 @@ namespace TimetableA.API.Controllers
                 return Ok();
             return Problem();
         }
+
+        [HttpPost("Verify/{groupId}")]
+        [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
+        public IActionResult VerifyNewLesson(int groupId, [FromBody] LessonVerifyRequest requestBody)
+        {
+            var lesson = mapper.Map<Lesson>(requestBody.Lesson);
+            var groups = ThisTimetable.Groups.Where(g => requestBody.GroupIds.Contains(g.Id) || g.Id == groupId);
+
+            if (groups.Any(g => g.Lessons.Any(l => l.CollidesWith(lesson))))
+                return Ok(false);
+            return Ok(true);
+        }
     }
 }

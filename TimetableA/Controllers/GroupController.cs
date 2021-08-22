@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +22,15 @@ namespace TimetableA.API.Controllers
         private readonly ITimetableRepository timetablesRepo;
         private readonly IGroupsRepository groupsRepo;
         private readonly IMapper mapper;
+        private readonly AppSettings settings;
 
         public GroupController(ITimetableRepository timetablesRepo, IGroupsRepository groupsRepo,
-            IMapper mapper, ILogger<GroupController> logger)
+            IMapper mapper, ILogger<GroupController> logger, IOptions<AppSettings> settings)
         {
             this.timetablesRepo = timetablesRepo;
             this.groupsRepo = groupsRepo;
             this.mapper = mapper;
+            this.settings = settings.Value;
 
             timetablesRepo.Logger = groupsRepo.Logger = logger;
         }
@@ -36,6 +39,9 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit, typeof(GroupAuthMethod))]
         public async Task<ActionResult<GroupOutputModel>> AddGroup([FromBody] GroupInputModel input)
         {
+            if (ThisTimetable.Groups.Count >= settings.MaxCountOfGroups)
+                return BadRequest($"Max count of groups is {settings.MaxCountOfGroups}");
+
             var newGroup = mapper.Map<Group>(input);
             newGroup.TimetableId = ThisTimetable.Id;
 

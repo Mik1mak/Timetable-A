@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,12 @@ namespace TimetableA.API.Controllers
         private readonly ITimetableRepository timetablesRepo;
         private readonly IMapper mapper;
         private readonly IAuthService authService;
+        private readonly AppSettings settings;
 
         public TimetableController(ITimetableRepository timetablesRepo, IAuthService authService,
-            IMapper mapper, ILogger<TimetableController> logger)
+            IMapper mapper, ILogger<TimetableController> logger, IOptions<AppSettings> settings)
         {
+            this.settings = settings.Value;
             this.timetablesRepo = timetablesRepo;
             this.authService = authService;
             this.mapper = mapper;
@@ -44,13 +47,6 @@ namespace TimetableA.API.Controllers
             if (!timetable.Any())
                 return NotFound();
 
-
-            //var output = timetable.Select(x =>
-            //{
-            //    //x.Gropus?.Clear();
-            //    return mapper.Map<TimetableOutputModel>(x);
-            //});
-
             return Ok(timetable);
         }
 #endif
@@ -60,7 +56,6 @@ namespace TimetableA.API.Controllers
         public async Task<ActionResult<TimetableOutputModel>> Get()
         {
             var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
-
             var output = mapper.Map<TimetableOutputModel>(timetable);
 
             return Ok(output);
@@ -69,6 +64,9 @@ namespace TimetableA.API.Controllers
         [HttpPost]
         public async Task<ActionResult<AuthenticateResponse>> Post(TimetableInputModel input)
         {
+            if (input.Cycles < 1 || input.Cycles > settings.MaxCountOfGroups)
+                return BadRequest("Invalid Cycles value.");
+
             var newTimetable = mapper.Map<Timetable>(input);
 
             newTimetable.CreateDate = DateTime.Now;
@@ -88,15 +86,22 @@ namespace TimetableA.API.Controllers
 
         [HttpPut]
         [Authorize(AuthLevel.Edit)]
-        public async Task<ActionResult> Put([FromBody] TimetableInputModel input)
+        public async Task<ActionResult<TimetableOutputModel>> Put([FromBody] TimetableInputModel input)
         {
+            if (input.Cycles < 1 || input.Cycles > settings.MaxCountOfGroups)
+                return BadRequest("Invalid Cycles value.");
+
             var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
 
             timetable.Name = input.Name;
             timetable.Cycles = input.Cycles;
+            timetable.DisplayEmptyDays = input.ShowWeekend;
 
             if (await timetablesRepo.SaveAsync(timetable))
-                return Ok();
+            {
+                var output = mapper.Map<TimetableOutputModel>(timetable);
+                return Ok(output);
+            }
 
             return Problem();
         }

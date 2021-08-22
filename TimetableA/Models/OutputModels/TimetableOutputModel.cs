@@ -8,12 +8,11 @@ namespace TimetableA.API.Models.OutputModels
 {
     public class TimetableOutputModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
 
         public int Cycles { get; set; }
 
-        public string Key { get; set; }
+        public bool DisplayEmptyDays { get; set; }
 
         public DateTime CreateDate { get; set; }
 
