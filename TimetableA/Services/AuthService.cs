@@ -54,7 +54,10 @@ namespace TimetableA.API.Services
                 return null;
             }
 
-            return new AuthenticateResponse(timetable, token);
+            return new AuthenticateResponse(timetable, token) { 
+                MaxCyclesPerTimetable=appSettings.MaxCyclesPerTimetable, 
+                MaxGroupsPerTimetable=appSettings.MaxGroupsPerTimetable
+            };
         }
 
         private string GenerateJwtToken(Timetable timetable, string key)

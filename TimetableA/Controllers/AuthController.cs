@@ -17,7 +17,7 @@ namespace TimetableA.API.Controllers
         private readonly ILogger logger;
         private readonly IAuthService authService;
 
-        public AuthController(ILogger<TimetableController> logger, IAuthService authService)
+        public AuthController(ILogger<AuthController> logger, IAuthService authService)
         {
             this.logger = logger;
             this.authService = authService;
@@ -29,7 +29,7 @@ namespace TimetableA.API.Controllers
             var response = await authService.Authenticate(model);
 
             if (response == null)
-                return BadRequest();
+                return BadRequest("Invalid ID or Key");
 
             return Ok(response);
         }

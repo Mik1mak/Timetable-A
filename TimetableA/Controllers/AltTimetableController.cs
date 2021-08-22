@@ -22,7 +22,7 @@ namespace TimetableA.API.Controllers
 
         public AltTimetableController(
             ITimetableRepository timetablesRepo,
-            ILogger<TimetableController> logger,
+            ILogger<AltTimetableController> logger,
             IOptions<AppSettings> settings)
         {
             this.settings = settings.Value;

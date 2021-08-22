@@ -39,8 +39,8 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit, typeof(GroupAuthMethod))]
         public async Task<ActionResult<GroupOutputModel>> AddGroup([FromBody] GroupInputModel input)
         {
-            if (ThisTimetable.Groups.Count >= settings.MaxCountOfGroups)
-                return BadRequest($"Max count of groups is {settings.MaxCountOfGroups}");
+            if (ThisTimetable.Groups.Count >= settings.MaxGroupsPerTimetable)
+                return BadRequest($"Max count of groups is {settings.MaxGroupsPerTimetable}");
 
             var newGroup = mapper.Map<Group>(input);
             newGroup.TimetableId = ThisTimetable.Id;

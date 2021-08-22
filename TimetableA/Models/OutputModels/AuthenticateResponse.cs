@@ -37,5 +37,8 @@ namespace TimetableA.API.Models.OutputModels
         public DateTime CreateDate { get; set; }
 
         public string Token { get; set; }
+
+        public int MaxGroupsPerTimetable { get; set; }
+        public int MaxCyclesPerTimetable { get; set; }
     }
 }

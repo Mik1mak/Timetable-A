@@ -49,13 +49,13 @@ namespace TimetableA.API.Helpers
                     isInvalid = true;
                 else if (!authValMethod.Valid(requestId, timetable))
                 {
-                    context.Result = new JsonResult(new { message = "Not Found" }) { StatusCode = StatusCodes.Status404NotFound };
+                    context.Result = new JsonResult("Not Found") { StatusCode = StatusCodes.Status404NotFound };
                     isInvalid = false;
                 }
             }
                 
             if (isInvalid)
-                context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+                context.Result = new JsonResult("Unauthorized") { StatusCode = StatusCodes.Status401Unauthorized };
         }
 
         private AuthLevel GetAuthLevel(Timetable timetable, string key)

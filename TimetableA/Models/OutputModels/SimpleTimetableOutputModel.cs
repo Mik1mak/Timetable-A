@@ -14,7 +14,7 @@ namespace TimetableA.API.Models.OutputModels
 
         public SimpleTimetableOutputModel(IEnumerable<Group> groups, AppSettings settings)
         {
-            for (int i = 1; i <= settings.MaxWeeksInTimetable; i++)
+            for (int i = 1; i <= settings.MaxCyclesPerTimetable; i++)
             {
                 var week = WeekOutputModel.GetWeekFromGroups(groups, i);
 

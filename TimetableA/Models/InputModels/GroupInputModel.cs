@@ -10,7 +10,7 @@ namespace TimetableA.API.Models.InputModels
     {
         [Required]
         [MaxLength(32)]
-        [MinLength(2)]
+        [MinLength(1)]
         public string Name { get; set; }
 
         [StringLength(7)]

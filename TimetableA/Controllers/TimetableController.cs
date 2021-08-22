@@ -64,8 +64,8 @@ namespace TimetableA.API.Controllers
         [HttpPost]
         public async Task<ActionResult<AuthenticateResponse>> Post(TimetableInputModel input)
         {
-            if (input.Cycles < 1 || input.Cycles > settings.MaxCountOfGroups)
-                return BadRequest("Invalid Cycles value.");
+            if (input.Cycles < 1 || input.Cycles > settings.MaxCyclesPerTimetable)
+                return BadRequest($"Max count of weeks is {settings.MaxCyclesPerTimetable}");
 
             var newTimetable = mapper.Map<Timetable>(input);
 
@@ -88,8 +88,8 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit)]
         public async Task<ActionResult<TimetableOutputModel>> Put([FromBody] TimetableInputModel input)
         {
-            if (input.Cycles < 1 || input.Cycles > settings.MaxCountOfGroups)
-                return BadRequest("Invalid Cycles value.");
+            if (input.Cycles < 1 || input.Cycles > settings.MaxCyclesPerTimetable)
+                return BadRequest($"Max count of weeks is {settings.MaxCyclesPerTimetable}");
 
             var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
 
