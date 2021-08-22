@@ -1,4 +1,4 @@
-<div class="col-12 p-2 border-bottom d-flex align-items-center">
+<div class="col-12 p-2 border-bottom d-flex align-items-center group-container">
     <div class="form-check w-100">
         <input class="form-check-input" id="{{group.id+group.name}}"type="checkbox" 
             [checked]="selected" [disabled]="disabled" (change)="toggle()">
@@ -6,13 +6,13 @@
             {{group?.name}}
         </label>
     </div>
-    <div class="flex-shrink-1">
-        <button class="btn" type="button" data-bs-toggle="dropdown">
+    <div *ngIf="editMode" class="flex-shrink-1">
+        <button class="btn" type="button" title="Group Menu" data-bs-toggle="dropdown">
             <i class="bi bi-three-dots-vertical"></i>
         </button>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" (click)="showEditModalOutput()"><i class="bi bi-pencil me-3"></i>Edit</a></li>
-            <li><a class="dropdown-item" href="#" (click)="remove()"><i class="bi bi-trash me-3"></i>Delete</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0);" (click)="showEditModalOutput()"><i class="bi bi-pencil me-3"></i>Edit</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0);" (click)="remove()"><i class="bi bi-trash me-3"></i>Delete</a></li>
         </ul>
     </div>
 </div>

@@ -3,11 +3,11 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/c
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { AuthenticationService } from '@app/_services';
+import { UserService } from '@app/_services';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-    constructor(private authenticationService: AuthenticationService) { }
+    constructor(private authenticationService: UserService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
@@ -16,7 +16,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 location.reload();
             }
 
-            const error = err.error.message || err.statusText;
+            const error = err.error.message || err.error.errors || err.statusText;
             return throwError(error);
         }))
     }

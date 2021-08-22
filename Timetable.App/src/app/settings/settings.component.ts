@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserIdentity } from '@app/_models';
+import { ModalService, UserService } from '@app/_services';
+import { ToasterService } from '@app/_services/toaster.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -7,9 +12,51 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor() { }
+  name!: string;
+  cycles!: number;
+  displayEmptyDays!: boolean;
 
-  ngOnInit(): void {
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private toaster: ToasterService,
+    private modalService: ModalService,
+    private authenticationService: UserService) {
+       
+    this.setUser(userService.currentUserValue);
   }
 
+  ngOnInit(): void {
+    this.userService.currentUser.subscribe(newUser => this.setUser(newUser));
+  }
+
+  update() {
+    this.userService.update(this.name, this.cycles, this.displayEmptyDays)
+      .pipe(first())
+      .subscribe({error: err => {
+        this.toaster.add(err);
+        this.setUser(this.userService.currentUserValue);
+      }});
+  }
+
+  setUser(user: UserIdentity) {
+    this.name = user.name!;
+    this.cycles = user.cycles!;
+    this.displayEmptyDays = user.displayEmptyDays!;
+  }
+
+  deleteTimetable() {
+    this.modalService.openConfirmModal('Confirm Timetable Deletion', 'This action will permanently delete the timetable with all groups and lessons.')
+      .subscribe({next: confirmation => {
+        if(confirmation) {
+          this.userService.deleteUser().subscribe({
+            next: () => {
+              this.authenticationService.logout();
+              this.router.navigate(['/create']);
+            },
+            error: err => this.toaster.add(err)
+          });
+        }
+      }});
+  }
 }

@@ -7,9 +7,10 @@ import { environment } from '@environments/environment';
 import { UserIdentity } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService {
+export class UserService {
     private currentUserSubject: BehaviorSubject<UserIdentity>;
     public currentUser: Observable<UserIdentity>;
+    private readonly url = `${environment.apiUrl}/api/Timetable`;
 
     constructor(private http: HttpClient) {
         let currentUser: string = localStorage.getItem('currentUser')!;
@@ -21,21 +22,47 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
+    public get currentUserEditMode(): boolean {
+        if(this.currentUserValue.editKey)
+            return true;
+        return false;
+    }
+
     login(id: number, key: string) {
         return this.getUser(environment.apiUrl+'/Authenticate/Auth', { id, key });
     }
 
     register(name: string, cycles: number){
-        return this.getUser(environment.apiUrl+'/api/Timetable', {name, cycles});
+        return this.getUser(this.url, {name, cycles});
+    }
+
+    update(name: string, cycles: number, showWeekend: boolean) {
+        return this.http.put<UserIdentity>(this.url, {name, cycles, showWeekend})
+            .pipe(map(timetableUser => {
+                let currentUser = this.currentUserValue;
+                currentUser.name = timetableUser.name;
+                currentUser.cycles = timetableUser.cycles;
+                currentUser.displayEmptyDays = timetableUser.displayEmptyDays;
+                this.setUser(currentUser);
+                return timetableUser;
+            }));
+    }
+
+    deleteUser() {
+        return this.http.delete(this.url);
     }
 
     private getUser(url: string, request: any) {
         return this.http.post<any>(url, request)
             .pipe(map(user => {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.currentUserSubject.next(user);
+                this.setUser(user);
                 return user;
             }));
+    }
+
+    private setUser(user: UserIdentity) {
+        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
     }
 
     logout() {

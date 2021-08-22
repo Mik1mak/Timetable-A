@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Group } from '@app/_models';
 import { GroupsService } from '@app/_services/groups.service';
-import { ToasterService } from '@app/_services/toaster.service';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({

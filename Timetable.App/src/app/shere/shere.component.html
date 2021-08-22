@@ -1,1 +1,24 @@
-<p>shere works!</p>
+<div class="m-2 px-2">
+    <label for="read-link" class="form-label fs-6">Read Mode</label>
+    <div class="d-flex">
+        <input #readLink type="text" class="form-control flex-grow-1" id="read-link" value="{{readShereLink}}" disabled>
+        <div #container>
+            <button ngxClipboard [cbContent]="readShereLink" [container]="container" 
+                type="button" class="btn btn-secondary" title="Copy to clipboard">
+                <i class="bi bi-clipboard-plus"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div *ngIf="editMode" class="m-2 mt-3 px-2">
+    <label for="edit-link" class="form-label fs-6">Edit Mode</label>
+    <div class="d-flex">
+        <input #editLink type="text" class="form-control flex-grow-1" id="edit-link" value="{{editShereLink}}" disabled>
+        <div #container2>
+            <button ngxClipboard [cbContent]="editShereLink" [container]="container2"
+                type="button" class="btn btn-secondary" title="Copy to clipboard">
+                <i class="bi bi-clipboard-plus"></i>
+            </button>
+        </div>
+    </div>
+</div>

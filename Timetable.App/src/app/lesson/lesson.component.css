@@ -1,0 +1,14 @@
+:host {
+    font-size: smaller;
+    position: absolute;
+}
+
+.lesson-container {
+    position: absolute;
+    width: 100%;
+    min-height: 66px;
+}
+
+.dropdown-btn {
+    z-index: 10;
+}

@@ -3,17 +3,17 @@
         <div class="modal-content">
             <form [formGroup]="editGroupForm" (ngSubmit)="edit()">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Group "{{groupToEdit?.name}}"</h5>
+                    <h5 class="modal-title">Edit Group <i>{{groupToEdit?.name}}</i></h5>
                     <button type="button" class="btn-close" (click)="close()"></button>
                 </div>
                 <div class="modal-body">
                     <div class="m-2">
-                        <label for="name" class="form-label">Group Name</label>
-                        <input type="text" class="form-control" id="name" formControlName="name">
+                        <label for="name-edit" class="form-label">Group Name</label>
+                        <input type="text" class="form-control" id="name-edit" formControlName="name">
                     </div>
                     <div class="my-4 mx-2 d-flex align-items-center">
-                        <label for="color" class="form-label me-2 my-1">Color</label>
-                        <input class="mx-2 my-1" type="color" id="color" value="#FFFFFF" formControlName="color">
+                        <label for="color-edit" class="form-label me-2 my-1">Color</label>
+                        <input class="mx-2 my-1" type="color" id="color-edit" value="#FFFFFF" formControlName="color">
                     </div>
                 </div>
                 <div class="modal-footer">

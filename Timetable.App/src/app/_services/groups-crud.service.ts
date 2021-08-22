@@ -30,7 +30,7 @@ export class GroupsCrudService {
         return this.http.get<number[]>(`${this.url}/${id}/CollidingGroups`);
     }
 
-    delete(group: Group) {
-        return this.http.delete(`${this.url}/${group.id}`);
+    delete(id: number) {
+        return this.http.delete(`${this.url}/${id}`);
     }
 }

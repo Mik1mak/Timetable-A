@@ -1,0 +1,20 @@
+<div *ngIf="week">
+    <div class="col-12 c-prim week-header m-0 p-0">
+        <div class="d-flex justify-content-between" style="height: 56px;">
+            <div></div>
+            <div class="text-center pt-3">
+                    <strong>Week {{week.number}}</strong> 
+            </div>
+            <div class="p-2">
+                <button *ngIf="editMode" class="btn" type="button" title="Add New Lesson" (click)="openAddModal()">
+                    <i class="bi bi-plus-lg" style="color: white;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="grid-wrapper">
+        <app-day *ngFor="let day of week.days" [day]="day" [pxPerMinute]="pxPerMin" 
+            [minStartOfWeek]="TotalMinutesOfminStart" [maxStopOfWeek]="TotalMinutesOfmaxStop"
+            [style.display]="display(day)"></app-day>
+    </div>
+</div>

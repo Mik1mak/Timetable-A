@@ -1,1 +1,16 @@
-<p>settings works!</p>
+<div class="m-3 px-2">
+    <label for="timetable-name" class="form-label fs-6">Timetable Name</label>
+    <input [(ngModel)]="name" (change)="update()" type="text" class="form-control" id="timetable-name"> 
+</div>
+<div class="m-3 px-2">
+    <label for="timetable-weeks" class="form-label fs-6">Weeks</label>
+    <input [(ngModel)]="cycles" (change)="update()" id="timetable-weeks" class="form-control" type="number" min="1" max="10">
+</div>
+<div class="m-3 my-4 px-2 ps-5 form-check form-switch">
+    <input [(ngModel)]="displayEmptyDays" (ngModelChange)="update()" id="timetable-empty-days" 
+        type="checkbox" class="form-check-input me-2">
+    <label for="timetable-empty-days" class="form-check-label fs-6">Show Empty Days</label>
+</div>
+<div class="m-3 px-2 d-grid gap-2">
+    <button class="btn btn-danger" (click)="deleteTimetable()">Delete Timetable</button>
+</div>

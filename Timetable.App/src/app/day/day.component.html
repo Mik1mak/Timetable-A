@@ -1,0 +1,12 @@
+<div #dayContainer class="bg-light day"
+    [style.height]="height">
+    <div class="c-light text-center p-2">
+        {{dayOfWeekFull}}
+    </div>
+    <div *ngIf="day">
+        <app-lesson *ngFor="let lessonOfDay of day?.lessons" 
+            [lesson]="lessonOfDay" [pxPerMin]="pxPerMinute"
+            [minStart]="minStartOfWeek" (removeEvent)="removeLesson($event)"
+            [style.width.px]="dayContainer.offsetWidth"></app-lesson>
+    </div>
+</div>
