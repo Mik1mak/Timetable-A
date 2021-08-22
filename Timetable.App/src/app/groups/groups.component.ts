@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Group } from '@app/_models';
-import { UserService } from '@app/_services';
-import { GroupsService } from '@app/_services/groups.service';
-import { ToasterService } from '@app/_services/toaster.service';
+import { GroupsService, ToasterService, UserService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
@@ -16,14 +13,15 @@ export class GroupsComponent implements OnInit {
   groups!: Group[];
   groupsService: GroupsService;
   editMode: boolean;
+  maxCountOfGroups?: number;
 
   constructor(
     private toaster: ToasterService,
-    groupsService: GroupsService, 
-    auth: UserService) {
-
-    this.editMode = auth.currentUserEditMode;
-
+    private userService: UserService,
+    groupsService: GroupsService) {
+    
+    this.editMode = userService.currentUserEditMode;
+    this.maxCountOfGroups = userService.currentUserValue.maxGroupsPerTimetable;
     this.groupsService = groupsService;
   }
 
@@ -47,9 +45,9 @@ export class GroupsComponent implements OnInit {
   }
 
   showAddModal() {
-    if(this.groupsLength >= 10)
+    if(this.groupsLength >= 20)
     {
-      this.toaster.add('max count of groups is 10');
+      this.toaster.add('Max count of groups is 10');
       return;
     }
 

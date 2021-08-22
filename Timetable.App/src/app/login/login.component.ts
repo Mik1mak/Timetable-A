@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
-            password: ['', Validators.required]
+            password: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]]
         });
         
         this.route.queryParams.subscribe(params => {

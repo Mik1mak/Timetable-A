@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserIdentity } from '@app/_models';
-import { ModalService, UserService } from '@app/_services';
-import { ToasterService } from '@app/_services/toaster.service';
+import { ModalService, UserService, ToasterService } from '@app/_services';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -15,6 +14,7 @@ export class SettingsComponent implements OnInit {
   name!: string;
   cycles!: number;
   displayEmptyDays!: boolean;
+  maxCycles!: number;
 
   constructor(
     private router: Router,
@@ -43,6 +43,7 @@ export class SettingsComponent implements OnInit {
     this.name = user.name!;
     this.cycles = user.cycles!;
     this.displayEmptyDays = user.displayEmptyDays!;
+    this.maxCycles = user.maxCyclesPerTimetable!;
   }
 
   deleteTimetable() {

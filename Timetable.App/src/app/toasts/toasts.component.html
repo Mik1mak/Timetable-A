@@ -1,8 +1,8 @@
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
+<div class="toast-container position-fixed bottom-0 end-0 p-3 high-z">
     <div *ngFor="let toast of toaster.toasts">
         <div class="toast show bg-danger" role="alert">
             <div class="d-flex">
-                <div class="toast-body">
+                <div class="toast-body white-text">
                 {{toast.message}}
                 </div>
                 <button type="button" title="dismiss" class="btn-close me-2 m-auto" data-bs-dismiss="toast" 

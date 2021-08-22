@@ -1,10 +1,10 @@
 <div class="m-3 px-2">
     <label for="timetable-name" class="form-label fs-6">Timetable Name</label>
-    <input [(ngModel)]="name" (change)="update()" type="text" class="form-control" id="timetable-name"> 
+    <input [(ngModel)]="name" (change)="update()" type="text" minlength="1" maxlength="32" class="form-control" id="timetable-name"> 
 </div>
 <div class="m-3 px-2">
     <label for="timetable-weeks" class="form-label fs-6">Weeks</label>
-    <input [(ngModel)]="cycles" (change)="update()" id="timetable-weeks" class="form-control" type="number" min="1" max="10">
+    <input [(ngModel)]="cycles" (change)="update()" id="timetable-weeks" class="form-control" type="number" min="1" max="{{maxCycles}}">
 </div>
 <div class="m-3 my-4 px-2 ps-5 form-check form-switch">
     <input [(ngModel)]="displayEmptyDays" (ngModelChange)="update()" id="timetable-empty-days" 

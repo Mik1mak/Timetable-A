@@ -3,7 +3,7 @@
     [style.height]="height"
     [style.top]="offset"
     class="border border p-1 lesson-container">
-    <div class="">
+    <div>
         <div class="d-inline">
             <small class="fw-lighter">{{lesson!.start | timetableHour}} - {{endDate | timetableHour}}</small>
         </div>
@@ -20,7 +20,7 @@
         </div>
         <div class="float-none"></div>
     </div>
-    <div>
+    <div class="text-truncate">
         <strong *ngIf="lesson?.link">
             <a href="{{lesson!.link}}" target="_blank">{{lesson!.name}}</a>
         </strong>

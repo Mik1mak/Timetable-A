@@ -9,7 +9,11 @@
                 <div class="modal-body">
                     <div class="m-2">
                         <label for="name" class="form-label">Group Name</label>
-                        <input type="text" class="form-control" id="name" formControlName="name">
+                        <input type="text" class="form-control" id="name" formControlName="name"    
+                            [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+                        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                            <div>Invalid Group Name length</div>
+                        </div>
                     </div>
                     <div class="my-4 mx-2 d-flex align-items-center">
                         <label for="color" class="form-label me-2 my-1">Color</label>

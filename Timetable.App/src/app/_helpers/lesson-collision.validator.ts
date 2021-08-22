@@ -20,7 +20,7 @@ export function lessonCollisionValidator(lessonsService: LessonsService, groupSe
             if(response)
                 return null;
             
-            return {error: 'Colliding with other lessons in group or in other selected groups'};
+            return {error: 'The lesson collide with other lessons in the group or in other selected groups'};
         }));
       };
 }

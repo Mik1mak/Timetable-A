@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Group } from '@app/_models';
-import { GroupsService } from '@app/_services/groups.service';
+import { GroupsService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
@@ -13,10 +13,15 @@ export class GroupModalEditComponent implements OnInit, OnChanges {
   @Input() groupToEdit?: Group;
 
   editGroupForm!: FormGroup;
+  submitted = false;
   
   constructor(
     private formBuilder: FormBuilder,
     private groupsService: GroupsService) { }
+
+    get f() {
+      return this.editGroupForm.controls;
+    }
 
   ngOnInit(): void {
       this.editGroupForm = this.formBuilder.group({
@@ -27,17 +32,19 @@ export class GroupModalEditComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(this.editGroupForm) {
-      this.editGroupForm.controls.name.setValue(this.groupToEdit?.name);
-      this.editGroupForm.controls.color.setValue(this.groupToEdit?.hexColor);
+      this.f.name.setValue(this.groupToEdit?.name);
+      this.f.color.setValue(this.groupToEdit?.hexColor);
     }
   }
 
   edit() {
+    this.submitted = true;
+
     if(this.editGroupForm.invalid)
       return;
 
-    let name = this.editGroupForm.controls.name.value;
-    let color = this.editGroupForm.controls.color.value;
+    let name = this.f.name.value;
+    let color = this.f.color.value;
 
     this.groupsService.update(this.groupToEdit!.id, name, color);
       
@@ -45,7 +52,8 @@ export class GroupModalEditComponent implements OnInit, OnChanges {
   }
 
   close() {
-    let modalElement = <Element>document.querySelector('#group-modal-edit');
+    this.submitted = false;
+    let modalElement = <Element>document.getElementById('group-modal-edit');
     let modal = Modal.getInstance(modalElement);
     modal?.hide();
   }

@@ -7,4 +7,6 @@ export class UserIdentity {
     cycles?: number;
     displayEmptyDays?: boolean;
     token?: string;
+    maxCyclesPerTimetable?: number;
+    maxGroupsPerTimetable?: number;
 }

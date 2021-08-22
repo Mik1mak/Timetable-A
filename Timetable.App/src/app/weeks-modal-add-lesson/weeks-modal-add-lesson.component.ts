@@ -19,6 +19,7 @@ export class WeeksModalAddLessonComponent implements OnInit {
   addLessonForm!: FormGroup;
   submitted = false;
   loading = false;
+  error?: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -68,7 +69,10 @@ export class WeeksModalAddLessonComponent implements OnInit {
     this.submitted = true;
 
     if(this.addLessonForm.invalid)
+    {
+      this.error = this.addLessonForm.errors![Object.keys(this.addLessonForm.errors!)[0]];
       return;
+    }
 
     this.loading = true;
 
@@ -78,7 +82,7 @@ export class WeeksModalAddLessonComponent implements OnInit {
 
     let newLesson = {
       groupId: this.f.group.value,
-      duration: this.f.value,
+      duration: this.f.duration.value,
       start: TotalTime.createDateTimeIso(week, day, startTime),
       name: this.f.name.value,
       classroom: this.f.classroom.value,
@@ -88,6 +92,7 @@ export class WeeksModalAddLessonComponent implements OnInit {
     this.lessonsService.add(newLesson).subscribe({next: (lesson: any) => {
       lesson.start = new Date(lesson.start); 
       this.saveEvent.emit({lesson: lesson, week: week});
+      this.error = undefined;
       this.close();
     },
     error: err => {
@@ -98,6 +103,7 @@ export class WeeksModalAddLessonComponent implements OnInit {
 
   reset() {
     this.addLessonForm.reset();
+    this.error = undefined;
     this.close();
   }
 

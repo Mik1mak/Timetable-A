@@ -75,6 +75,7 @@
                             <div>Max length of the classroom is {{f.link.errors.maxlength.requiredLength}}</div>
                         </div>
                     </div>
+                    <div *ngIf="submitted && error" class="alert alert-danger m-2 mb-0 float-none">{{error}}</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" (click)="reset()">Cancel</button>

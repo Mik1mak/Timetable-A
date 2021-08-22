@@ -9,22 +9,22 @@ import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor, ErrorInterceptor, TimetableHourPipe } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
-import { RegisterComponent } from './register/register.component';
-import { ShereComponent } from './shere/shere.component';
-import { GroupsComponent } from './groups/groups.component';
-import { SettingsComponent } from './settings/settings.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { ToastsComponent } from './toasts/toasts.component';
-import { GroupComponent } from './group/group.component';
-import { GroupModalAddComponent } from './group-modal-add/group-modal-add.component';
-import { GroupModalEditComponent } from './group-modal-edit/group-modal-edit.component';
+import { RegisterComponent } from './register';
+import { ShereComponent } from './shere';
+import { GroupsComponent } from './groups';
+import { SettingsComponent } from './settings';
+import { NavbarComponent } from './navbar';
+import { ToastsComponent } from './toasts';
+import { GroupComponent } from './group';
+import { GroupModalAddComponent } from './group-modal-add';
+import { GroupModalEditComponent } from './group-modal-edit';
 import { ClipboardModule } from 'ngx-clipboard';
-import { WeeksComponent } from './weeks/weeks.component';
-import { WeekComponent } from './week/week.component';
-import { DayComponent } from './day/day.component';
-import { LessonComponent } from './lesson/lesson.component';
-import { WeeksModalAddLessonComponent } from './weeks-modal-add-lesson/weeks-modal-add-lesson.component';
-import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
+import { WeeksComponent } from './weeks';
+import { WeekComponent } from './week';
+import { DayComponent } from './day';
+import { LessonComponent } from './lesson';
+import { WeeksModalAddLessonComponent } from './weeks-modal-add-lesson';
+import { ConfirmModalComponent } from './confirm-modal';
 
 @NgModule({
     imports: [

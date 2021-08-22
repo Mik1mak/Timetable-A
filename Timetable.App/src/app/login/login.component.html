@@ -1,27 +1,29 @@
 ﻿<div class="col-md-6 offset-md-3 mt-5">
     <div class="card">
         <h4 class="card-header">Open Timetable</h4>
-        <div class="card-body">
+        <div class="card-body p-4">
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label for="username">ID</label>
-                    <input type="number" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+                    <input type="number" min="1" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
                     <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                         <div *ngIf="f.username.errors.required">ID is required</div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label for="password">Key</label>
                     <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                        <div *ngIf="f.password.errors.required">Key is required</div>
+                        <div>Invalid Key length</div>
                     </div>
                 </div>
-                <button [disabled]="loading" class="btn btn-primary">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                    Open
-                </button>
-                <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                <div *ngIf="error" class="alert alert-danger mt-3 mb-0 float-none">{{error}}</div>
+                <div class="mt-3">
+                    <button [disabled]="loading" class="btn btn-primary float-end">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Open
+                    </button>
+                </div>
             </form>
         </div>
     </div>

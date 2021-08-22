@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '@app/_services';
-import { GroupsService } from '@app/_services/groups.service';
+import { UserService, GroupsService } from '@app/_services';
 
 @Component({
   selector: 'app-shere',

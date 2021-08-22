@@ -21,8 +21,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      cycles: ['', Validators.required]
+      name: ['', [Validators.required, Validators.maxLength(32)]],
     });
 
     this.f.cycles.setValue(1);
@@ -38,7 +37,7 @@ export class RegisterComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authenticationService.register(this.f.name.value, this.f.cycles.value)
+    this.authenticationService.register(this.f.name.value, 1)
         .pipe(first())
         .subscribe({
             next: () => {
