@@ -37,11 +37,6 @@ export class LessonsService {
             groupIds: selectedGroupsIds
         };
 
-        return this.http.post<ValidationErrors>(`${this.url}/Verify/${lesson.groupId}`, requestBody).pipe(map(response => {
-            if(response)
-                return null;
-            
-            return {error: 'Colliding with other lessons in group or in other selected groups'};
-        }));
+        return this.http.post<ValidationErrors>(`${this.url}/Verify/${lesson.groupId}`, requestBody);
     }
 }

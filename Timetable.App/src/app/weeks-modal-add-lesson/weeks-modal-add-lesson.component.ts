@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TotalTime } from '@app/_helpers';
+import { lessonEndValidator, TotalTime } from '@app/_helpers';
 import { lessonCollisionValidator } from '@app/_helpers/lesson-collision.validator';
 import { Group } from '@app/_models';
 import { GroupsService, ModalService, LessonsService, UserService, ToasterService } from '@app/_services';
@@ -41,7 +41,8 @@ export class WeeksModalAddLessonComponent implements OnInit {
     }, 
     {
       updateOn: 'blur',
-      asyncValidators: lessonCollisionValidator(this.lessonsService, this.groupService)
+      validators: lessonEndValidator(),
+      asyncValidators: lessonCollisionValidator(this.lessonsService, this.groupService),
     });
 
     this.groupService.groups.subscribe({next: groups => this.groups = groups});

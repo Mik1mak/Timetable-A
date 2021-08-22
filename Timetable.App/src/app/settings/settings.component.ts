@@ -14,7 +14,7 @@ export class SettingsComponent implements OnInit {
 
   name!: string;
   cycles!: number;
-  showWeekend!: boolean;
+  displayEmptyDays!: boolean;
 
   constructor(
     private router: Router,
@@ -31,7 +31,7 @@ export class SettingsComponent implements OnInit {
   }
 
   update() {
-    this.userService.update(this.name, this.cycles, this.showWeekend)
+    this.userService.update(this.name, this.cycles, this.displayEmptyDays)
       .pipe(first())
       .subscribe({error: err => {
         this.toaster.add(err);
@@ -42,7 +42,7 @@ export class SettingsComponent implements OnInit {
   setUser(user: UserIdentity) {
     this.name = user.name!;
     this.cycles = user.cycles!;
-    this.showWeekend = user.showWeekend!;
+    this.displayEmptyDays = user.displayEmptyDays!;
   }
 
   deleteTimetable() {

@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
-import { AbstractControl, AsyncValidator, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { Week } from '@app/_models';
+import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { GroupsService, LessonsService } from '@app/_services';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { TotalTime } from './total-time';
 
 export function lessonCollisionValidator(lessonsService: LessonsService, groupService: GroupsService): AsyncValidatorFn {
@@ -18,6 +16,11 @@ export function lessonCollisionValidator(lessonsService: LessonsService, groupSe
             groupId: groupId,
             duration: duration,
             start: TotalTime.createDateTimeIso(weekNumber, day, start.substr(0, 5))
-        }, groupService.selectedValue).pipe(first());
+        }, groupService.selectedValue).pipe(first()).pipe(map(response => {
+            if(response)
+                return null;
+            
+            return {error: 'Colliding with other lessons in group or in other selected groups'};
+        }));
       };
 }

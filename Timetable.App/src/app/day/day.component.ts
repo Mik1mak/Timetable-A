@@ -41,7 +41,7 @@ export class DayComponent implements OnInit {
   }
 
   private refreshDayVisibility(currentSelected: number[], currentUser: UserIdentity) {
-    if(currentUser.showWeekend) {
+    if(currentUser.displayEmptyDays) {
       this.day!.isVisible = true;
       return;
     }

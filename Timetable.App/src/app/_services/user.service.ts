@@ -42,7 +42,7 @@ export class UserService {
                 let currentUser = this.currentUserValue;
                 currentUser.name = timetableUser.name;
                 currentUser.cycles = timetableUser.cycles;
-                currentUser.showWeekend = timetableUser.showWeekend;
+                currentUser.displayEmptyDays = timetableUser.displayEmptyDays;
                 this.setUser(currentUser);
                 return timetableUser;
             }));

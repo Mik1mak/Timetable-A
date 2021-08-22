@@ -5,6 +5,6 @@ export class UserIdentity {
     readKey?: string;
     createDate?: Date;
     cycles?: number;
-    showWeekend?: boolean;
+    displayEmptyDays?: boolean;
     token?: string;
 }
