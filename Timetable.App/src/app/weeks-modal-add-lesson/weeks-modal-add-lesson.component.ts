@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { lessonEndValidator, TotalTime } from '@app/_helpers';
-import { lessonCollisionValidator } from '@app/_helpers/lesson-collision.validator';
+import { lessonCollisionValidator, lessonEndValidator, TotalTime } from '@app/_helpers';
 import { Group } from '@app/_models';
 import { GroupsService, ModalService, LessonsService, UserService, ToasterService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
@@ -18,6 +17,8 @@ export class WeeksModalAddLessonComponent implements OnInit {
   groups!: Group[];
   weeksNumbers: number[] = [];
   addLessonForm!: FormGroup;
+  submitted = false;
+  loading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,35 +60,52 @@ export class WeeksModalAddLessonComponent implements OnInit {
     }});
   }
 
+  get f() {
+    return this.addLessonForm.controls;
+  }
+
   add() {
+    this.submitted = true;
+
     if(this.addLessonForm.invalid)
       return;
 
-    const day: number = this.addLessonForm.controls.day.value;
-    const week: number = this.addLessonForm.controls.week.value;
-    let startTime = this.addLessonForm.controls.start.value;
+    this.loading = true;
+
+    const day: number = this.f.day.value;
+    const week: number = this.f.week.value;
+    let startTime = this.f.start.value;
 
     let newLesson = {
-      groupId: this.addLessonForm.controls.group.value,
-      duration: this.addLessonForm.controls.duration.value,
+      groupId: this.f.group.value,
+      duration: this.f.value,
       start: TotalTime.createDateTimeIso(week, day, startTime),
-      name: this.addLessonForm.controls.name.value,
-      classroom: this.addLessonForm.controls.classroom.value,
-      link: this.addLessonForm.controls.link.value,
+      name: this.f.name.value,
+      classroom: this.f.classroom.value,
+      link: this.f.link.value,
     };
 
     this.lessonsService.add(newLesson).subscribe({next: (lesson: any) => {
       lesson.start = new Date(lesson.start); 
       this.saveEvent.emit({lesson: lesson, week: week});
+      this.close();
     },
-    error: err => this.toaster.add(err)})
+    error: err => {
+      this.toaster.add(err);
+      this.close();
+    }})
+  }
 
-    this.close();    
-  }   
+  reset() {
+    this.addLessonForm.reset();
+    this.close();
+  }
 
   close() {
+    this.loading = false;
+    this.submitted = false;
     let modalElement = <Element>document.getElementById('weeks-modal-add-lesson');
     let modal = Modal.getInstance(modalElement);
-    modal?.hide();
+    modal!.hide();
   }
 }

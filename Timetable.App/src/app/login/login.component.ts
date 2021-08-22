@@ -52,7 +52,8 @@ export class LoginComponent implements OnInit {
                 next: () => {
                     const returnUrl = this.route.snapshot.queryParams['returnUrl'];
 
-                    if(returnUrl) {
+                    if(
+                        returnUrl) {
                         this.router.navigateByUrl(returnUrl);
                     }
                     else

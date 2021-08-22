@@ -7,47 +7,81 @@
                     <button type="button" class="btn-close" (click)="close()"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="m-2">
-                        <label for="lesson-group" class="form-label">Group</label>
-                        <select id="lesson-group" class="form-select" formControlName="group">
+                    <div class="m-2 mb-3 form-floating">
+                        <select id="lesson-group" class="form-select" formControlName="group" [ngClass]="{ 'is-invalid': submitted && f.group.errors }">
                             <option *ngFor="let group of groups" [ngValue]="group.id">{{group.name}}</option>
                         </select>
+                        <label for="lesson-group" class="form-label">Group</label>
+                        <div *ngIf="submitted && f.group.errors" class="invalid-feedback">
+                            <div *ngIf="f.group.errors.required">Group is required, create one if you haven't already </div>
+                        </div>
                     </div>
-                    <div class="m-2">
-                        <label for="lesson-week" class="form-label">Week</label>
-                        <select id="lesson-week" name="" class="form-select" formControlName="week">
+                    <div class="m-2 mb-3 form-floating">
+                        <select id="lesson-week" class="form-select" formControlName="week" [ngClass]="{ 'is-invalid': submitted && f.week.errors }">
                             <option *ngFor="let i of weeksNumbers" [ngValue]="i">Week {{i}}</option>
-                         </select>
+                        </select>
+                        <label for="lesson-week" class="form-label">Week</label>
+                        <div *ngIf="submitted && f.week.errors" class="invalid-feedback">
+                            <div *ngIf="f.week.errors.required">Beginning Time is required</div>
+                        </div>
                     </div>
-                    <div class="m-2">
-                        <label for="lesson-day" class="form-label">Day Of Week</label>
-                        <select id="lesson-day" name="" class="form-select" formControlName="day">
+                    <div class="m-2 mb-3 form-floating">
+                        <select id="lesson-day" class="form-select" formControlName="day" [ngClass]="{ 'is-invalid': submitted && f.day.errors }">
                             <option *ngFor="let dayOfWeek of daysOfweek; index as i" [ngValue]="i+1">{{dayOfWeek}}</option>
                          </select>
+                         <label for="lesson-day" class="form-label">Day Of Week</label>
+                         <div *ngIf="submitted && f.day.errors" class="invalid-feedback">
+                            <div *ngIf="f.day.errors.required">Day Of Week is required</div>
+                        </div>
                     </div>
-                    <div class="m-2">
+                    <div class="m-2 mb-3 form-floating">
+                        <input type="time" class="form-control" id="lesson-start" formControlName="start" [ngClass]="{ 'is-invalid': submitted && f.start.errors }">
                         <label for="lesson-start" class="form-label">Beginning</label>
-                        <input type="time" class="form-control" id="lesson-start" formControlName="start">
+                        <div *ngIf="submitted && f.start.errors" class="invalid-feedback">
+                            <div *ngIf="f.start.errors.required">Beginning Time is required</div>
+                        </div>
                     </div>
-                    <div class="m-2">
+                    <div class="m-2 mb-3 form-floating">
+                        <input type="number" min="15" max="1440" step="15" class="form-control" id="lesson-duration" 
+                            formControlName="duration" [ngClass]="{ 'is-invalid': submitted && f.duration.errors }">
                         <label for="lesson-duration" class="form-label">Duration (min)</label>
-                        <input type="number" min="15" max="1440" class="form-control" id="lesson-duration" formControlName="duration">
+                        <div *ngIf="submitted && f.duration.errors" class="invalid-feedback">
+                            <div *ngIf="f.duration.errors.required">Lesson duration is required</div>
+                            <div *ngIf="f.duration.errors.min">Minimal duration value is {{f.duration.errors.min.min}}</div>
+                            <div *ngIf="f.duration.errors.max">Max duration value is {{f.duration.errors.max.max}}</div>
+                        </div>
                     </div>
-                    <div class="m-2">
+                    <div class="m-2 mb-3 form-floating">
+                        <input type="text" class="form-control" id="lesson-name" formControlName="name"
+                            [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
                         <label for="lesson-name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="lesson-name" formControlName="name">
-                    </div>
-                    <div class="m-2">
+                        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                            <div *ngIf="f.name.errors.required">Lesson name is required</div>
+                        </div>
+                    </div>                    
+                    <div class="m-2 mb-3 form-floating">
+                        <input type="text" class="form-control" id="lesson-classroom" formControlName="classroom"
+                            [ngClass]="{ 'is-invalid': submitted && f.classroom.errors }">
                         <label for="lesson-classroom" class="form-label">Classroom</label>
-                        <input type="text" class="form-control" id="lesson-classroom" formControlName="classroom">
+                        <div *ngIf="submitted && f.classroom.errors" class="invalid-feedback">
+                            <div>Max length of the classroom is {{f.classroom.errors.maxlength.requiredLength}}</div>
+                        </div>
                     </div>
-                    <div class="m-2">
+                    <div class="m-2 mb-3 form-floating">
+                        <input type="url" class="form-control" id="lesson-link" formControlName="link"
+                            [ngClass]="{ 'is-invalid': submitted && f.link.errors }">
                         <label for="lesson-link" class="form-label">Link</label>
-                        <input type="url" class="form-control" id="lesson-link" formControlName="link">
+                        <div *ngIf="submitted && f.link.errors" class="invalid-feedback">
+                            <div>Max length of the classroom is {{f.link.errors.maxlength.requiredLength}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-secondary" (click)="reset()">Cancel</button>
+                    <button [disabled]="loading" class="btn btn-primary">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Add
+                    </button>
                 </div>
             </form>
         </div>
