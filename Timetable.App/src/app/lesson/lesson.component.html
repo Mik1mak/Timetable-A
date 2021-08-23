@@ -11,7 +11,7 @@
             <button class="btn dropdown-btn" type="button" title="Lesson Menu" data-bs-toggle="dropdown">
                 <i class="bi bi-three-dots-vertical"></i>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="z-index: 1025;">
                 <!-- <li><a class="dropdown-item" href="javascript:void(0);"><i class="bi bi-card-text me-3"></i>Details</a></li> -->
                 <li *ngIf="editMode"><a class="dropdown-item" href="javascript:void(0);" (click)="copy()"><i class="bi bi-clipboard-plus me-3"></i>Copy</a></li>
                 <!-- <li *ngIf="editMode"><a class="dropdown-item" href="javascript:void(0);"><i class="bi bi-pencil me-3"></i>Edit</a></li> -->

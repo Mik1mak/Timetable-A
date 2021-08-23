@@ -1,0 +1,17 @@
+{
+  "hosting": [
+    {
+      "app": {
+        "project": "Timetable-App",
+        "target": "build",
+        "configuration": "production",
+        "path": "dist/Timetable-App"
+      },
+      "azureHosting": {
+        "subscription": "be88a132-9505-456f-8f7f-cf8d74bfd603",
+        "resourceGroupName": "Timetable-App-static-deploy",
+        "account": "timetableappstatic"
+      }
+    }
+  ]
+}

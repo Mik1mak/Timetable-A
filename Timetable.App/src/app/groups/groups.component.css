@@ -1,3 +1,11 @@
 #groups-header {
     min-height: 56px;
 }
+
+.p-bottom {
+    padding-bottom: 82px;
+}
+
+small {
+    color: #ededed;
+}

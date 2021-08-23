@@ -10,11 +10,16 @@
 .grid-wrapper {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 2px;
     padding: 1px;
 }
 
 .plus {
     color: white;
+}
+
+.placeholder {
+    width: 58px;
+    visibility: hidden;
 }
