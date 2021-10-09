@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace TimetableA.Entities.Models
+namespace TimetableA.Models
 {
     public class Lesson : IModel
     {

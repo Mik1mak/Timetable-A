@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TimetableA.Entities.Data;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
-using TimetableA.Entities.Models;
+using TimetableA.Models;
 
 namespace TimetableA.DataAccessLayer.Repositories.Concrete
 {

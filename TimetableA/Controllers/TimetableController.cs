@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimetableA.API.Helpers;
-using TimetableA.API.Models.InputModels;
-using TimetableA.API.Models.OutputModels;
+using TimetableA.API.DTO.InputModels;
+using TimetableA.API.DTO.OutputModels;
 using TimetableA.API.Services;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
-using TimetableA.Entities.Models;
+using TimetableA.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,7 +40,7 @@ namespace TimetableA.API.Controllers
         [HttpGet("All")]
         public async Task<ActionResult<IEnumerable<Timetable>>> GetAll()
         {
-            var timetable = await timetablesRepo.GetAllAsync();
+            IEnumerable<Timetable> timetable = await timetablesRepo.GetAllAsync();
 
             if (timetable == null)
                 return NotFound();
@@ -55,8 +55,8 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Read)]
         public async Task<ActionResult<TimetableOutputModel>> Get()
         {
-            var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
-            var output = mapper.Map<TimetableOutputModel>(timetable);
+            Timetable timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
+            TimetableOutputModel output = mapper.Map<TimetableOutputModel>(timetable);
 
             return Ok(output);
         }
@@ -67,7 +67,7 @@ namespace TimetableA.API.Controllers
             if (input.Cycles < 1 || input.Cycles > settings.MaxCyclesPerTimetable)
                 return BadRequest($"Max count of weeks is {settings.MaxCyclesPerTimetable}");
 
-            var newTimetable = mapper.Map<Timetable>(input);
+            Timetable newTimetable = mapper.Map<Timetable>(input);
 
             newTimetable.CreateDate = DateTime.Now;
             newTimetable.EditKey = KeyGen.Generate();
@@ -76,7 +76,7 @@ namespace TimetableA.API.Controllers
             if (await timetablesRepo.SaveAsync(newTimetable))
             {
                 var authRequest = new AuthenticateRequest { Id = newTimetable.Id, Key = newTimetable.EditKey };
-                var response = await authService.Authenticate(authRequest);
+                AuthenticateResponse response = await authService.Authenticate(authRequest);
                 return Ok(response);
             }
                 
@@ -91,7 +91,7 @@ namespace TimetableA.API.Controllers
             if (input.Cycles < 1 || input.Cycles > settings.MaxCyclesPerTimetable)
                 return BadRequest($"Max count of weeks is {settings.MaxCyclesPerTimetable}");
 
-            var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
+            Timetable timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
 
             timetable.Name = input.Name;
             timetable.Cycles = input.Cycles;
@@ -99,7 +99,7 @@ namespace TimetableA.API.Controllers
 
             if (await timetablesRepo.SaveAsync(timetable))
             {
-                var output = mapper.Map<TimetableOutputModel>(timetable);
+                TimetableOutputModel output = mapper.Map<TimetableOutputModel>(timetable);
                 return Ok(output);
             }
 

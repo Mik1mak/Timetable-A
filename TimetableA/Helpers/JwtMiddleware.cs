@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
@@ -37,7 +36,7 @@ namespace TimetableA.API.Helpers
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var secretKey = Encoding.ASCII.GetBytes(appSettings.Secret);
+                byte[] secretKey = Encoding.ASCII.GetBytes(appSettings.Secret);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -48,7 +47,7 @@ namespace TimetableA.API.Helpers
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-                var key = jwtToken.Claims.First(x => x.Type == "key").Value;
+                string key = jwtToken.Claims.First(x => x.Type == "key").Value;
 
                 context.Items["Timetable"] = await timetableRepo.GetAsync(userId);
                 context.Items["Key"] = key;

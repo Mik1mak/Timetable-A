@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace TimetableA.API.Models.OutputModels
+namespace TimetableA.API.DTO.OutputModels
 {
     public class LessonOutputModel
     {

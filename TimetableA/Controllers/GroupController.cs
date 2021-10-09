@@ -8,10 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimetableA.API.Helpers;
-using TimetableA.API.Models.InputModels;
-using TimetableA.API.Models.OutputModels;
+using TimetableA.API.DTO.InputModels;
+using TimetableA.API.DTO.OutputModels;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
-using TimetableA.Entities.Models;
+using TimetableA.Models;
 
 namespace TimetableA.API.Controllers
 {
@@ -42,12 +42,12 @@ namespace TimetableA.API.Controllers
             if (ThisTimetable.Groups.Count >= settings.MaxGroupsPerTimetable)
                 return BadRequest($"Max count of groups is {settings.MaxGroupsPerTimetable}");
 
-            var newGroup = mapper.Map<Group>(input);
+            Group newGroup = mapper.Map<Group>(input);
             newGroup.TimetableId = ThisTimetable.Id;
 
             if (await groupsRepo.SaveAsync(newGroup))
             {
-                var output = mapper.Map<GroupOutputModel>(newGroup);
+                GroupOutputModel output = mapper.Map<GroupOutputModel>(newGroup);
                 output.CollidingGroups = await CollidingGroups(newGroup);
                 return Ok(output);
             }
@@ -59,9 +59,9 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Read, typeof(GroupAuthMethod))]
         public async Task<ActionResult<GroupOutputModel>> GetGroup(int id)
         {
-            var group = await groupsRepo.GetAsync(id);
+            Group group = await groupsRepo.GetAsync(id);
 
-            var output = mapper.Map<GroupOutputModel>(group);
+            GroupOutputModel output = mapper.Map<GroupOutputModel>(group);
             output.CollidingGroups = await CollidingGroups(group);
 
             return Ok(output);
@@ -71,7 +71,7 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Read, typeof(GroupAuthMethod))]
         public async Task<ActionResult<IEnumerable<GroupOutputModel>>> GetGroups()
         {
-            var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
+            Timetable timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
 
             if (timetable.Groups == null)
                 return NotFound();
@@ -80,9 +80,9 @@ namespace TimetableA.API.Controllers
 
             var output = new List<GroupOutputModel>();
 
-            foreach (var g in timetable.Groups)
+            foreach (Group g in timetable.Groups)
             {
-                var outputModel = mapper.Map<GroupOutputModel>(g);
+                GroupOutputModel outputModel = mapper.Map<GroupOutputModel>(g);
                 outputModel.CollidingGroups = await CollidingGroups(g);
                 output.Add(outputModel);
             }
@@ -94,14 +94,14 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Read, typeof(GroupAuthMethod))]
         public async Task<ActionResult<IEnumerable<int>>> CollidingGroups(int id)
         {
-            var group = await groupsRepo.GetAsync(id);
+            Group group = await groupsRepo.GetAsync(id);
             return Ok(await CollidingGroups(group));
         }
 
         private async Task<IEnumerable<int>> CollidingGroups(Group group)
         {
-            var timetable = await timetablesRepo.GetAsync(group.TimetableId);
-            var otherGroups = timetable.Groups?.Where(x => x.Id != group.Id);
+            Timetable timetable = await timetablesRepo.GetAsync(group.TimetableId);
+            IEnumerable<Group> otherGroups = timetable.Groups?.Where(x => x.Id != group.Id);
 
             return group.CollidingGroupsIds(otherGroups);
         }
@@ -110,7 +110,7 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit, typeof(GroupAuthMethod))]
         public async Task<ActionResult> PutGroup(int id, [FromBody] GroupInputModel input)
         {
-            var group = await groupsRepo.GetAsync(id);
+            Group group = await groupsRepo.GetAsync(id);
 
             group.Name = input.Name;
             group.HexColor = input.HexColor;

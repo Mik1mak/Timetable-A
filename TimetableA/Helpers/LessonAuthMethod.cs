@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using TimetableA.Entities.Models;
+using TimetableA.Models;
 
 namespace TimetableA.API.Helpers
 {
@@ -13,7 +11,7 @@ namespace TimetableA.API.Helpers
             if (timetable.Groups == null)
                 return false;
 
-            foreach (var group in timetable.Groups)
+            foreach (Group group in timetable.Groups)
             {
                 if (group.Lessons != null)
                     if (group.Lessons.Any(x => x.Id.ToString() == id))

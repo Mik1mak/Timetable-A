@@ -8,10 +8,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TimetableA.API.Helpers;
-using TimetableA.API.Models.InputModels;
-using TimetableA.API.Models.OutputModels;
+using TimetableA.API.DTO.InputModels;
+using TimetableA.API.DTO.OutputModels;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
-using TimetableA.Entities.Models;
+using TimetableA.Models;
 
 namespace TimetableA.API.Services
 {
@@ -63,7 +63,7 @@ namespace TimetableA.API.Services
         private string GenerateJwtToken(Timetable timetable, string key)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var keyJWT = Encoding.ASCII.GetBytes(appSettings.Secret);
+            byte[] keyJWT = Encoding.ASCII.GetBytes(appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] 
@@ -74,7 +74,7 @@ namespace TimetableA.API.Services
                 Expires = DateTime.UtcNow.AddMonths(6),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyJWT), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
     }

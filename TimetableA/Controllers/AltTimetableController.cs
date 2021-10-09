@@ -8,8 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimetableA.API.Helpers;
-using TimetableA.API.Models.OutputModels;
+using TimetableA.API.DTO.OutputModels;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
+using TimetableA.Models;
 
 namespace TimetableA.API.Controllers
 {
@@ -32,20 +33,24 @@ namespace TimetableA.API.Controllers
 
         [HttpGet]
         [Authorize(AuthLevel.Read)]
-        public async Task<ActionResult<SimpleTimetableOutputModel>> Get()
+        public async Task<ActionResult<AltTimetableOutputModel>> Get()
         {
-            var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
+            Timetable timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
 
-            return Ok(new SimpleTimetableOutputModel(timetable.Groups, this.settings));
+            AltTimetableOutputModel output = AltTimetableOutputModelFactory.FromGroups(timetable.Groups, this.settings);
+
+            return Ok(output);
         }
 
         [HttpGet("Week/{weekIndex}")]
         [Authorize(AuthLevel.Read)]
         public async Task<ActionResult<WeekOutputModel>> GetWeek(int weekIndex)
         {
-            var timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
+            Timetable timetable = await timetablesRepo.GetAsync(ThisTimetable.Id);
 
-            return Ok(WeekOutputModel.GetWeekFromGroups(timetable.Groups, weekIndex));
+            WeekOutputModel output = WeekOutputModelFactory.FromGroups(timetable.Groups, weekIndex);
+
+            return Ok(output);
         }
     }
 }

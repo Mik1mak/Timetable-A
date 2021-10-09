@@ -18,8 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TimetableA.API.DTO\TimetableA.API.DTO.csproj" />
     <ProjectReference Include="..\TimetableA.DataAccessLayer\TimetableA.DataAccessLayer.csproj" />
     <ProjectReference Include="..\TimetableA.Entities\TimetableA.Entities.csproj" />
+    <ProjectReference Include="..\TimetableA.Models\TimetableA.Models.csproj" />
   </ItemGroup>
 
 </Project>

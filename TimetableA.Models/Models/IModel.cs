@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimetableA.Entities.Models
+namespace TimetableA.Models
 {
     public interface IModel
     {

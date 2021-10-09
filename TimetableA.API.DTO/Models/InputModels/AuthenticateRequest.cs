@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TimetableA.API.Models.InputModels
+namespace TimetableA.API.DTO.InputModels
 {
     public class AuthenticateRequest
     {

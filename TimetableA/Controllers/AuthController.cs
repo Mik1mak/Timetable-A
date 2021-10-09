@@ -5,7 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TimetableA.API.Models.InputModels;
+using TimetableA.API.DTO.InputModels;
+using TimetableA.API.DTO.OutputModels;
 using TimetableA.API.Services;
 
 namespace TimetableA.API.Controllers
@@ -26,7 +27,7 @@ namespace TimetableA.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Authenticate(AuthenticateRequest model)
         {
-            var response = await authService.Authenticate(model);
+            AuthenticateResponse response = await authService.Authenticate(model);
 
             if (response == null)
                 return BadRequest("Invalid ID or Key");

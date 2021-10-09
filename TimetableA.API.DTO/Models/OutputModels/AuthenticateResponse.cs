@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TimetableA.API.Helpers;
-using TimetableA.Entities.Models;
+using TimetableA.Models;
 
-namespace TimetableA.API.Models.OutputModels
+namespace TimetableA.API.DTO.OutputModels
 {
     public class AuthenticateResponse
     {
@@ -21,7 +17,6 @@ namespace TimetableA.API.Models.OutputModels
 
             Token = token;
         }
-
         public int Id { get; set; }
 
         public string Name { get; set; }

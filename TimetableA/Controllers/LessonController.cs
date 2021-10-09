@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimetableA.API.Helpers;
-using TimetableA.API.Models.InputModels;
-using TimetableA.API.Models.OutputModels;
+using TimetableA.API.DTO.InputModels;
+using TimetableA.API.DTO.OutputModels;
 using TimetableA.DataAccessLayer.Repositories.Abstract;
-using TimetableA.Entities.Models;
+using TimetableA.Models;
 
 namespace TimetableA.API.Controllers
 {
@@ -35,12 +35,12 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
         public async Task<ActionResult<LessonOutputModel>> AddLesson(int groupId, [FromBody] LessonInputModel input)
         {
-            var group = await groupsRepo.GetAsync(groupId);
+            Group group = await groupsRepo.GetAsync(groupId);
 
             if (group.TimetableId != ThisTimetable.Id)
                 return BadRequest();
 
-            var lessonToAdd = mapper.Map<Lesson>(input);
+            Lesson lessonToAdd = mapper.Map<Lesson>(input);
             lessonToAdd.GroupId = groupId;
 
             if (group.Lessons.Any(x => x.CollidesWith(lessonToAdd)))
@@ -57,8 +57,8 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Read, typeof(LessonAuthMethod))]
         public async Task<ActionResult<GroupOutputModel>> GetLesson(int id)
         {
-            var lesson = await lessonsRepo.GetAsync(id);
-            var output = mapper.Map<LessonOutputModel>(lesson);
+            Lesson lesson = await lessonsRepo.GetAsync(id);
+            LessonOutputModel output = mapper.Map<LessonOutputModel>(lesson);
             return Ok(output);
         }
 
@@ -66,7 +66,7 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Read, typeof(GroupAuthMethod), "goupId")]
         public async Task<ActionResult<IEnumerable<LessonOutputModel>>> GetLessons(int groupId)
         {
-            var group = await groupsRepo.GetAsync(groupId);
+            Group group = await groupsRepo.GetAsync(groupId);
 
             return Ok(group.Lessons.Select(x => mapper.Map<LessonOutputModel>(x)));
         }
@@ -75,7 +75,7 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
         public async Task<ActionResult> PutLesson(int id, [FromBody] LessonInputModel input)
         {
-            var lesson = await lessonsRepo.GetAsync(id);
+            Lesson lesson = await lessonsRepo.GetAsync(id);
             lesson.Name = input.Name;
             lesson.Start = input.Start;
             lesson.Duration = TimeSpan.FromMinutes(input.Duration);
@@ -103,8 +103,8 @@ namespace TimetableA.API.Controllers
         [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
         public IActionResult VerifyNewLesson(int groupId, [FromBody] LessonVerifyRequest requestBody)
         {
-            var lesson = mapper.Map<Lesson>(requestBody.Lesson);
-            var groups = ThisTimetable.Groups.Where(g => requestBody.GroupIds.Contains(g.Id) || g.Id == groupId);
+            Lesson lesson = mapper.Map<Lesson>(requestBody.Lesson);
+            IEnumerable<Group> groups = ThisTimetable.Groups.Where(g => requestBody.GroupIds.Contains(g.Id) || g.Id == groupId);
 
             if (groups.Any(g => g.Lessons.Any(l => l.CollidesWith(lesson))))
                 return Ok(false);

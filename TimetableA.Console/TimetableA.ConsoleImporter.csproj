@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="6.0.94" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Timetable.Importer\TimetableA.Importer.csproj" />
+    <ProjectReference Include="..\TimetableA.API.DTO\TimetableA.API.DTO.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>
