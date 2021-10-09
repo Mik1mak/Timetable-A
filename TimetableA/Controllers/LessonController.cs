@@ -43,7 +43,7 @@ namespace TimetableA.API.Controllers
             Lesson lessonToAdd = mapper.Map<Lesson>(input);
             lessonToAdd.GroupId = groupId;
 
-            if (group.Lessons.Any(x => x.CollidesWith(lessonToAdd)))
+            if (group.Lessons.Any(x => x.CollideWith(lessonToAdd)))
                 return BadRequest("Lesson can't collide with other existing lessons in same group.");
 
             if (await lessonsRepo.SaveAsync(lessonToAdd))
@@ -82,7 +82,7 @@ namespace TimetableA.API.Controllers
             lesson.Link = input.Link;
             lesson.Classroom = input.Classroom;
 
-            if (lesson.Group.Lessons.Any(x => x.CollidesWith(lesson)))
+            if (lesson.Group.Lessons.Any(x => x.CollideWith(lesson)))
                 return BadRequest("Lesson can't collide with other existing lessons in this same group.");
 
             if (await lessonsRepo.SaveAsync(lesson))
@@ -106,7 +106,7 @@ namespace TimetableA.API.Controllers
             Lesson lesson = mapper.Map<Lesson>(requestBody.Lesson);
             IEnumerable<Group> groups = ThisTimetable.Groups.Where(g => requestBody.GroupIds.Contains(g.Id) || g.Id == groupId);
 
-            if (groups.Any(g => g.Lessons.Any(l => l.CollidesWith(lesson))))
+            if (groups.Any(g => g.Lessons.Any(l => l.CollideWith(lesson))))
                 return Ok(false);
             return Ok(true);
         }

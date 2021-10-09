@@ -32,7 +32,7 @@ namespace TimetableA.Models
         {
             foreach (var lesson in Lessons)
                 foreach (var lesson2 in group2.Lessons)
-                    if (lesson.CollidesWith(lesson2))
+                    if (lesson.CollideWith(lesson2))
                         return true;
 
             return false;

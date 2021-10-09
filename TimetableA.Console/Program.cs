@@ -18,12 +18,10 @@ namespace TimetableA.ConsoleImporter
             IConfig config = new TxtConfig();
             client.BaseAddress = config.Dest;
 
-            string filePath = GetFile(config.Source).Result;
+            StreamReader source = GetSoure(config.Source).Result;
 
             Console.WriteLine("Tworzenie planu...");
-            Timetable timetable = IcsParser
-                .FromFile(filePath)
-                .GetTimetable();
+            Timetable timetable = new IcsParser(source).GetTimetable();
 
             timetable.Cycles = config.Cycles;
             timetable.Name = timetable.Name.Substring(0, 31);
@@ -40,9 +38,9 @@ namespace TimetableA.ConsoleImporter
             Console.ReadKey();
         }
 
-        private static async Task<string> GetFile(Uri uri)
+        private static async Task<StreamReader> GetSoure(Uri uri)
         {
-            string filePath;
+            StreamReader output;
 
             if(uri.Scheme.Equals("webcals"))
             {
@@ -59,26 +57,19 @@ namespace TimetableA.ConsoleImporter
             {
                 case "http":
                 case "https":
-                    var currentPath = Directory.GetCurrentDirectory();
-                    filePath = $"{currentPath}/timetable.ics";
-
-                    if (File.Exists(filePath))
-                        File.Delete(filePath);
-
                     Console.WriteLine("Pobieranie planu...");
-                    using (FileStream fs = File.Create(filePath))
-                    using (var response = await new HttpClient().GetStreamAsync(uri))
-                        await response.CopyToAsync(fs);
+                    output = new StreamReader(await new HttpClient().GetStreamAsync(uri));
                     break;
                 case "file":
-                    filePath = uri.LocalPath;
+                    Console.WriteLine("Otwieranie planu...");
+                    output = File.OpenText(uri.LocalPath);
                     break;
                 default:
                     Console.WriteLine("Invalid Uri.");
                     throw new Exception("Invalid Uri.");
             }
 
-            return filePath;
+            return output;
         }
     }
 }

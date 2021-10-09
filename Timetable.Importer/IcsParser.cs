@@ -8,7 +8,7 @@ namespace TimetableA.Importer
     {
         private readonly Timetable timetable = new();
 
-        protected IcsParser(StreamReader reader)
+        public IcsParser(StreamReader source)
         {
             var defaultGroup = new Group
             {
@@ -28,20 +28,15 @@ namespace TimetableA.Importer
                 new LessonLineParser(defaultGroup),
             };
 
-            using(reader)
+            using(source)
             {
                 string line;
-                while ((line = reader.ReadLine()) != null)
+                while ((line = source.ReadLine()) != null)
                 {
                     foreach(ILineParser p in lineParsers)
                         p.Parse(line);
                 }
             }
-        }
-
-        public static IcsParser FromFile(string path)
-        {
-            return new IcsParser(File.OpenText(path));
         }
 
         public Timetable GetTimetable()

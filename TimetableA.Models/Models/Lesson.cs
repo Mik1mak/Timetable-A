@@ -40,22 +40,19 @@ namespace TimetableA.Models
         [JsonIgnore]
         public Group Group { get; set; }
 
-        public bool CollidesWith(Lesson lesson2)
+        public bool CollideWith(Lesson lesson2)
         {
-            var end = Start + Duration;
+            DateTime end = Start + Duration;
+            DateTime lesson2End = lesson2.Start + lesson2.Duration;
+
+            if (lesson2.Start <= Start && lesson2End >= end)
+                return true;
 
             if (lesson2.Start >= Start && lesson2.Start < end)
                 return true;
 
-            var lesson2End = lesson2.Start + lesson2.Duration;
-
             if (lesson2End > Start && lesson2End <= end)
                 return true;
-
-            if (lesson2.Start < Start && lesson2End > end)
-                return true;
-
-
 
             return false;
         }
