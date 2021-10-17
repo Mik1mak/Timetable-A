@@ -5,48 +5,89 @@ using System.Threading.Tasks;
 using TimetableA.API.DTO.OutputModels;
 using TimetableA.Models;
 using TimetableA.Importer;
+using System.Linq;
 
 namespace TimetableA.ConsoleImporter
 {
-
     partial class Program
     {
         private static readonly HttpClient client = new();
+        private const string CONFIGNAME = "config.txt";
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            IConfig config = new TxtConfig();
-            client.BaseAddress = config.Dest;
+            if(!File.Exists(CONFIGNAME))
+            {
+                Console.WriteLine("Brak pliku konfiguracyjnego.");
+                End();
+                return;
+            }
 
-            StreamReader source = GetSoure(config.Source).Result;
+            IConfig config = null;
+            TimetableSender sender = new(client);
 
-            Console.WriteLine("Tworzenie planu...");
-            Timetable timetable = new IcsParser(source).GetTimetable();
+            try
+            {
+                config = new TxtConfig(CONFIGNAME);
+                StreamReader source = await GetReaderFromSource(config.Source);
+                client.BaseAddress = config.Dest;
 
-            timetable.Cycles = config.Cycles;
-            timetable.Name = timetable.Name.Substring(0, 31);
-            timetable.TrimLessonsToCycles();
-            
-            var sender = new TimetableSender(client);
+                Console.WriteLine("Tworzenie planu...");
+                Timetable timetable = new IcsParser(source).GetTimetable();
 
-            Console.WriteLine("Wysyłanie planu...");
-            AuthenticateResponse response = sender.CreateAsync(timetable).Result;
-            string output = $"Link do planu: {config.StaticApp}login/?id={response.Id}&key={response.EditKey}";
+                timetable.Cycles = config.Cycles;
+                timetable.Name = timetable.Name.SliceIfTooLong(32);
+                timetable.TrimLessonsToCycles();
 
-            Console.WriteLine($"Plan zapisany. {output}");
-            File.AppendAllText("Output.txt", output);
+                Console.WriteLine("Wysyłanie planu...");
+
+                if(config.AsLayer)
+                {
+                    await sender.LoginToAccount(config.LoginInfo);
+                    timetable.Groups.First().Name = timetable.Name;
+                }
+                else
+                {
+                    await sender.CreateTimetable(timetable);
+                }
+
+                AuthenticateResponse response = await sender.CreateAsync(timetable);
+
+                string output = $"\r\nLink do planu: {config.StaticApp}login/?id={response.Id}" +
+                    $"&key={response.EditKey}" +
+                    $"&returnUrl=%2F%3F{string.Join("%26", sender.AddedGroupsId.Select(id => $"g%3D{id}"))}";
+
+                Console.WriteLine($"Plan zapisany. {output}");
+                File.AppendAllText("Output.txt", output);
+            }
+            catch(Refit.ApiException ex)
+            {
+                if(config != null && !config.AsLayer)
+                    await sender.DeleteTimetableIfWasCreated();
+
+                Console.WriteLine($"Request Error: {ex.Message}");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            End();
+        }
+
+        private static void End()
+        {
+            Console.WriteLine("Enter any key to exit.");
             Console.ReadKey();
         }
 
-        private static async Task<StreamReader> GetSoure(Uri uri)
+        private static async Task<StreamReader> GetReaderFromSource(Uri uri)
         {
-            StreamReader output;
-
-            if(uri.Scheme.Equals("webcals"))
+            if(uri.Scheme == "webcals")
             {
                 var uriBuilder = new UriBuilder(uri)
                 {
-                    Scheme = Uri.UriSchemeHttps,
+                    Scheme = Uri.UriSchemeHttp,
                     Port = -1
                 };
 
@@ -57,19 +98,33 @@ namespace TimetableA.ConsoleImporter
             {
                 case "http":
                 case "https":
+                    HttpClient client = new();
                     Console.WriteLine("Pobieranie planu...");
-                    output = new StreamReader(await new HttpClient().GetStreamAsync(uri));
-                    break;
+
+                    try
+                    {
+                        return new StreamReader(await client.GetStreamAsync(uri));
+                    }
+                    catch (Exception)
+                    {
+                        var uriBuilder = new UriBuilder(uri)
+                        {
+                            Scheme = uri.Scheme == Uri.UriSchemeHttps ? 
+                                Uri.UriSchemeHttp : Uri.UriSchemeHttps,
+                            Port = -1,
+                        };
+
+                        uri = uriBuilder.Uri;
+
+                        return new StreamReader(await client.GetStreamAsync(uri));
+                    }
                 case "file":
                     Console.WriteLine("Otwieranie planu...");
-                    output = File.OpenText(uri.LocalPath);
-                    break;
+                    return File.OpenText(uri.LocalPath);
                 default:
                     Console.WriteLine("Invalid Uri.");
-                    throw new Exception("Invalid Uri.");
+                    throw new Exception("Invalid source Uri.");
             }
-
-            return output;
         }
     }
 }

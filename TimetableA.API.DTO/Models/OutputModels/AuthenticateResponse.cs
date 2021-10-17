@@ -17,6 +17,9 @@ namespace TimetableA.API.DTO.OutputModels
 
             Token = token;
         }
+
+        public AuthenticateResponse() { }
+
         public int Id { get; set; }
 
         public string Name { get; set; }

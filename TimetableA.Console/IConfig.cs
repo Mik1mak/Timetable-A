@@ -1,4 +1,5 @@
 ﻿using System;
+using TimetableA.API.DTO.InputModels;
 
 namespace TimetableA.ConsoleImporter
 {
@@ -8,5 +9,8 @@ namespace TimetableA.ConsoleImporter
         public Uri Dest { get; }
         public Uri StaticApp { get; }
         public int Cycles { get; }
+
+        public bool AsLayer { get; }
+        public AuthenticateRequest LoginInfo { get; }
     }
 }

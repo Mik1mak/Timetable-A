@@ -1,4 +1,5 @@
 ﻿using System;
+using TimetableA.API.DTO.InputModels;
 
 namespace TimetableA.ConsoleImporter
 {
@@ -16,6 +17,10 @@ namespace TimetableA.ConsoleImporter
             public Uri StaticApp => new(@"https://timetableappstatic.z22.web.core.windows.net");
 
             public int Cycles => 1;
+
+            public bool AsLayer => false;
+
+            public AuthenticateRequest LoginInfo => throw new NotImplementedException();
         }
     }
 }
