@@ -33,7 +33,9 @@ namespace TimetableA.ConsoleImporter
                 client.BaseAddress = config.Dest;
 
                 Console.WriteLine("Tworzenie planu...");
-                Timetable timetable = new IcsParser(source).GetTimetable();
+                Timetable timetable =
+                    new IcsParser(source).GetTimetable();
+                    //new OptivumParser(source.BaseStream).GetTimetable();
 
                 timetable.Cycles = config.Cycles;
                 timetable.Name = timetable.Name.SliceIfTooLong(32);
@@ -41,7 +43,7 @@ namespace TimetableA.ConsoleImporter
 
                 Console.WriteLine("Wysyłanie planu...");
 
-                if(config.AsLayer)
+                if (config.AsLayer)
                 {
                     await sender.LoginToAccount(config.LoginInfo);
                     timetable.Groups.First().Name = timetable.Name;

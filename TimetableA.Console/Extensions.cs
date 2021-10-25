@@ -18,6 +18,9 @@ namespace TimetableA.ConsoleImporter
 
         public static string SliceIfTooLong(this string str, int maxLength)
         {
+            if (str == null)
+                return null;
+
             if (str.Length > maxLength)
                 str = str.Substring(0, maxLength);
 

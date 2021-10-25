@@ -40,8 +40,8 @@ namespace TimetableA.ConsoleImporter
                         Name = l.Name.SliceIfTooLong(32),
                         Start = l.Start,
                         Duration = (int)l.Duration.TotalMinutes,
-                        Classroom = l.Classroom.SliceIfTooLong(32),
-                        Link = l.Link.SliceIfTooLong(512),
+                        Classroom = l.Classroom?.SliceIfTooLong(32),
+                        Link = l.Link?.SliceIfTooLong(512),
                     };
                 }));
             }
