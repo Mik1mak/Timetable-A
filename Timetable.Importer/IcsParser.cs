@@ -8,6 +8,11 @@ namespace TimetableA.Importer
     {
         private readonly Timetable timetable = new();
 
+        private readonly ICollection<ILineParser> lineParsers;
+        private readonly StreamReader source;
+
+        private bool parsed = false;
+
         public IcsParser(StreamReader source)
         {
             var defaultGroup = new Group
@@ -22,25 +27,31 @@ namespace TimetableA.Importer
                 defaultGroup
             };
 
-            var lineParsers = new HashSet<ILineParser>()
+            lineParsers = new HashSet<ILineParser>()
             {
                 new TimetableLineParser(timetable),
                 new LessonLineParser(defaultGroup),
             };
 
-            using(source)
-            {
-                string line;
-                while ((line = source.ReadLine()) != null)
-                {
-                    foreach(ILineParser p in lineParsers)
-                        p.Parse(line);
-                }
-            }
+            this.source = source;
         }
 
         public Timetable GetTimetable()
         {
+            if(!parsed)
+            {
+                using (source)
+                {
+                    string line;
+                    while ((line = source.ReadLine()) != null)
+                    {
+                        foreach (ILineParser p in lineParsers)
+                            p.Parse(line);
+                    }
+                }
+                parsed = true;
+            }
+
             return timetable;
         }
     }

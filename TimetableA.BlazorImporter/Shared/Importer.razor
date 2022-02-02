@@ -1,0 +1,95 @@
+﻿@inject TimetableSender api
+
+@*
+formularz:
+	format źródła ICS | Optivum
+		>ile cykli, url, plik
+		>url
+	warstwa | nowy plan
+		>link do logowania planu
+		>
+output:
+	>data, godz, link
+*@
+
+<h3>Importer</h3>
+
+
+<EditForm Model="@form" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+	 <p>
+        <label>
+            Parser:
+            <InputSelect @bind-Value="form.Parser">
+               @foreach (var item in parsers)
+               {
+                <option value="@item.Value">@item.Key</option>   
+               }
+                
+            </InputSelect>
+        </label>
+    </p>
+    @if(urlAllowedParsers.Contains(form.Parser))
+    {
+    <p>
+        <label>
+            Source URL:
+            <InputText id="source" @bind-Value="form.Source" />
+        </label>
+    </p>    
+    }
+    @if(form.Parser == parsers["ics"])
+    {
+    <p>
+        <label>
+            Cycles:
+            <InputNumber id="cycles" @bind-Value="form.Cycles" />
+        </label>
+    </p>    
+    }
+    <p>
+        <label>
+            Tryb:
+            <InputSelect @bind-Value="form.Parser">
+                <option value="item.Value">item.Key</option>   
+            </InputSelect>
+        </label>
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private ImporterForm form = new();
+    private Dictionary<string, string> parsers = new Dictionary<string, string>
+    {
+        {"ics", "ICS"},
+        {"optivum", "Optivum"},
+    };
+    private ICollection<string> urlAllowedParsers = new HashSet<string>();
+    private ICollection<string> fileAllowedParsers= new HashSet<string>();
+
+    protected override void OnInitialized()
+    {
+        urlAllowedParsers.Add(parsers["ics"]);
+        urlAllowedParsers.Add(parsers["optivum"]);
+
+        form.Parser = parsers["ics"];
+        base.OnInitialized();
+    }
+
+    private void HandleValidSubmit()
+    {
+        // Process the valid form
+    }
+
+    public class ImporterForm
+    {
+        public string Parser { get; set; } = string.Empty;
+        public int Cycles { get; set; } = 1;
+        public string Source { get; set; } = string.Empty;
+		//public AuthenticateRequest LoginInfo { get; }
+	}
+}

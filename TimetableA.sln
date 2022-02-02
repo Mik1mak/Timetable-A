@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31424.327
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.API", "TimetableA\TimetableA.API.csproj", "{B5C86BB8-0F4E-40B2-899A-8455C46550D9}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.Models", "TimetableA.Models\TimetableA.Models.csproj", "{C5C40A01-33EA-4D10-9130-7ABA3063249F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.Tests", "Timetable.Tests\TimetableA.Tests.csproj", "{C6A08F2C-952C-43DC-B3BA-9052A07D64AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableA.BlazorImporter", "TimetableA.BlazorImporter\TimetableA.BlazorImporter.csproj", "{3682D248-D404-499B-984E-9D8BB33682DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{C6A08F2C-952C-43DC-B3BA-9052A07D64AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A08F2C-952C-43DC-B3BA-9052A07D64AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6A08F2C-952C-43DC-B3BA-9052A07D64AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3682D248-D404-499B-984E-9D8BB33682DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3682D248-D404-499B-984E-9D8BB33682DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3682D248-D404-499B-984E-9D8BB33682DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3682D248-D404-499B-984E-9D8BB33682DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
