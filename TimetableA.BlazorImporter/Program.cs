@@ -13,5 +13,6 @@ builder.Services.AddRefitClient<ITimetableEndpoints>().ConfigureHttpClient(c =>
 });
 
 builder.Services.AddScoped(typeof(TimetableSender));
+builder.Services.AddScoped(typeof(TimetableGetter));
 
 await builder.Build().RunAsync();

@@ -12,7 +12,7 @@ namespace TimetableA.Importer
     public class OptivumParser : ITimetableParser
     {
         private const string DEFAULT_GROUP_NAME = "Zajęcia";
-        private readonly HtmlDocument doc;
+        private readonly HtmlDocument doc = new();
         private readonly Dictionary<string, Group> groups = new();
         private Timetable timetable = new()
         {
@@ -22,8 +22,12 @@ namespace TimetableA.Importer
 
         public OptivumParser(Stream source)
         {
-            doc = new HtmlDocument();
             doc.Load(source);
+        }
+
+        public OptivumParser(string htmlDoc)
+        {
+            doc.LoadHtml(htmlDoc);
         }
 
         public Timetable GetTimetable()
@@ -34,8 +38,17 @@ namespace TimetableA.Importer
 
         private void Parse()
         {
-            timetable.Name = doc.DocumentNode.SelectSingleNode("/html/body/table/tr/td/span").InnerHtml;
-            HtmlNodeCollection cellList = doc.DocumentNode.SelectNodes("//div/table/tr/td/table/tr/td");
+            string tab = "table";
+            //var htmlDoc = doc.DocumentNode.InnerHtml;
+
+            var tabNode = doc.DocumentNode.SelectSingleNode("/html/body/table");
+            if (tabNode.LastChild.OriginalName == "tbody")
+                tab = "table/tbody";
+
+            HtmlNode node = doc.DocumentNode.SelectSingleNode($"/html/body/{tab}/tr/td/span");
+
+            timetable.Name = node.InnerHtml;
+            HtmlNodeCollection cellList = doc.DocumentNode.SelectNodes($"//div/{tab}/tr/td/{tab}/tr/td");
 
             if (cellList is null)
                 return;

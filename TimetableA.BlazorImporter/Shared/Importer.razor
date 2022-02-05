@@ -1,4 +1,5 @@
-﻿@inject TimetableSender api
+﻿@inject TimetableSender sender
+@inject TimetableGetter getter
 
 @*
 formularz:
@@ -22,25 +23,49 @@ output:
 	 <p>
         <label>
             Parser:
-            <InputSelect @bind-Value="form.Parser">
+            <InputSelect @bind-Value="form.ParserId">
                @foreach (var item in parsers)
                {
-                <option value="@item.Value">@item.Key</option>   
+                <option value="@item.Key">@item.Value.DisplayName</option>   
                }
                 
             </InputSelect>
         </label>
     </p>
-    @if(urlAllowedParsers.Contains(form.Parser))
+    <p>
+        <label>
+            Source:
+            <InputSelect @bind-Value="form.SelectedSource">
+                @if(parsers[form.ParserId].ParseFromUrl)
+                {
+                    <option value="url">From URL</option>
+                }
+                @if(parsers[form.ParserId].ParseFromFile)
+                {
+                    <option value="file">From File</option>
+                }
+            </InputSelect>
+        </label>
+    </p>
+    @if (form.SelectedSource == "url")
+    {
+        <p>
+            <label>
+                Source URL:
+                <InputText id="source" @bind-Value="form.Source" />
+            </label>
+        </p>
+    }
+    @if(form.SelectedSource == "file")
     {
     <p>
         <label>
-            Source URL:
-            <InputText id="source" @bind-Value="form.Source" />
+            Source File:
+            <InputFile OnChange="@LoadFile"/>
         </label>
     </p>    
     }
-    @if(form.Parser == parsers["ics"])
+    @if(parsers[form.ParserId].AskAboutCycles)
     {
     <p>
         <label>
@@ -51,45 +76,101 @@ output:
     }
     <p>
         <label>
-            Tryb:
-            <InputSelect @bind-Value="form.Parser">
-                <option value="item.Value">item.Key</option>   
+            Mode:
+            <InputSelect @bind-Value="form.AsNew">
+                <option value="true">Save as new Timetable</option>
+                @*<option value="false">Save as Timetable Layer</option>   *@
             </InputSelect>
         </label>
     </p>
+    @if(!form.AsNew)
+    {
+    <p>
+        <label>
+            Timetable Edit URL:
+            <InputText @bind-Value="form.EditUrl"/>
+        </label>
+    </p>    
+    }
 
     <button type="submit">Submit</button>
 </EditForm>
 
 @code {
     private ImporterForm form = new();
-    private Dictionary<string, string> parsers = new Dictionary<string, string>
+    private bool loading = false;
+    private Dictionary<string, ITimetableParserInfo> parsers = new()
     {
-        {"ics", "ICS"},
-        {"optivum", "Optivum"},
+        { nameof(IcsParserInfo), new IcsParserInfo() },
+        { nameof(OptivumParserInfo), new OptivumParserInfo() },
     };
-    private ICollection<string> urlAllowedParsers = new HashSet<string>();
-    private ICollection<string> fileAllowedParsers= new HashSet<string>();
 
     protected override void OnInitialized()
     {
-        urlAllowedParsers.Add(parsers["ics"]);
-        urlAllowedParsers.Add(parsers["optivum"]);
-
-        form.Parser = parsers["ics"];
         base.OnInitialized();
     }
 
-    private void HandleValidSubmit()
+    private void LoadFile(InputFileChangeEventArgs e)
     {
-        // Process the valid form
+        form.SourceFile = e.File;
     }
 
-    public class ImporterForm
+    private async void HandleValidSubmit()
     {
-        public string Parser { get; set; } = string.Empty;
-        public int Cycles { get; set; } = 1;
-        public string Source { get; set; } = string.Empty;
-		//public AuthenticateRequest LoginInfo { get; }
-	}
+        loading = true;
+        try
+        {
+            Timetable? timetable = null;
+
+            switch(form.SelectedSource)
+            {
+                case "url":
+                    if (string.IsNullOrEmpty(form.Source))
+                        return;
+                    timetable = await getter.GetFromUri(parsers[form.ParserId], form.Source);
+                    break;
+                case "file":
+                    if (form.SourceFile is null)
+                        return;
+                    using(Stream stream = form.SourceFile.OpenReadStream())
+                    {
+                        var parser = await parsers[form.ParserId].GetParserFromStreamAsync(stream);
+                        timetable = parser.GetTimetable();        
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            timetable.Cycles = form.Cycles;
+            timetable.Name = timetable.Name.SliceIfTooLong(32);
+            timetable.TrimLessonsToCycles();
+
+            await sender.CreateTimetable(timetable);
+
+            try
+            {
+                var response = await sender.CreateAsync(timetable);
+
+                string output = $"https://timetableappstatic.z22.web.core.windows.net/login/?id={response.Id}" +
+                    $"&key={response.EditKey}" +
+                    $"&returnUrl=%2F%3F{string.Join("%26", sender.AddedGroupsId.Select(id => $"g%3D{id}"))}";
+
+                Console.WriteLine(output);
+            }
+            catch
+            {
+                await sender.DeleteTimetableIfWasCreated();
+                Console.WriteLine("cos nie tak przy wysylaniu");
+            }
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            loading = false;        
+        }
+    }
 }
