@@ -1,5 +1,8 @@
-﻿@inject TimetableSender sender
+﻿@page "/"
+
+@inject TimetableSender sender
 @inject TimetableGetter getter
+@inject IConfiguration config
 
 @*
 formularz:
@@ -13,8 +16,9 @@ output:
 	>data, godz, link
 *@
 
-<h3>Importer</h3>
+<PageTitle>Timetable Import</PageTitle>
 
+<h3>Importer</h3>
 
 <EditForm Model="@form" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
@@ -22,13 +26,12 @@ output:
 
 	 <p>
         <label>
-            Parser:
+            Source Type:
             <InputSelect @bind-Value="form.ParserId">
-               @foreach (var item in parsers)
+               @foreach (var item in sourceType)
                {
-                <option value="@item.Key">@item.Value.DisplayName</option>   
+                    <option value="@item.Key">@item.Value.DisplayName</option>   
                }
-                
             </InputSelect>
         </label>
     </p>
@@ -36,11 +39,11 @@ output:
         <label>
             Source:
             <InputSelect @bind-Value="form.SelectedSource">
-                @if(parsers[form.ParserId].ParseFromUrl)
+                @if(sourceType[form.ParserId].ParseFromUrl)
                 {
                     <option value="url">From URL</option>
                 }
-                @if(parsers[form.ParserId].ParseFromFile)
+                @if(sourceType[form.ParserId].ParseFromFile)
                 {
                     <option value="file">From File</option>
                 }
@@ -65,7 +68,7 @@ output:
         </label>
     </p>    
     }
-    @if(parsers[form.ParserId].AskAboutCycles)
+    @if(sourceType[form.ParserId].AskAboutCycles)
     {
     <p>
         <label>
@@ -79,7 +82,7 @@ output:
             Mode:
             <InputSelect @bind-Value="form.AsNew">
                 <option value="true">Save as new Timetable</option>
-                @*<option value="false">Save as Timetable Layer</option>   *@
+                <option value="false">Save as Timetable Layers</option>   
             </InputSelect>
         </label>
     </p>
@@ -87,23 +90,50 @@ output:
     {
     <p>
         <label>
-            Timetable Edit URL:
+            Target Timetable Edit URL:
             <InputText @bind-Value="form.EditUrl"/>
         </label>
     </p>    
     }
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn btn-primary" disabled="@loading">
+        @if(loading)
+        {
+            <span class="spinner-border spinner-border-sm" role="status"></span>
+            <span>Working...</span>
+        }
+        else
+        {
+            <span>Submit</span>
+        }
+    </button>
 </EditForm>
 
+@if(log.Any())
+{
+<div class="card mt-2" >
+  <ul class="list-group list-group-flush">
+      @foreach(var record in log)
+      {
+        <li class="list-group-item">
+            <a href="@record.Item1" target="_blank">@record.Item2</a>  @record.Item3.ToString()
+        </li> 
+      }
+  </ul>
+</div>    
+}
+
 @code {
+    
     private ImporterForm form = new();
     private bool loading = false;
-    private Dictionary<string, ITimetableParserInfo> parsers = new()
+    private Dictionary<string, ITimetableSourceType> sourceType = new()
     {
-        { nameof(IcsParserInfo), new IcsParserInfo() },
-        { nameof(OptivumParserInfo), new OptivumParserInfo() },
+        { nameof(IcsSourceType), new IcsSourceType() },
+        { nameof(OptivumSourceType), new OptivumSourceType() },
+        { nameof(ApiSourceType), new ApiSourceType() },
     };
+    private List<(string, string, DateTime)> log = new();
 
     protected override void OnInitialized()
     {
@@ -117,6 +147,9 @@ output:
 
     private async void HandleValidSubmit()
     {
+        if (loading)
+            return;
+
         loading = true;
         try
         {
@@ -127,15 +160,16 @@ output:
                 case "url":
                     if (string.IsNullOrEmpty(form.Source))
                         return;
-                    timetable = await getter.GetFromUri(parsers[form.ParserId], form.Source);
+                    timetable = await getter.GetFromUri(sourceType[form.ParserId], form.Source);
                     break;
                 case "file":
                     if (form.SourceFile is null)
                         return;
                     using(Stream stream = form.SourceFile.OpenReadStream())
                     {
-                        var parser = await parsers[form.ParserId].GetParserFromStreamAsync(stream);
-                        timetable = parser.GetTimetable();        
+                        timetable = await sourceType[form.ParserId]
+                            .SetSource(stream)
+                            .GetTimetable();
                     }
                     break;
                 default:
@@ -146,22 +180,23 @@ output:
             timetable.Name = timetable.Name.SliceIfTooLong(32);
             timetable.TrimLessonsToCycles();
 
-            await sender.CreateTimetable(timetable);
+            if(form.AsNew)
+                await sender.CreateTimetable(timetable);
+            else
+                await sender.LoginToAccount(form.EditUrl.GetLoginInfo());
 
             try
             {
-                var response = await sender.CreateAsync(timetable);
-
-                string output = $"https://timetableappstatic.z22.web.core.windows.net/login/?id={response.Id}" +
-                    $"&key={response.EditKey}" +
-                    $"&returnUrl=%2F%3F{string.Join("%26", sender.AddedGroupsId.Select(id => $"g%3D{id}"))}";
-
+                AuthenticateResponse response = await sender.Send(timetable);
+                string output = response.GetHref(config["TargetUrl"], sender.AddedGroupsId);
+                log.Add((output, response.Name, DateTime.Now));
+                StateHasChanged();
                 Console.WriteLine(output);
             }
             catch
             {
                 await sender.DeleteTimetableIfWasCreated();
-                Console.WriteLine("cos nie tak przy wysylaniu");
+                Console.WriteLine("Nastapil zgrzyt");
             }
         }
         catch(Exception ex)
@@ -170,7 +205,8 @@ output:
         }
         finally
         {
-            loading = false;        
+            loading = false;
+            StateHasChanged();
         }
     }
 }

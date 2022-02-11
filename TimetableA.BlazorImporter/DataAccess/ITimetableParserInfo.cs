@@ -9,7 +9,5 @@ namespace TimetableA.BlazorImporter
         public bool ParseFromFile { get; }
         public string DisplayName { get; }
         public bool AskAboutCycles { get; }
-
-        public Task<ITimetableParser> GetParserFromStreamAsync(Stream stream);
     }
 }

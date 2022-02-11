@@ -14,7 +14,9 @@ namespace TimetableA.BlazorImporter
         private AuthenticateResponse? response;
         private bool timetableCreated = false;
 
-        public ICollection<int> AddedGroupsId { get; } = new HashSet<int>();
+
+        private readonly List<int> addedGroupsIds = new();
+        public IEnumerable<int> AddedGroupsId => addedGroupsIds;
 
         public TimetableSender(ITimetableEndpoints client)
         {
@@ -37,7 +39,7 @@ namespace TimetableA.BlazorImporter
             return this;
         }
 
-        public async Task<AuthenticateResponse> CreateAsync(Timetable timetable)
+        public async Task<AuthenticateResponse> Send(Timetable timetable)
         {
             if (response is null)
                 throw new InvalidOperationException();
@@ -48,7 +50,7 @@ namespace TimetableA.BlazorImporter
             {
                 var addedGroup = await apiService.AddGroup(groupAndLessons.Key, response.Token);
 
-                AddedGroupsId.Add(addedGroup.Id);
+                addedGroupsIds.Add(addedGroup.Id);
 
                 foreach (LessonInputModel lesson in groupAndLessons.Value)
                     await apiService.AddLesson(addedGroup.Id, lesson, response.Token);

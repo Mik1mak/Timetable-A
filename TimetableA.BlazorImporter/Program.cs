@@ -9,7 +9,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddRefitClient<ITimetableEndpoints>().ConfigureHttpClient(c =>
 {
-    c.BaseAddress = new Uri(@"https://timetablea-api.azurewebsites.net");
+    c.BaseAddress = new Uri(builder.Configuration["ApiUrl"]!);
 });
 
 builder.Services.AddScoped(typeof(TimetableSender));

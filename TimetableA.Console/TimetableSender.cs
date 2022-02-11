@@ -38,7 +38,7 @@ namespace TimetableA.ConsoleImporter
             return this;
         }
 
-        public async Task<AuthenticateResponse> CreateAsync(Timetable timetable)
+        public async Task<AuthenticateResponse> Send(Timetable timetable)
         {
             if (response is null)
                 throw new InvalidOperationException();

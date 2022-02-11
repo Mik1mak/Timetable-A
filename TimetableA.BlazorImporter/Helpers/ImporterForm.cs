@@ -5,7 +5,7 @@ namespace TimetableA.BlazorImporter
 {
     public class ImporterForm
     {
-        string parserId = nameof(IcsParserInfo);
+        string parserId = nameof(IcsSourceType);
 
         [Required]
         public string ParserId 

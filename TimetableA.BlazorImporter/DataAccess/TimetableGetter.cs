@@ -6,15 +6,29 @@ namespace TimetableA.BlazorImporter
     public class TimetableGetter
     {
         private readonly HttpClient client;
+        private readonly ITimetableEndpoints api;
 
-        public TimetableGetter(HttpClient client) => this.client = client;
-
-        public async Task<Timetable> GetFromUri(ITimetableParserInfo parserInfo, string uri)
+        public TimetableGetter(HttpClient client, ITimetableEndpoints api)
         {
-            Uri source = GetUriFromSource(uri);
-            Stream stream = await GetStream(source);
-            ITimetableParser parser = await parserInfo.GetParserFromStreamAsync(stream);
-            return parser.GetTimetable();
+            this.client = client;
+            this.api = api;
+        }
+
+        public async Task<Timetable> GetFromUri(ITimetableSourceType timetableSrc, string uri)
+        {
+            if(timetableSrc.AcceptedSources.Contains(typeof(Stream)))
+            {
+                Uri source = GetUriFromSource(uri);
+                Stream stream = await GetStream(source);
+                return await timetableSrc.SetSource(stream).GetTimetable();
+            }
+            else if(timetableSrc.AcceptedSources.Contains(typeof(TimetableApiGetter)))
+            {
+                TimetableApiGetter apiGetter = new(api, uri.GetLoginInfo());
+                return await timetableSrc.SetSource(apiGetter).GetTimetable();
+            }
+
+            throw new Exception("Source not supproted");
         }
 
         private Uri GetUriFromSource(string source)
@@ -36,7 +50,7 @@ namespace TimetableA.BlazorImporter
         }
 
         private async Task<Stream> GetStream(Uri uri)
-        {
+        { 
             switch (uri.Scheme)
             {
                 case "http":

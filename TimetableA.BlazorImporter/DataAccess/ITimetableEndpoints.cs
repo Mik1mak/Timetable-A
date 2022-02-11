@@ -16,6 +16,9 @@ namespace TimetableA.BlazorImporter
         [Delete("/api/Timetable")]
         Task Delete([Header("Authorization")] string token);
 
+        [Get("/api/Timetable")]
+        Task<TimetableOutputModel> GetTimetable([Header("Authorization")] string token);
+
         [Post("/api/Group")]
         Task<GroupOutputModel> AddGroup([Body] GroupInputModel group, [Header("Authorization")] string token);
 

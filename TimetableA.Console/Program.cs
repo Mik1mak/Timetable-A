@@ -53,7 +53,7 @@ namespace TimetableA.ConsoleImporter
                     await sender.CreateTimetable(timetable);
                 }
 
-                AuthenticateResponse response = await sender.CreateAsync(timetable);
+                AuthenticateResponse response = await sender.Send(timetable);
 
                 string output = $"\r\nLink do planu: {config.StaticApp}login/?id={response.Id}" +
                     $"&key={response.EditKey}" +
