@@ -30,10 +30,10 @@ namespace TimetableA.Importer
             doc.LoadHtml(htmlDoc);
         }
 
-        public Timetable GetTimetable()
+        public Task<Timetable> GetTimetable()
         {
             Parse();
-            return timetable;
+            return Task.FromResult(timetable);
         }
 
         private void Parse()

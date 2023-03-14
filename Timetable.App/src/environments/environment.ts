@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://timetablea-api.azurewebsites.net'
+  apiUrl: 'https://timetableaapi.azurewebsites.net'
 };
 
 /*

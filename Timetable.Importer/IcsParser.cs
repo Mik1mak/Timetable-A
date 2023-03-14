@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using TimetableA.Models;
 
 namespace TimetableA.Importer
@@ -36,14 +37,14 @@ namespace TimetableA.Importer
             this.source = source;
         }
 
-        public Timetable GetTimetable()
+        public async Task<Timetable> GetTimetable()
         {
             if(!parsed)
             {
                 using (source)
                 {
                     string line;
-                    while ((line = source.ReadLine()) != null)
+                    while ((line = await source.ReadLineAsync()) != null)
                     {
                         foreach (ILineParser p in lineParsers)
                             p.Parse(line);

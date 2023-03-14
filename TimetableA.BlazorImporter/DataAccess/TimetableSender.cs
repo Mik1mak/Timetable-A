@@ -26,8 +26,8 @@ namespace TimetableA.BlazorImporter
         public async Task<TimetableSender> CreateTimetable(Timetable timetable)
         {
             var slicer = new TimetableSlicer(timetable);
-
-            response = await apiService.CreateTimetable(slicer.GetTimetableModel());
+            TimetableInputModel model = slicer.GetTimetableModel();
+            response = await apiService.CreateTimetable(model);
             timetableCreated = true;
 
             return this;

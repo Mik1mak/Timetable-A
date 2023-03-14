@@ -124,7 +124,7 @@ output:
 }
 
 @code {
-    
+
     private ImporterForm form = new();
     private bool loading = false;
     private Dictionary<string, ITimetableSourceType> sourceType = new()
@@ -167,9 +167,8 @@ output:
                         return;
                     using(Stream stream = form.SourceFile.OpenReadStream())
                     {
-                        timetable = await sourceType[form.ParserId]
-                            .SetSource(stream)
-                            .GetTimetable();
+                        ITimetableFactory src = sourceType[form.ParserId].SetSource(stream);
+                        timetable = await src.GetTimetable();
                     }
                     break;
                 default:

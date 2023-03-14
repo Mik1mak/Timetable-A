@@ -33,7 +33,7 @@ namespace TimetableA.BlazorImporter
                 htmlDoc = await docReader.ReadToEndAsync();
             }
 
-            return new OptivumParser(htmlDoc).GetTimetable();
+            return await new OptivumParser(htmlDoc).GetTimetable();
         }
 
         public ITimetableFactory SetSource(object stream)

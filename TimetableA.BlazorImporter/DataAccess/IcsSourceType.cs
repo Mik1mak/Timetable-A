@@ -19,25 +19,30 @@ namespace TimetableA.BlazorImporter
 
         public IEnumerable<Type> AcceptedSources => new HashSet<Type>()
         {
-            typeof(Stream)
+            typeof(Stream),
+            typeof(MemoryStream),
         };
 
-        public Task<Timetable> GetTimetable()
+        public async Task<Timetable> GetTimetable()
         {
             if (str == null)
                 throw new InvalidOperationException();
 
+
             using StreamReader reader = new(str);
-            Timetable timetable = new IcsParser(reader).GetTimetable();
-            return Task.FromResult(timetable);
+            Timetable timetable = await new IcsParser(reader).GetTimetable();
+
+            return timetable;
         }
 
         public ITimetableFactory SetSource(object stream)
         {
-            if (!AcceptedSources.Contains(stream.GetType()))
-                throw new ArgumentException("Invalid Type of source");
+            Stream? tmp = stream as Stream;
 
-            str = stream as Stream;
+            if (tmp == null)
+                throw new ArgumentException($"Invalid Type of source - {stream.GetType()}");
+
+            str = tmp;
             return this;
         }
 

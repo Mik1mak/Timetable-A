@@ -19,7 +19,7 @@ namespace TimetableA.BlazorImporter
             {
                 ShowWeekend = true,
                 Cycles = timetable.Cycles,
-                Name = timetable.Name,
+                Name = timetable.Name ?? "Timetable",
             };
         }
 
