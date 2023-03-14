@@ -9,6 +9,6 @@ Każdy z planów lekcji można otworzyć w trybie do edycji lub tylko do odczytu
 
 Aplikacja Dostępna pod [tym](https://timetablea.azurewebsites.net) adresem. 
 
-[Demo w trybie edycji](https://timetablea.azurewebsites.net/login/?id=15&key=uGU1u0NrjCsCuwVk&returnUrl=%2F%3Fg%3D37%26g%3D34%26g%3D32%26g%3D35)
+[Demo w trybie edycji](https://timetablea.azurewebsites.net/login/?id=16&key=D4bgMO3IuX3J0jAq&returnUrl=%2F%3Fg%3D41%26g%3D40%26g%3D43)
 
-[Demo w trybie do odczytu](https://timetablea.azurewebsites.net/login/?id=16&key=D4bgMO3IuX3J0jAq&returnUrl=%2F%3Fg%3D41%26g%3D40%26g%3D43)
+[Demo w trybie do odczytu](https://timetablea.azurewebsites.net/login/?id=15&key=uGU1u0NrjCsCuwVk&returnUrl=%2F%3Fg%3D37%26g%3D34%26g%3D32%26g%3D35)
