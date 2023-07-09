@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.API", "TimetableA\TimetableA.API.csproj", "{B5C86BB8-0F4E-40B2-899A-8455C46550D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.Entities", "TimetableA.Entities\TimetableA.Entities.csproj", "{193D0A98-6F08-4E2D-97C8-3E37D81CFA97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.DataAccessLayer.EntityFramework", "TimetableA.Entities\TimetableA.DataAccessLayer.EntityFramework.csproj", "{193D0A98-6F08-4E2D-97C8-3E37D81CFA97}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.DataAccessLayer", "TimetableA.DataAccessLayer\TimetableA.DataAccessLayer.csproj", "{63105980-94E2-4CA2-A15B-E487711EF73B}"
 EndProject
@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.Models", "Timeta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.Tests", "Timetable.Tests\TimetableA.Tests.csproj", "{C6A08F2C-952C-43DC-B3BA-9052A07D64AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableA.BlazorImporter", "TimetableA.BlazorImporter\TimetableA.BlazorImporter.csproj", "{3682D248-D404-499B-984E-9D8BB33682DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.BlazorImporter", "TimetableA.BlazorImporter\TimetableA.BlazorImporter.csproj", "{3682D248-D404-499B-984E-9D8BB33682DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Importer", "Importer", "{E8ED3B3A-562D-4505-96D3-A4AD2E9B403E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B189330-E452-4FE6-A7C0-5977A8B2154E} = {E8ED3B3A-562D-4505-96D3-A4AD2E9B403E}
+		{5D5C644E-FF1D-4E42-885A-A12DD1E7ACDD} = {E8ED3B3A-562D-4505-96D3-A4AD2E9B403E}
+		{3682D248-D404-499B-984E-9D8BB33682DC} = {E8ED3B3A-562D-4505-96D3-A4AD2E9B403E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5FABF4F-31A0-49F9-8A8F-4EB3851E86E9}

@@ -1,35 +1,34 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TimetableA.Entities.Migrations
+namespace TimetableA.DataAccessLayer.EntityFramework.Migrations;
+
+public partial class timetableUpdate : Migration
 {
-    public partial class timetableUpdate : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<int>(
-                name: "StartHour",
-                table: "Timetables",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+        migrationBuilder.AddColumn<int>(
+            name: "StartHour",
+            table: "Timetables",
+            type: "int",
+            nullable: false,
+            defaultValue: 0);
 
-            migrationBuilder.AddColumn<int>(
-                name: "StopHour",
-                table: "Timetables",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-        }
+        migrationBuilder.AddColumn<int>(
+            name: "StopHour",
+            table: "Timetables",
+            type: "int",
+            nullable: false,
+            defaultValue: 0);
+    }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "StartHour",
-                table: "Timetables");
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "StartHour",
+            table: "Timetables");
 
-            migrationBuilder.DropColumn(
-                name: "StopHour",
-                table: "Timetables");
-        }
+        migrationBuilder.DropColumn(
+            name: "StopHour",
+            table: "Timetables");
     }
 }

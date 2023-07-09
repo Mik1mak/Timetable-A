@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,9 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TimetableA.API.Helpers;
 using TimetableA.API.Services;
-using TimetableA.DataAccessLayer.Repositories.Abstract;
-using TimetableA.DataAccessLayer.Repositories.Concrete;
-using TimetableA.Entities.Data;
+using TimetableA.DataAccessLayer.EntityFramework;
 
 namespace TimetableA
 {
@@ -63,13 +60,9 @@ namespace TimetableA
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
-            services.AddDbContext<TimetableAContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DevConnection"),
-                b => b.MigrationsAssembly(typeof(TimetableAContext).Assembly.FullName)));
+            // services.UseInMemoryEntityFrameworkAccessLayer();
+            services.UseEntityFrameworkAccessLayer(Configuration);
 
-            services.AddScoped<ITimetableRepository, TimetableRepository>();
-            services.AddScoped<IGroupsRepository, GroupsRepository>();
-            services.AddScoped<ILessonsRepository, LessonsRepository>();
             services.AddScoped<IAuthService, AuthService>();
 
             services.AddCors();

@@ -34,7 +34,7 @@ namespace TimetableA.ConsoleImporter
 
                 Console.WriteLine("Tworzenie planu...");
                 Timetable timetable =
-                    new IcsParser(source).GetTimetable();
+                    await new IcsParser(source).GetTimetable();
                     //new OptivumParser(source.BaseStream).GetTimetable();
 
                 timetable.Cycles = config.Cycles;
