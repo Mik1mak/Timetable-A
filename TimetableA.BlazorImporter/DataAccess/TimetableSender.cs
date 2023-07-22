@@ -15,8 +15,8 @@ namespace TimetableA.BlazorImporter
         private bool timetableCreated = false;
 
 
-        private readonly List<int> addedGroupsIds = new();
-        public IEnumerable<int> AddedGroupsId => addedGroupsIds;
+        private readonly List<string> addedGroupsIds = new();
+        public IEnumerable<string> AddedGroupsId => addedGroupsIds;
 
         public TimetableSender(ITimetableEndpoints client)
         {

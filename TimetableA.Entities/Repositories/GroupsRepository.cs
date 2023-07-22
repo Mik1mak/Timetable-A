@@ -22,7 +22,7 @@ public class GroupsRepository : BaseRepository<Group>, IGroupsRepository
             .ToListAsync();
     }
 
-    public async override Task<Group> GetAsync(int id)
+    public async override Task<Group> GetAsync(string id)
     {
         return await context.Set<Group>()
             .Include(x => x.Lessons)

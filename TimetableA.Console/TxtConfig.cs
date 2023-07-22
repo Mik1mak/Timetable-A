@@ -28,7 +28,7 @@ namespace TimetableA.ConsoleImporter
                     else if (sLine[0].Contains(nameof(AsLayer)))
                         AsLayer = bool.Parse(sLine[^1]);
                     else if (sLine[0].Contains(nameof(LoginInfo.Id)))
-                        LoginInfo.Id = int.Parse(sLine[^1]);
+                        LoginInfo.Id = sLine[^1];
                     else if (sLine[0].Contains(nameof(LoginInfo.Key)))
                         LoginInfo.Key = sLine[^1];
                 }catch(Exception ex)

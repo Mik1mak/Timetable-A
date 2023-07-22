@@ -46,7 +46,7 @@ namespace TimetableA.API.Helpers
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+                var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
                 string key = jwtToken.Claims.First(x => x.Type == "key").Value;
 
                 context.Items["Timetable"] = await timetableRepo.GetAsync(userId);

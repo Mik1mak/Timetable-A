@@ -20,6 +20,6 @@ namespace TimetableA.ConsoleImporter
         Task<GroupOutputModel> AddGroup([Body] GroupInputModel group, [Header("Authorization")] string token);
 
         [Post("/api/Lesson/{groupId}")]
-        Task<LessonOutputModel> AddLesson(int groupId, [Body] LessonInputModel lesson, [Header("Authorization")] string token);
+        Task<LessonOutputModel> AddLesson(string groupId, [Body] LessonInputModel lesson, [Header("Authorization")] string token);
     }
 }

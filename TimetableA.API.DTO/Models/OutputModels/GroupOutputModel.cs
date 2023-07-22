@@ -5,7 +5,7 @@ namespace TimetableA.API.DTO.OutputModels
 {
     public class GroupOutputModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
@@ -13,6 +13,6 @@ namespace TimetableA.API.DTO.OutputModels
 
         public IEnumerable<LessonOutputModel> Lessons { get; set; }
 
-        public IEnumerable<int> CollidingGroups { get; set; }
+        public IEnumerable<string> CollidingGroups { get; set; }
     }
 }

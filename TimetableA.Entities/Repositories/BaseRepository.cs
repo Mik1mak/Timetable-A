@@ -46,12 +46,12 @@ public abstract class BaseRepository<TEntity> where TEntity : class, IModel
         return await context.Set<TEntity>().ToListAsync();
     }
 
-    public async virtual Task<TEntity> GetAsync(int id)
+    public async virtual Task<TEntity> GetAsync(string id)
     {
         return await context.FindAsync<TEntity>(id);
     }
 
-    public async virtual Task<bool> DeleteAsync(int id)
+    public async virtual Task<bool> DeleteAsync(string id)
     {
         var entityToRemove = await context.FindAsync<TEntity>(id);
 

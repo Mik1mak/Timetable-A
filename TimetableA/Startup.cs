@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using TimetableA.API.Helpers;
 using TimetableA.API.Services;
 using TimetableA.DataAccessLayer.EntityFramework;
+using TimetableA.DataAccessLayer.RavenDB;
 
 namespace TimetableA
 {
@@ -56,12 +57,13 @@ namespace TimetableA
                 });
             });
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
-            // services.UseInMemoryEntityFrameworkAccessLayer();
-            services.UseEntityFrameworkDataAccessLayer(Configuration);
+            //services.UseInMemoryEntityFrameworkDataAccessLayer();
+            //services.UseEntityFrameworkDataAccessLayer(Configuration);
+            services.UseRavenDBDataAccessLayer(Configuration);
 
             services.AddScoped<IAuthService, AuthService>();
 

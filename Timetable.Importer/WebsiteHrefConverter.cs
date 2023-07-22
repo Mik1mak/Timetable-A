@@ -10,7 +10,7 @@ namespace TimetableA.Importer
 {
     public static class WebsiteHrefConverter
     {
-        public static string GetHref(this AuthenticateResponse response, string baseUrl, IEnumerable<int> addedGroupsIds)
+        public static string GetHref(this AuthenticateResponse response, string baseUrl, IEnumerable<string> addedGroupsIds)
         {
             return $"{baseUrl}/?id={response.Id}" +
                 $"&key={response.EditKey}" +
@@ -29,7 +29,7 @@ namespace TimetableA.Importer
 
                 if(splitedParam[0] == "id")
                 {
-                    loginInfo.Id = int.Parse(splitedParam[1]);
+                    loginInfo.Id = splitedParam[1];
                 }
                 else if(splitedParam[0] == "key")
                 {

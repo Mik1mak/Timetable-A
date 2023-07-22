@@ -8,6 +8,6 @@ namespace TimetableA.API.DTO.InputModels
     public class LessonVerifyRequest
     {
         public LessonInputModel Lesson { get; set; }
-        public IEnumerable<int> GroupIds { get; set; }
+        public IEnumerable<string> GroupIds { get; set; }
     }
 }

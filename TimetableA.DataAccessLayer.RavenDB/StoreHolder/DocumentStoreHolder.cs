@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TimetableA.DataAccessLayer.RavenDB.StoreHolder;
 
-internal class DocumentStoreHolder
+public class DocumentStoreHolder
 {
     private readonly RavenDbSettings options;
 

@@ -9,7 +9,7 @@ namespace TimetableA.API.DTO.InputModels
     public class AuthenticateRequest
     {
         [Required]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public string Key { get; set; }
     }

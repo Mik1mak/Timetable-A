@@ -11,7 +11,8 @@ namespace TimetableA.Models
     public class Timetable : IModel
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
 
         [Column(TypeName = "nvarchar(64)")]
         public string Name { get; set; }
@@ -28,6 +29,6 @@ namespace TimetableA.Models
 
         public DateTime CreateDate { get; set; }
 
-        public ICollection<Group> Groups { get; set; }
+        public ICollection<Group> Groups { get; set; } = new List<Group>();
     }
 }

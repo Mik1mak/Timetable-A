@@ -10,7 +10,7 @@ namespace TimetableA.API.DTO.OutputModels
         {
             Duration = (int)duration.TotalMinutes;
         }
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
@@ -22,6 +22,6 @@ namespace TimetableA.API.DTO.OutputModels
 
         public string Link { get; set; }
 
-        public int GroupId { get; set; }
+        public string GroupId { get; set; }
     }
 }

@@ -57,7 +57,7 @@ namespace TimetableA.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(AuthLevel.Read, typeof(GroupAuthMethod))]
-        public async Task<ActionResult<GroupOutputModel>> GetGroup(int id)
+        public async Task<ActionResult<GroupOutputModel>> GetGroup(string id)
         {
             Group group = await groupsRepo.GetAsync(id);
 
@@ -92,13 +92,13 @@ namespace TimetableA.API.Controllers
 
         [HttpGet("{id}/CollidingGroups")]
         [Authorize(AuthLevel.Read, typeof(GroupAuthMethod))]
-        public async Task<ActionResult<IEnumerable<int>>> CollidingGroups(int id)
+        public async Task<ActionResult<IEnumerable<string>>> CollidingGroups(string id)
         {
             Group group = await groupsRepo.GetAsync(id);
             return Ok(await CollidingGroups(group));
         }
 
-        private async Task<IEnumerable<int>> CollidingGroups(Group group)
+        private async Task<IEnumerable<string>> CollidingGroups(Group group)
         {
             Timetable timetable = await timetablesRepo.GetAsync(group.TimetableId);
             IEnumerable<Group> otherGroups = timetable.Groups?.Where(x => x.Id != group.Id);
@@ -108,7 +108,7 @@ namespace TimetableA.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(AuthLevel.Edit, typeof(GroupAuthMethod))]
-        public async Task<ActionResult> PutGroup(int id, [FromBody] GroupInputModel input)
+        public async Task<ActionResult> PutGroup(string id, [FromBody] GroupInputModel input)
         {
             Group group = await groupsRepo.GetAsync(id);
 
@@ -122,7 +122,7 @@ namespace TimetableA.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthLevel.Edit, typeof(GroupAuthMethod))]
-        public async Task<ActionResult> DeleteGroup(int id)
+        public async Task<ActionResult> DeleteGroup(string id)
         {
             if (await groupsRepo.DeleteAsync(id))
                 return Ok();

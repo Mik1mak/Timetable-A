@@ -15,7 +15,7 @@ namespace TimetableA.ConsoleImporter
         private AuthenticateResponse response;
         private bool timetableCreated = false;
 
-        public ICollection<int> AddedGroupsId { get; } = new HashSet<int>();
+        public ICollection<string> AddedGroupsId { get; } = new HashSet<string>();
 
         public TimetableSender(HttpClient client)
         {

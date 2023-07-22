@@ -21,7 +21,7 @@ public class TimetableRepository : BaseRepository<Timetable>, ITimetableReposito
             .ToListAsync();
     }
 
-    public async override Task<Timetable> GetAsync(int id)
+    public async override Task<Timetable> GetAsync(string id)
     {
         return await context.Set<Timetable>()
             .Include(x => x.Groups)

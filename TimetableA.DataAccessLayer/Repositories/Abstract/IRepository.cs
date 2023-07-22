@@ -14,10 +14,10 @@ namespace TimetableA.DataAccessLayer.Repositories.Abstract
 
         public Task<bool> SaveAsync(T model);
 
-        public Task<T> GetAsync(int id);
+        public Task<T> GetAsync(string id);
 
         public Task<IEnumerable<T>> GetAllAsync();
 
-        public Task<bool> DeleteAsync(int id);
+        public Task<bool> DeleteAsync(string id);
     }
 }

@@ -19,7 +19,8 @@ namespace TimetableA.Models
         }
 
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
 
         [Column(TypeName = "nvarchar(64)")]
         public string Name { get; set; }
@@ -36,7 +37,7 @@ namespace TimetableA.Models
 
         [Required]
         [ForeignKey(nameof(Group))]
-        public int GroupId { get; set; }
+        public string GroupId { get; set; }
         [JsonIgnore]
         public Group Group { get; set; }
 

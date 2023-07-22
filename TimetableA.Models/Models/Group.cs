@@ -12,7 +12,8 @@ namespace TimetableA.Models
     public class Group : IModel
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
 
         [Column(TypeName = "nvarchar(64)")]
         public string Name { get; set; }
@@ -22,11 +23,11 @@ namespace TimetableA.Models
 
         [Required]
         [ForeignKey(nameof(Timetable))]
-        public int TimetableId { get; set; }
+        public string TimetableId { get; set; }
         [JsonIgnore]
         public Timetable Timetable { get; set; }
 
-        public ICollection<Lesson> Lessons { get; set; }
+        public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 
         public bool CollidesWith(Group group2)
         {
@@ -38,6 +39,6 @@ namespace TimetableA.Models
             return false;
         }
 
-        public IEnumerable<int> CollidingGroupsIds(IEnumerable<Group> groups) => groups?.Where(x => CollidesWith(x))?.Select(x => x.Id);
+        public IEnumerable<string> CollidingGroupsIds(IEnumerable<Group> groups) => groups?.Where(x => CollidesWith(x))?.Select(x => x.Id);
     }
 }

@@ -33,7 +33,7 @@ namespace TimetableA.API.Controllers
 
         [HttpPost("{groupId}")]
         [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
-        public async Task<ActionResult<LessonOutputModel>> AddLesson(int groupId, [FromBody] LessonInputModel input)
+        public async Task<ActionResult<LessonOutputModel>> AddLesson(string groupId, [FromBody] LessonInputModel input)
         {
             Group group = await groupsRepo.GetAsync(groupId);
 
@@ -55,7 +55,7 @@ namespace TimetableA.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(AuthLevel.Read, typeof(LessonAuthMethod))]
-        public async Task<ActionResult<GroupOutputModel>> GetLesson(int id)
+        public async Task<ActionResult<GroupOutputModel>> GetLesson(string id)
         {
             Lesson lesson = await lessonsRepo.GetAsync(id);
             LessonOutputModel output = mapper.Map<LessonOutputModel>(lesson);
@@ -64,7 +64,7 @@ namespace TimetableA.API.Controllers
 
         [HttpGet("Group/{groupId}")]
         [Authorize(AuthLevel.Read, typeof(GroupAuthMethod), "goupId")]
-        public async Task<ActionResult<IEnumerable<LessonOutputModel>>> GetLessons(int groupId)
+        public async Task<ActionResult<IEnumerable<LessonOutputModel>>> GetLessons(string groupId)
         {
             Group group = await groupsRepo.GetAsync(groupId);
 
@@ -73,7 +73,7 @@ namespace TimetableA.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
-        public async Task<ActionResult> PutLesson(int id, [FromBody] LessonInputModel input)
+        public async Task<ActionResult> PutLesson(string id, [FromBody] LessonInputModel input)
         {
             Lesson lesson = await lessonsRepo.GetAsync(id);
             lesson.Name = input.Name;
@@ -92,7 +92,7 @@ namespace TimetableA.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
-        public async Task<ActionResult> DeleteLesson(int id)
+        public async Task<ActionResult> DeleteLesson(string id)
         {
             if (await lessonsRepo.DeleteAsync(id))
                 return Ok();
@@ -101,7 +101,7 @@ namespace TimetableA.API.Controllers
 
         [HttpPost("Verify/{groupId}")]
         [Authorize(AuthLevel.Edit, typeof(LessonAuthMethod))]
-        public IActionResult VerifyNewLesson(int groupId, [FromBody] LessonVerifyRequest requestBody)
+        public IActionResult VerifyNewLesson(string groupId, [FromBody] LessonVerifyRequest requestBody)
         {
             Lesson lesson = mapper.Map<Lesson>(requestBody.Lesson);
             IEnumerable<Group> groups = ThisTimetable.Groups.Where(g => requestBody.GroupIds.Contains(g.Id) || g.Id == groupId);

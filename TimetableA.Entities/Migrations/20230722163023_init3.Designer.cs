@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimetableA.DataAccessLayer.EntityFramework.Data;
 
@@ -11,9 +12,10 @@ using TimetableA.DataAccessLayer.EntityFramework.Data;
 namespace TimetableA.DataAccessLayer.EntityFramework.Migrations
 {
     [DbContext(typeof(TimetableAContext))]
-    partial class TimetableAContextModelSnapshot : ModelSnapshot
+    [Migration("20230722163023_init3")]
+    partial class init3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
