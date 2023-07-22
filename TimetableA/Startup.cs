@@ -61,7 +61,7 @@ namespace TimetableA
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // services.UseInMemoryEntityFrameworkAccessLayer();
-            services.UseEntityFrameworkAccessLayer(Configuration);
+            services.UseEntityFrameworkDataAccessLayer(Configuration);
 
             services.AddScoped<IAuthService, AuthService>();
 

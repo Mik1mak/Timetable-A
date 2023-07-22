@@ -22,7 +22,7 @@ public static class Extensions
         return services;
     }
 
-    public static IServiceCollection UseInMemoryEntityFrameworkAccessLayer(this IServiceCollection services)
+    public static IServiceCollection UseInMemoryEntityFrameworkDataAccessLayer(this IServiceCollection services)
     {
         services.AddDbContext<TimetableAContext>(options =>
              options.UseInMemoryDatabase("Timetable"));
@@ -30,7 +30,7 @@ public static class Extensions
         return services.RegisterRepositories();
     }
 
-    public static IServiceCollection UseEntityFrameworkAccessLayer(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection UseEntityFrameworkDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<TimetableAContext>(options =>
              options.UseSqlServer(configuration.GetConnectionString("DevConnection"),

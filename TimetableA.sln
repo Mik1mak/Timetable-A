@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimetableA.BlazorImporter",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Importer", "Importer", "{E8ED3B3A-562D-4505-96D3-A4AD2E9B403E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimetableA.DataAccessLayer.RavenDB", "TimetableA.DataAccessLayer.RavenDB\TimetableA.DataAccessLayer.RavenDB.csproj", "{87595BBD-23C2-46A7-AA71-614784C02439}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{3682D248-D404-499B-984E-9D8BB33682DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3682D248-D404-499B-984E-9D8BB33682DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3682D248-D404-499B-984E-9D8BB33682DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87595BBD-23C2-46A7-AA71-614784C02439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87595BBD-23C2-46A7-AA71-614784C02439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87595BBD-23C2-46A7-AA71-614784C02439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87595BBD-23C2-46A7-AA71-614784C02439}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
