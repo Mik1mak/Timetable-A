@@ -18,7 +18,7 @@ public static class Extensions
 {
     public static IServiceCollection UseRavenDBDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAutoMapper(typeof(DocumentStoreHolder).Assembly);
+        services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
         services.Configure<RavenDbSettings>(configuration.GetSection(RavenDbSettings.Position));
 
