@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://timetableaapi.azurewebsites.net'
+  apiUrl: 'https://timetablea-api.azurewebsites.net'
 };
