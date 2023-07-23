@@ -26,7 +26,14 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish TimetableA -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        
+      - uses: actions/checkout@v3
+      - name: Add Certificate   
+        env:
+          USER_PFX: ${{ secrets.USER_PFX }}
+        run: |
+          echo $USER_PFX | base64 --decode > ${{env.DOTNET_ROOT}}/myapp/timetablea-raven.pfx
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
