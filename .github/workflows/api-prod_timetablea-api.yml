@@ -33,7 +33,7 @@ jobs:
         env:
           USER_PFX: ${{ secrets.USER_PFX }}
         run: |
-          echo $USER_PFX | base64 --decode > ${{env.DOTNET_ROOT}}/myapp/timetablea-raven.pfx
+          echo "$USER_PFX" | base64 --decode > ${{env.DOTNET_ROOT}}/myapp/timetablea-raven.pfx
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
