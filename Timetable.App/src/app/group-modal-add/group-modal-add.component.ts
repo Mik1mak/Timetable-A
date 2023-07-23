@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { GroupsService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
 
@@ -8,11 +8,11 @@ import Modal from 'bootstrap/js/dist/modal';
   templateUrl: './group-modal-add.component.html'
 })
 export class GroupModalAddComponent implements OnInit {
-  addGroupForm!: FormGroup;
+  addGroupForm!: UntypedFormGroup;
   submitted = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private groupsService: GroupsService) { }
 
     get f() {

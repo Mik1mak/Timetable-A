@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Group } from '@app/_models';
 import { GroupsService } from '@app/_services';
 import Modal from 'bootstrap/js/dist/modal';
@@ -12,11 +12,11 @@ export class GroupModalEditComponent implements OnInit, OnChanges {
 
   @Input() groupToEdit?: Group;
 
-  editGroupForm!: FormGroup;
+  editGroupForm!: UntypedFormGroup;
   submitted = false;
   
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private groupsService: GroupsService) { }
 
     get f() {

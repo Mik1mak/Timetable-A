@@ -124,5 +124,7 @@
       }
     }
   },
-  "defaultProject": "Timetable-App"
+  "cli": {
+    "analytics": false
+  }
 }

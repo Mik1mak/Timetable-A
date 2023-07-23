@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { lessonCollisionValidator, lessonEndValidator, TotalTime } from '@app/_helpers';
 import { Group } from '@app/_models';
 import { GroupsService, ModalService, LessonsService, UserService, ToasterService } from '@app/_services';
@@ -16,13 +16,13 @@ export class WeeksModalAddLessonComponent implements OnInit {
   readonly daysOfweek = TotalTime.dayOfWeeksArray;
   groups!: Group[];
   weeksNumbers: number[] = [];
-  addLessonForm!: FormGroup;
+  addLessonForm!: UntypedFormGroup;
   submitted = false;
   loading = false;
   error?: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private groupService: GroupsService,
     private lessonsService: LessonsService,
     private userService: UserService,
